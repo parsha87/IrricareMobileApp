@@ -10,6 +10,9 @@ import {
   ResetPasswordScreen,
   Dashboard,
 } from './src/screens'
+import ConfigurationSettingsScreen from './src/screens/ConfirgurationSettings'
+import ConfigurationTimeScreen from './src/screens/ConfigurationTime'
+import ValveSettingsScreen from './src/screens/ValveSettings'
 
 const Stack = createStackNavigator()
 
@@ -18,7 +21,7 @@ export default function App() {
     <Provider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="StartScreen"
+          initialRouteName="Dashboard"
           screenOptions={{
             headerShown: false,
           }}
@@ -27,8 +30,13 @@ export default function App() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
-          <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}
-          />
+          <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}/>
+
+
+          <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen}/>
+          <Stack.Screen name="ConfigurationTimeScreen" component={ConfigurationTimeScreen} />
+          <Stack.Screen name="ValveSettingsScreen" component={ValveSettingsScreen} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
