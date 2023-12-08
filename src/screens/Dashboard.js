@@ -46,8 +46,8 @@ export default function Dashboard({ navigation }) {
             routes: [{ name: 'ConfigurationSettings' }],
           })
         }
-      >
-        Configuration setting
+      >s
+        Configuration settings
       </Button>
       <Button
         mode="outlined"
