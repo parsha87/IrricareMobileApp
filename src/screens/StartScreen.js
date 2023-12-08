@@ -9,7 +9,7 @@ export default function StartScreen({ navigation }) {
   return (
     <Background>
       <Logo />
-      <Header>Login Template</Header>
+      <Header>Login </Header>
       <Paragraph>
         The easiest way to start with your amazing application.
       </Paragraph>
