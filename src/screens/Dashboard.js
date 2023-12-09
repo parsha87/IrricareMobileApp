@@ -9,7 +9,6 @@ import { View, StyleSheet } from 'react-native'
 export default function Dashboard({ navigation }) {
   return (
     <Background>
-      <Logo />
       <Header>Let’s start</Header>
       <Paragraph>
         Your amazing app starts here. Open you favorite code editor and start
@@ -46,7 +45,7 @@ export default function Dashboard({ navigation }) {
             routes: [{ name: 'ConfigurationSettings' }],
           })
         }
-      >s
+      >
         Configuration settings
       </Button>
       <Button
@@ -61,31 +60,20 @@ export default function Dashboard({ navigation }) {
         Valve setting
       </Button>
 
-
-
-      {/* <View
-          style={[
-            styles.container,
-            {
-              // Try setting `flexDirection` to `"row"`.
-              flexDirection: 'row',
-            },
-          ]}>
-          <View style={{ flex: 3, backgroundColor: 'red' }} />
-          <View style={{ flex: 3, backgroundColor: 'darkorange' }} />
-          <View style={{ flex: 3, backgroundColor: 'green' }} />
-        </View> */}
-
-
-
-
-
-
-
+      <Button
+        mode="outlined"
+        onPress={() =>
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'SequenceSettings' }],
+          })
+        }
+      >
+        SequenceSettingsScreen
+      </Button>
 
     </Background>
   )
-
 
 }
 const styles = StyleSheet.create({
