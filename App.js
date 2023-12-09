@@ -33,11 +33,34 @@ export default function App() {
           <Stack.Screen name="StartScreen" component={StartScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="Dashboard" component={Dashboard} />
+          <Stack.Screen name="Dashboard" 
+          component={Dashboard} 
+          options={{
+            title: 'Dashboard',
+            headerStyle: {
+              backgroundColor: '#3498db', // Set your desired background color
+            },
+            headerTintColor: '#fff', // Set your desired text color
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerShown: false
+          }} 
+          />
           <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
 
 
-          <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen} />
+          <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen} options={{
+            title: 'Configuration Settings Screen',
+            headerStyle: {
+              backgroundColor: '#3498db', // Set your desired background color
+            },
+            headerTintColor: '#fff', // Set your desired text color
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerShown: false
+          }} />
           <Stack.Screen name="ConfigurationTimeScreen" component={ConfigurationTimeScreen} />
           <Stack.Screen name="ValveSettingsScreen" component={ValveSettingsScreen} />
 

@@ -4,9 +4,17 @@ import { Text } from 'react-native-paper'
 import Button from '../components/Button'
 
 const ConfigurationSettingsScreen=({navigation})=>{
+    const handleBack = () => {
+        navigation.goBack();
+      };
     return (
         <View>
-            <Text>ConfigurationSettingsScreen</Text>
+              <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+        <TouchableOpacity onPress={handleBack}>
+          <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
+        </TouchableOpacity>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>ConfigurationSettingsScreen</Text>
+      </View>
             <Button
                 mode="outlined"
                 onPress={() =>
