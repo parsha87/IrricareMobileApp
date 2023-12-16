@@ -9,6 +9,8 @@ import {
   RegisterScreen,
   ResetPasswordScreen,
   Dashboard,
+  Dashboard1,
+  
 } from './src/screens'
 import ConfigurationSettingsScreen from './src/screens/ConfirgurationSettings'
 import ConfigurationTimeScreen from './src/screens/ConfigurationTime'
@@ -17,6 +19,7 @@ import SequenceSettingsScreen from './src/screens/SequenceSettings'
 import IrrigationSequenceScreen from './src/screens/IrrigationSequence'
 import CyclicSequenceScreen from './src/screens/CyclicSequence'
 import FilterSequenceScreen from './src/screens/FilterSequence'
+import MainpageScreen from './src/screens/Mainpage'
 
 const Stack = createStackNavigator()
 
@@ -32,43 +35,130 @@ export default function App() {
         >
           <Stack.Screen name="StartScreen" component={StartScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="Dashboard" 
-          component={Dashboard} 
-          options={{
-            title: 'Dashboard',
-            headerStyle: {
-              backgroundColor: '#3498db', // Set your desired background color
-            },
-            headerTintColor: '#fff', // Set your desired text color
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            headerShown: false
-          }} 
+          <Stack.Screen name="Dashboard"
+            component={Dashboard}
+            options={{
+              title: 'Dashboard',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
           />
           <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
 
 
-          <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen} options={{
-            title: 'Configuration Settings Screen',
-            headerStyle: {
-              backgroundColor: '#3498db', // Set your desired background color
-            },
-            headerTintColor: '#fff', // Set your desired text color
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            headerShown: false
-          }} />
-          <Stack.Screen name="ConfigurationTimeScreen" component={ConfigurationTimeScreen} />
-          <Stack.Screen name="ValveSettingsScreen" component={ValveSettingsScreen} />
+          <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen}
+            options={{
+              title: 'Configuration Settings Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }} />
+          <Stack.Screen name="ConfigurationTimeScreen" component={ConfigurationTimeScreen}
+            options={{
+              title: 'Configuration Settings Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
+          />
+          <Stack.Screen name="ValveSettingsScreen" component={ValveSettingsScreen}
+            options={{
+              title: 'Valve Settings Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }} />
 
-          <Stack.Screen name="SequenceSettings" component={SequenceSettingsScreen} />
-          <Stack.Screen name="IrrigationSequenceScreen" component={IrrigationSequenceScreen} />
+          <Stack.Screen name="SequenceSettings" component={SequenceSettingsScreen}
+            options={{
+              title: 'Sequence Settings',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
+          />
+          <Stack.Screen name="IrrigationSequenceScreen" component={IrrigationSequenceScreen}
+            options={{
+              title: 'Irrigation Sequence Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
+          />
+
+          <Stack.Screen name="FilterSequenceScreen" component={FilterSequenceScreen}
+            options={{
+              title: 'Filter Sequence Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
+          />
+          <Stack.Screen name="CyclicSequenceScreen" component={CyclicSequenceScreen}
+            options={{
+              title: 'Cyclic Sequence Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
+            />
+            <Stack.Screen name="MainpageScreen" component={MainpageScreen}
+            options={{
+              title: 'Cyclic Sequence Screen',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }}
+            />
           
-          <Stack.Screen name="FilterSequenceScreen" component={FilterSequenceScreen} />
-          <Stack.Screen name="CyclicSequenceScreen" component={CyclicSequenceScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

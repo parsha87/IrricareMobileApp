@@ -1,12 +1,24 @@
-import { View } from "react-native";
+import { View,TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
 import Button from '../components/Button'
 
 
 const ValveSettingsScreen = ({ navigation }) => {
+    const handleBack = () => {
+        navigation.goBack();
+    };
+
     return (
+
         <View>
-            <Text>ValveSettingsScreen</Text>
+            <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+                  <TouchableOpacity onPress={handleBack}>
+                    <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
+                    </TouchableOpacity>
+                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>ValveSettingsScreen</Text>
+            </View>
+
+        
             <Button
                 mode="outlined"
                 onPress={() =>

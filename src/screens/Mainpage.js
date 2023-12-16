@@ -2,21 +2,20 @@ import React, { useState } from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Text } from 'react-native-paper'
 import Button from '../components/Button'
-import TextInput from '../components/TextInput'
 
-const IrrigationSequenceScreen=({navigation})=>{
-    const [SequenceNo, setSequenceNo] = useState("")
-    const [PumpNo, setPumpNo] = useState("")
+const MainpageScreen =({navigation})=>{
+
     const handleBack = () => {
         navigation.goBack();
     };
     return (
+        
         <View>
             <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                   <TouchableOpacity onPress={handleBack}>
                     <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                     </TouchableOpacity>
-                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>IrrigationSequenceScreen</Text>
+                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Sequence2Screen</Text>
             </View>
             
             <Button
@@ -30,33 +29,18 @@ const IrrigationSequenceScreen=({navigation})=>{
             >
                 Back
             </Button>
-            <TextInput
-        label="SequenceNo"
-        returnKeyType="next"
-        value={SequenceNo.value}
-        onChangeText={(text) => setSequenceNo(text)}
-        autoCapitalize="none"
-      />
-      <TextInput
-        label="PumpNo"
-        returnKeyType="next"
-        value={PumpNo.value}
-        onChangeText={(text) => setPumpNo(text)}
-        autoCapitalize="none"
-      />
-      <Button
-                mode="contained"
+            <Button
+                mode="outlined"
                 onPress={() =>
                     navigation.reset({
                         index: 0,
-                        routes: [{ name: 'SequenceSettings' }],
+                        routes: [{ name: 'Dashboard' }],
                     })
                 }
             >
-               Save
+                Dashboard
             </Button>
-      
         </View>
     );
 }
-export default  IrrigationSequenceScreen;
+export default MainpageScreen;

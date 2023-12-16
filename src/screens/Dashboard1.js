@@ -1,68 +1,45 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Text } from 'react-native-paper'
-import Button from '../components/Button'
+import React from 'react'
 import Background from '../components/Background'
-
-
-export default function SequenceSetting({ navigation }) {
-  const [email, setEmail] = useState("")
-
+import Logo from '../components/Logo'
+import Header from '../components/Header'
+import Paragraph from '../components/Paragraph'
+import Button from '../components/Button'
+import {  StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+export default function Dashboard1({ navigation }) {
   const handleBack = () => {
     navigation.goBack();
   };
-
   return (
-
-
-
-
-
-
     <View>
       <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
         <TouchableOpacity onPress={handleBack}>
           <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
         </TouchableOpacity>
-        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>SequenceSettings</Text>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Dashboard1</Text>
       </View>
-
-
-
-
-
-
-
-
-
       <Button
         mode="outlined"
         onPress={() =>
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Dashboard' }],
+            routes: [{ name: 'StartScreen' }],
           })
         }
       >
-        Back
+        Logout
       </Button>
-
-
-
-
-
-
-
       <Button
         mode="outlined"
         onPress={() =>
           navigation.reset({
             index: 0,
-            routes: [{ name: 'IrrigationSequenceScreen' }],
+            routes: [{ name: 'SequenceSettings' }],
           })
         }
       >
-        IrrigationSequence
+        Configuration Time Screen
       </Button>
 
       <Button
@@ -70,22 +47,22 @@ export default function SequenceSetting({ navigation }) {
         onPress={() =>
           navigation.reset({
             index: 0,
-            routes: [{ name: 'FilterSequenceScreen' }],
+            routes: [{ name: 'ConfigurationSettings' }],
           })
         }
       >
-        FilterSequence
+        Configuration settings
       </Button>
       <Button
         mode="outlined"
         onPress={() =>
           navigation.reset({
             index: 0,
-            routes: [{ name: 'CyclicSequenceScreen' }],
+            routes: [{ name: 'ValveSettingsScreen' }],
           })
         }
       >
-        CyclicSequence
+        Valve setting
       </Button>
 
       <Button
@@ -93,25 +70,21 @@ export default function SequenceSetting({ navigation }) {
         onPress={() =>
           navigation.reset({
             index: 0,
-            routes: [{ name: 'CyclicSequenceScreen' }],
+            routes: [{ name: 'SequenceSettings' }],
           })
         }
       >
-        CyclicSequence
+        SequenceSettingsScreen
       </Button>
-      
 
     </View>
-
-
-
   )
 
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 4,
+    flex: 3,
     padding: 20,
-    height: 60,
+    height: 50,
   },
 });

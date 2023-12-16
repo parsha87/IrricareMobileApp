@@ -7,6 +7,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 //https://github.com/react-native-datetimepicker/datetimepicker#usage
 const ConfigurationTimeScreen = ({ navigation }) => {
     const [date, setDate] = useState(new Date(1598051730000));
+   
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setDate(currentDate);
@@ -27,8 +28,20 @@ const ConfigurationTimeScreen = ({ navigation }) => {
     const showTimepicker = () => {
         showMode('time');
     };
+    const handleBack = () => {
+        navigation.goBack();
+    };
     return (
         <SafeAreaView>
+    
+          <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+                <TouchableOpacity onPress={handleBack}>
+                    <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
+                </TouchableOpacity>
+                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>ConfigurationSettingsScreen</Text>
+            </View>
+
+
             <View>
                 <Text>ConfigurationTimeScreen</Text>
 
