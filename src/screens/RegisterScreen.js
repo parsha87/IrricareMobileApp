@@ -143,7 +143,7 @@ export default function RegisterScreen({ navigation }) {
           value={country}
           items={countryitems}
           setOpen={setopencountry}
-          setValue={setcontrollerNo}
+          setValue={setCountry}
           setItems={setcountryItems}
         />
 
@@ -156,8 +156,8 @@ export default function RegisterScreen({ navigation }) {
           errorText={timezone.error}
         />
         <DropDownPicker
-          open={opencontrollerNo}
-          value={lcontrollerNo}
+          open={openlanguage}
+          value={language}
           items={items}
           setOpen={setlanguageOpen}
           setValue={setLanguage}
