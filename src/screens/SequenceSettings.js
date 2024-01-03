@@ -31,75 +31,76 @@ export default function SequenceSetting({ navigation }) {
 
 
 
+      <View style={styles.container}>
+
+
+
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Dashboard' }],
+            })
+          }
+        >
+          Back
+        </Button>
 
 
 
 
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Dashboard' }],
-          })
-        }
-      >
-        Back
-      </Button>
 
 
 
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'IrrigationSequenceScreen' }],
+            })
+          }
+        >
+          IrrigationSequence
+        </Button>
 
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'FilterSequenceScreen' }],
+            })
+          }
+        >
+          FilterSequence
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'CyclicSequenceScreen' }],
+            })
+          }
+        >
+          CyclicSequence
+        </Button>
 
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'CyclicSequenceScreen' }],
+            })
+          }
+        >
+          CyclicSequence
+        </Button>
 
-
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'IrrigationSequenceScreen' }],
-          })
-        }
-      >
-        IrrigationSequence
-      </Button>
-
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'FilterSequenceScreen' }],
-          })
-        }
-      >
-        FilterSequence
-      </Button>
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'CyclicSequenceScreen' }],
-          })
-        }
-      >
-        CyclicSequence
-      </Button>
-
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'CyclicSequenceScreen' }],
-          })
-        }
-      >
-        CyclicSequence
-      </Button>
-      
+      </View>
 
     </View>
 
@@ -110,8 +111,7 @@ export default function SequenceSetting({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 4,
     padding: 20,
-    height: 60,
+    width: '100%',
   },
 });

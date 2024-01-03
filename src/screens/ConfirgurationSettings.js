@@ -9,27 +9,38 @@ const ConfigurationSettingsScreen = ({ navigation }) => {
     };
     return (
         <View>
-            
             <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-                  <TouchableOpacity onPress={handleBack}>
+                <TouchableOpacity onPress={handleBack}>
                     <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-                    </TouchableOpacity>
+                </TouchableOpacity>
                 <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>ConfigurationsSettingsScreen</Text>
             </View>
 
+            <View style={styles.container}>
 
-            <Button
-                mode="text"
-                onPress={() =>
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'Dashboard' }],
-                    })
-                }
-            >
-                Back
-            </Button>
+                <Button
+                    mode="text"
+                    onPress={() =>
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Dashboard' }],
+                        })
+                    }
+                >
+                    Back
+                </Button>
+            </View>
+
         </View>
+
+
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+        width: '100%',
+    },
+})
 export default ConfigurationSettingsScreen;

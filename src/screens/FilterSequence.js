@@ -15,7 +15,7 @@ const FilterSequenceScreen=({navigation})=>{
                     </TouchableOpacity>
                 <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>FilterSequenceScreen</Text>
             </View>
-            
+            <View style={styles.container}>
             <Button
                 mode="outlined"
                 onPress={() =>
@@ -50,7 +50,15 @@ const FilterSequenceScreen=({navigation})=>{
             >
                Back
             </Button>
+            </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+      width: '100%',
+    },
+  });
 export default FilterSequenceScreen;

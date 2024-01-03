@@ -10,10 +10,22 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+
+  const [controllerNo, setcontrollerNo] = useState("")
+  const [opencontrollerNo, setopencontrollerNo] = useState(false);
+  const [controllerItems, setControllerItems] = useState([
+    { label: 'Spain', value: 'spain' },
+    { label: 'Madrid', value: 'madrid' },
+    { label: 'Barcelona', value: 'barcelona' },
+    { label: 'Italy', value: 'italy' },
+    { label: 'Rome', value: 'rome' },
+    { label: 'Finland', value: 'finland' }
+  ]);
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value)
@@ -31,7 +43,7 @@ export default function LoginScreen({ navigation }) {
 
 
 
-  
+
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />
@@ -58,6 +70,15 @@ export default function LoginScreen({ navigation }) {
         errorText={password.error}
         secureTextEntry
       />
+      <DropDownPicker
+        open={opencontrollerNo}
+        value={controllerNo}
+        items={controllerItems}
+        setOpen={setopencontrollerNo}
+        setValue={setcontrollerNo}
+        setItems={setControllerItems}
+      />
+
       <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}

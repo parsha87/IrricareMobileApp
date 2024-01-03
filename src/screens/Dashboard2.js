@@ -83,8 +83,7 @@ export default function Dashboard({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
     padding: 20,
-    height: 50,
+    width: '100%',
   },
 });
