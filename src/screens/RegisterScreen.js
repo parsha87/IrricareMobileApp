@@ -28,7 +28,7 @@ export default function RegisterScreen({ navigation }) {
   const [controllerNo, setControllerNo] = useState([])
   const [subUseremail, setsubUseremail] = useState({ value: '', error: '' })
   const [subUserMobileNo, setsubUserMobileNo] = useState({ value: '', error: '' })
-
+  
   //dropdown
   const [language, setLanguage] = useState("")
   const [openlanguage, setlanguageOpen] = useState(false);

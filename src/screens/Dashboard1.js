@@ -39,7 +39,7 @@ export default function Dashboard1({ navigation }) {
           })
         }
       >
-        Configuration Time Screen
+        Configuration Time 
       </Button>
 
       <Button

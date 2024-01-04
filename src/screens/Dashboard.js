@@ -42,7 +42,7 @@ export default function Dashboard({ navigation }) {
             })
           }
         >
-          Configuration Time Screen
+          Controller time setting
         </Button>
 
         <Button
@@ -54,7 +54,7 @@ export default function Dashboard({ navigation }) {
             })
           }
         >
-          Configuration settings
+           Max Filter & Max Valve Settings
         </Button>
         <Button
           mode="outlined"

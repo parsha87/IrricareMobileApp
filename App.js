@@ -56,7 +56,7 @@ export default function App() {
 
           <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen}
             options={{
-              title: 'Configuration Settings Screen',
+              title: 'Configuration Settings Screen ',
               headerStyle: {
                 backgroundColor: '#3498db', // Set your desired background color
               },
