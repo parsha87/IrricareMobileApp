@@ -10,7 +10,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 //https://github.com/react-native-datetimepicker/datetimepicker#usage
 const ConfigurationTimeScreen = ({ navigation }) => {
 
-    const HHList=[
+    const HHList = [
         { label: '1', value: '1' },
         { label: '2', value: '2' },
         { label: '3', value: '3' },
@@ -37,7 +37,7 @@ const ConfigurationTimeScreen = ({ navigation }) => {
         { label: '24', value: '24' }
     ]
 
-    const MMList=[
+    const MMList = [
         { label: '1', value: '1' },
         { label: '2', value: '2' },
         { label: '3', value: '3' },
@@ -107,18 +107,23 @@ const ConfigurationTimeScreen = ({ navigation }) => {
 
 
     const [dayEnd, setdayEnd] = useState({ value: '', error: '' })
-    const [dayEndHH, setdayEndHH] = useState({ value: '', error: '' })
-    
-   
+
+
     const [dayStartHH, setdayStartHH] = useState("")
     const [opendaystartHH, setopendaystartHH] = useState(false);
     const [itemsHH, setItemsHH] = useState(HHList);
     // //dropdown daystart MM
     const [dayStartMM, setdayStartMM] = useState("")
     const [opendaystartMM, setopendaystartMM] = useState(false);
-    const [itemsMM, setItemsMM] = useState(MMList);
-
-
+    const [ItemsMM, setItemsMM] = useState(MMList);
+    //dropdrown dayEndHH
+    const [dayEndHH, setdayEndHH] = useState("")
+    const [openEndHH, setopenEndHH] = useState(false);
+    const [itemsendHH, setitemsendHH] = useState(HHList);
+    //
+    const [dayEndMM, setdayEndMM] = useState("")
+    const [opendayEndMM, setopendayEndMM] = useState(false);
+    const [itemsEndMM, setItemsEndMM] = useState(MMList);
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setDate(currentDate);
@@ -189,7 +194,7 @@ const ConfigurationTimeScreen = ({ navigation }) => {
 
                 />
                 {/* Day Start */}
-                <TextInput
+                {/* <TextInput
                     label="dayStart"
                     returnKeyType="done"
                     value={dayStart.value}
@@ -197,7 +202,7 @@ const ConfigurationTimeScreen = ({ navigation }) => {
                     error={!!dayStart.error}
                     errorText={dayStart.error}
 
-                />
+                /> */}
                 {/* Day Start HH */}
                 <DropDownPicker
                     open={opendaystartHH}
@@ -207,14 +212,55 @@ const ConfigurationTimeScreen = ({ navigation }) => {
                     setValue={setdayStartHH}
                     setItems={setItemsHH}
                 />
-  <DropDownPicker
+
+                <DropDownPicker
                     open={opendaystartMM}
                     value={dayStartMM}
-                    items={itemsMM}
+                    items={itemsEndMM}
                     setOpen={setopendaystartMM}
                     setValue={setdayStartMM}
                     setItems={setItemsMM}
+
                 />
+                {/* <TextInput
+                    label="dayEnd"
+                    returnKeyType="done"
+                    value={dayEnd.value}
+                    onChangeText={(text) => setdayEnd({ value: text, error: '' })}
+                    error={!!dayEnd.error}
+                    errorText={dayEnd.error}
+
+                /> */}
+                {/* Day End HH */}
+                <DropDownPicker
+                    open={openEndHH}
+                    value={dayEndHH}
+                    items={itemsHH}
+                    setOpen={setopenEndHH}
+                    setValue={setdayEndHH}
+                    setItems={setItemsHH}
+                />
+                <DropDownPicker
+                    open={opendayEndMM}
+                    value={dayEndMM}
+                    items={itemsEndMM}
+                    setOpen={setopendayEndMM}
+                    setValue={setdayEndMM}
+                    setItems={setItemsMM}
+                />
+                <Button
+                    mode="contained"
+                    onPress={() =>
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'SequenceSettings' }],
+                        })
+                    }
+                >
+                    Sumbit
+                </Button>
+
+
 
 
 
