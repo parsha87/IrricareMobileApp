@@ -88,17 +88,7 @@ export default function SequenceSetting({ navigation }) {
           CyclicSequence
         </Button>
 
-        <Button
-          mode="outlined"
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'CyclicSequenceScreen' }],
-            })
-          }
-        >
-          CyclicSequence
-        </Button>
+       
 
       </View>
 
