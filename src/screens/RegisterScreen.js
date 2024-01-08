@@ -18,7 +18,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 
 export default function RegisterScreen({ navigation }) {
-  const [name, setName] = useState({ value: '', error: '' })
+  const [FirstName, setFirstName] = useState({ value: '', error: '' })
   const [lastName, setlastName] = useState({ value: '', error: '' })
   const [mobileNo, setmobileNo] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
@@ -84,12 +84,12 @@ export default function RegisterScreen({ navigation }) {
 
 
         <TextInput
-          label="Name"
+          label="FirstName"
           returnKeyType="next"
-          value={name.value}
-          onChangeText={(text) => setName({ value: text, error: '' })}
-          error={!!name.error}
-          errorText={name.error}
+          value={FirstName.value}
+          onChangeText={(text) => setFirstName({ value: text, error: '' })}
+          error={!!FirstName.error}
+          errorText={FirstName.error}
         />
 
         <TextInput

@@ -3,6 +3,9 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Text } from 'react-native-paper'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { ScrollView } from 'react-native-gesture-handler'
 
 const CyclicSequenceScreen = ({ navigation }) => {
     const HHList = [
@@ -102,44 +105,48 @@ const CyclicSequenceScreen = ({ navigation }) => {
     const handleBack = () => {
         navigation.goBack();
     };
-    //dropdown daystart HH
     const [dayStartHH, setdayStartHH] = useState("")
-    const [opendaystartHH, setopendaystartHH] = useState(false);
-   // const [itemsHH, setItemsHH] = useState(HHList);
+    const [opendayStartHH, setopendaystartHH] = useState(false);
+    const [itemsHH, setItemsHH] = useState(HHList);
     // //dropdown daystart MM
     const [dayStartMM, setdayStartMM] = useState("")
     const [opendaystartMM, setopendaystartMM] = useState(false);
-   // const [ItemsMM, setItemsMM] = useState(MMList);
-   //dropdrown dayEndHH
-   const [dayEndHH, setdayEndHH] = useState("")
-   const [openEndHH, setopenEndHH] = useState(false);
-   const [itemsendHH, setitemsendHH] = useState(HHList);
-   //dropdown dayEnd MM
-   const [dayEndMM, setdayEndMM] = useState("")
-   const [opendayEndMM, setopendayEndMM] = useState(false);
-   const [itemsEndMM, setItemsEndMM] = useState(MMList);
-   //dropdown Interval HH
-   //const [intervalHH, setintervalHH] = useState("")
-  // const [openintervalHH, setintervalHH] = useState(false);
-   const [itemsHH, setItemsHH] = useState(HHList);
-//dropdown Interval MM
-//const [intervalMM, setintervalMM] = useState("")
-   //const [openintervalMM, setintervalMM] = useState(false);
-   const [itemsMM, setItemsMM] = useState(HHList);
+    const [ItemsMM, setItemsMM] = useState(MMList);
+    //dropdrown dayEndHH
+    const [dayEndHH, setdayEndHH] = useState("")
+    const [openEndHH, setopenEndHH] = useState(false);
+    const [itemsendHH, setitemsendHH] = useState(HHList);
+    //
+    const [dayEndMM, setdayEndMM] = useState("")
+    const [opendayEndMM, setopendayEndMM] = useState(false);
+    const [itemsEndMM, setItemsEndMM] = useState(MMList);
+    //dropdown Interval HH
+    const [intervalHH, setintervalHH] = useState("")
+     const [openintervalHH, setopenintervalHH] = useState(false);
+    const [itemsintervalHH, setItemsintervalHH] = useState(MMList);
+    //dropdown Interval MM
+    const [intervalMM, setintervalMM] = useState("")
+    const [openintervalMM, setopenintervalMM] = useState(false);
+    const [itemsintervalMM, setitemsintervalMM] = useState(MMList);
 
     const [WeekdaysString, setWeekdaysString] = useState({ value: '', error: '' })
     const [ValveNo, setValveNo] = useState({ value: '', error: '' })
    
+
     const [ValveDuration, setValveDuration] = useState({ value: '', error: '' })
     const [FO_TimeHH, setFO_TimeHH] = useState({ value: '', error: '' })
     const [StartTime_Min, setStartTime_Min] = useState({ value: '', error: '' })
     const [EndTime_Min, setEndTime_Min] = useState({ value: '', error: '' })
     const [Usermobile_IMEINo, setUsermobile_IMEINo] = useState({ value: '', error: '' })
-   
+    const [StartTime_HH, setStartTime_HH] = useState({ value: '', error: '' })
+    const [EndTime_HH, setEndTime_HH] = useState({ value: '', error: '' })
+    const [Interval, setInterval] = useState({ value: '', error: '' })
+
+
     return (
 
-
-        <View>
+<ScrollView>
+    <View>
             <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                 <TouchableOpacity onPress={handleBack}>
                     <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
@@ -174,17 +181,18 @@ const CyclicSequenceScreen = ({ navigation }) => {
                     autoCapitalize="none"
                 />
                 <TextInput
-                label="StartTime_HH"
-                returnKeyType="done"
-                value={StartTime_HH.value}
-                onChangeText={(text) => setStartTime_HH({ value: text, error: '' })}
-                error={!!StartTime_HH.error}
-                errorText={StartTime_HH.error}
+                    label="StartTime_HH"
+                    returnKeyType="done"
+                    value={StartTime_HH.value}
+                    onChangeText={(text) => setStartTime_HH({ value: text, error: '' })}
+                    error={!!StartTime_HH.error}
+                    errorText={StartTime_HH.error}
 
-            />
-             {/* Day Start HH */}
-             <DropDownPicker
-                    open={opendaystartHH}
+                />
+
+                {/* Day Start HH */}
+                <DropDownPicker
+                    open={opendayStartHH}
                     value={dayStartHH}
                     items={itemsHH}
                     setOpen={setopendaystartHH}
@@ -192,16 +200,16 @@ const CyclicSequenceScreen = ({ navigation }) => {
                     setItems={setItemsHH}
                 />
 
-                <DropDownPicker
+                 <DropDownPicker
                     open={opendaystartMM}
                     value={dayStartMM}
-                    items={itemsStartMM}
+                    items={itemsHH}
                     setOpen={setopendaystartMM}
-                    setValue={setdayStartMM}
+                    setValue={ setopendaystartMM}
                     setItems={setItemsMM}
 
-                />
-            <TextInput
+                /> 
+                 <TextInput
                 label="EndTime_HH"
                 returnKeyType="done"
                 value={EndTime_HH.value}
@@ -209,8 +217,8 @@ const CyclicSequenceScreen = ({ navigation }) => {
                 error={!!EndTime_HH.error}
                 errorText={EndTime_HH.error}
 
-            />
-            <DropDownPicker
+            /> 
+                 <DropDownPicker
                     open={openEndHH}
                     value={dayEndHH}
                     items={itemsHH}
@@ -225,8 +233,8 @@ const CyclicSequenceScreen = ({ navigation }) => {
                     setOpen={setopendayEndMM}
                     setValue={setdayEndMM}
                     setItems={setItemsMM}
-                />
-            <TextInput
+                /> 
+                 <TextInput
                 label=" Interval"
                 returnKeyType="done"
                 value={Interval.value}
@@ -234,11 +242,11 @@ const CyclicSequenceScreen = ({ navigation }) => {
                 error={!!Interval.error}
                 errorText={Interval.error}
 
-            />
-            <DropDownPicker
+            /> 
+                <DropDownPicker
                     open={openintervalHH}
                     value={intervalHH}
-                    items={intervalHH}
+                    items={itemsintervalHH}
                     setOpen={setintervalHH}
                     setValue={setintervalHH}
                     setItems={setItemsHH}
@@ -252,62 +260,62 @@ const CyclicSequenceScreen = ({ navigation }) => {
                     setValue={setintervalMM}
                     setItems={setItemsMM}
 
+                /> 
+                <TextInput
+                    label="WeekdaysString"
+                    returnKeyType="done"
+                    value={WeekdaysString.value}
+                    onChangeText={(text) => setWeekdaysString({ value: text, error: '' })}
+                    error={!!WeekdaysString.error}
+                    errorText={WeekdaysString.error}
+
                 />
-            <TextInput
-                label="WeekdaysString"
-                returnKeyType="done"
-                value={WeekdaysString.value}
-                onChangeText={(text) => setWeekdaysString({ value: text, error: '' })}
-                error={!!WeekdaysString.error}
-                errorText={WeekdaysString.error}
+                <TextInput
+                    label="ValveNo"
+                    returnKeyType="done"
+                    value={ValveNo.value}
+                    onChangeText={(text) => setValveNo({ value: text, error: '' })}
+                    error={!!ValveNo.error}
+                    errorText={ValveNo.error}
 
-            />
-            <TextInput
-                label="ValveNo"
-                returnKeyType="done"
-                value={ValveNo.value}
-                onChangeText={(text) => setValveNo({ value: text, error: '' })}
-                error={!!ValveNo.error}
-                errorText={ValveNo.error}
+                />
+                <TextInput
+                    label="ValveDuration"
+                    returnKeyType="done"
+                    value={ValveDuration.value}
+                    onChangeText={(text) => setValveDuration({ value: text, error: '' })}
+                    error={!!ValveDuration.error}
+                    errorText={ValveDuration.error}
 
-            />
-            <TextInput
-                label="ValveDuration"
-                returnKeyType="done"
-                value={ValveDuration.value}
-                onChangeText={(text) => setValveDuration({ value: text, error: '' })}
-                error={!!ValveDuration.error}
-                errorText={ValveDuration.error}
+                />
+                <TextInput
+                    label="StartTime_Min"
+                    returnKeyType="done"
+                    value={StartTime_Min.value}
+                    onChangeText={(text) => setStartTime_Min({ value: text, error: '' })}
+                    error={!!StartTime_Min.error}
+                    errorText={StartTime_Min.error}
 
-            />
-            <TextInput
-                label="StartTime_Min"
-                returnKeyType="done"
-                value={StartTime_Min.value}
-                onChangeText={(text) => setStartTime_Min({ value: text, error: '' })}
-                error={!!StartTime_Min.error}
-                errorText={StartTime_Min.error}
+                />
+                <TextInput
+                    label="EndTime_Min"
+                    returnKeyType="done"
+                    value={EndTime_Min.value}
+                    onChangeText={(text) => setEndTime_Min({ value: text, error: '' })}
+                    error={!!EndTime_Min.error}
+                    errorText={EndTime_Min.error}
 
-            />
-            <TextInput
-                label="EndTime_Min"
-                returnKeyType="done"
-                value={EndTime_Min.value}
-                onChangeText={(text) => setEndTime_Min({ value: text, error: '' })}
-                error={!!EndTime_Min.error}
-                errorText={EndTime_Min.error}
+                />
+                <TextInput
+                    label="Usermobile_IMEINo"
+                    returnKeyType="done"
+                    value={Usermobile_IMEINo.value}
+                    onChangeText={(text) => setUsermobile_IMEINo({ value: text, error: '' })}
+                    error={!!Usermobile_IMEINo.error}
+                    errorText={Usermobile_IMEINo.error}
 
-            />
-            <TextInput
-                label="Usermobile_IMEINo"
-                returnKeyType="done"
-                value={Usermobile_IMEINo.value}
-                onChangeText={(text) => setUsermobile_IMEINo({ value: text, error: '' })}
-                error={!!Usermobile_IMEINo.error}
-                errorText={Usermobile_IMEINo.error}
+                />
 
-            />
-            
                 <Button
                     mode="contained"
                     onPress={() =>
@@ -319,19 +327,12 @@ const CyclicSequenceScreen = ({ navigation }) => {
                 >
                     Sumbit
                 </Button>
-                <Button
-                    mode="contained"
-                    onPress={() =>
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'SequenceSettings' }],
-                        })
-                    }
-                >
-                    Back
-                </Button>
+                
             </View>
         </View>
+
+</ScrollView>
+    
     );
 }
 
