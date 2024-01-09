@@ -4,10 +4,38 @@ import { Text } from 'react-native-paper'
 import Button from '../components/Button'
 import Background from '../components/Background'
 
+
 export default function SequenceSetting({ navigation }) {
-    return (
-      <Background>
-           <Button
+  const [email, setEmail] = useState("")
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
+  return (
+
+
+
+
+
+
+    <View>
+      <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+        <TouchableOpacity onPress={handleBack}>
+          <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
+        </TouchableOpacity>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>SequenceSettings</Text>
+      </View>
+
+
+
+
+
+      <View style={styles.container}>
+
+
+
+        <Button
           mode="outlined"
           onPress={() =>
             navigation.reset({
@@ -18,7 +46,13 @@ export default function SequenceSetting({ navigation }) {
         >
           Back
         </Button>
-      
+
+
+
+
+
+
+
         <Button
           mode="outlined"
           onPress={() =>
@@ -30,7 +64,7 @@ export default function SequenceSetting({ navigation }) {
         >
           IrrigationSequence
         </Button>
-  
+
         <Button
           mode="outlined"
           onPress={() =>
@@ -53,17 +87,21 @@ export default function SequenceSetting({ navigation }) {
         >
           CyclicSequence
         </Button>
-  
-        
-  
-      </Background>
-    )
-  
-  }
-  const styles = StyleSheet.create({
-    container: {
-      flex: 3,
-      padding: 20,
-      height: 50,
-    },
-  });
+
+       
+
+      </View>
+
+    </View>
+
+
+
+  )
+
+}
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    width: '100%',
+  },
+});

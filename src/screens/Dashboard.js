@@ -4,7 +4,7 @@ import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Paragraph from '../components/Paragraph'
 import Button from '../components/Button'
-import {  StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 export default function Dashboard({ navigation }) {
@@ -19,72 +19,74 @@ export default function Dashboard({ navigation }) {
         </TouchableOpacity>
         <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Dashboard</Text>
       </View>
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'StartScreen' }],
-          })
-        }
-      >
-        Logout
-      </Button>
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'ConfigurationTimeScreen' }],
-          })
-        }
-      >
-        Configuration Time Screen
-      </Button>
 
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'ConfigurationSettings' }],
-          })
-        }
-      >
-        Configuration settings
-      </Button>
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'ValveSettingsScreen' }],
-          })
-        }
-      >
-        Valve setting
-      </Button>
+      <View style={styles.container}>
 
-      <Button
-        mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'SequenceSettings' }],
-          })
-        }
-      >
-        SequenceSettingsScreen
-      </Button>
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'StartScreen' }],
+            })
+          }
+        >
+          Logout
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'ConfigurationTimeScreen' }],
+            })
+          }
+        >
+          Controller time setting
+        </Button>
 
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'ConfigurationSettings' }],
+            })
+          }
+        >
+           Max Filter & Max Valve Settings
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'ValveSettingsScreen' }],
+            })
+          }
+        >
+          Valve setting
+        </Button>
+
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'SequenceSettings' }],
+            })
+          }
+        >
+          SequenceSettingsScreen
+        </Button>
+      </View>
     </View>
   )
 
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
     padding: 20,
-    height: 50,
+    width: '100%',
   },
 });
