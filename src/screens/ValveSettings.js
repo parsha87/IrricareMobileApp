@@ -42,7 +42,7 @@ const ValveSettingsScreen = ({ navigation }) => {
                 <View style={styles.container}>
 
                     <Button
-                        mode="outlined"
+                        mode="contained"
                         onPress={() =>
                             navigation.reset({
                                 index: 0,

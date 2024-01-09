@@ -36,7 +36,7 @@ export default function SequenceSetting({ navigation }) {
 
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -54,7 +54,7 @@ export default function SequenceSetting({ navigation }) {
 
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -66,7 +66,7 @@ export default function SequenceSetting({ navigation }) {
         </Button>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -77,7 +77,7 @@ export default function SequenceSetting({ navigation }) {
           FilterSequence
         </Button>
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,

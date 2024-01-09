@@ -23,7 +23,7 @@ export default function Dashboard({ navigation }) {
       <View style={styles.container}>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -34,7 +34,7 @@ export default function Dashboard({ navigation }) {
           Logout
         </Button>
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -46,7 +46,7 @@ export default function Dashboard({ navigation }) {
         </Button>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -57,7 +57,7 @@ export default function Dashboard({ navigation }) {
            Max Filter & Max Valve Settings
         </Button>
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -69,7 +69,7 @@ export default function Dashboard({ navigation }) {
         </Button>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigation.reset({
               index: 0,

@@ -46,9 +46,9 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <Background>
-      <BackButton goBack={navigation.goBack} />
+      {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Header>Welcome back.</Header>
+      <Header>Welcome.</Header>
       <TextInput
         label="Email"
         returnKeyType="next"
@@ -70,14 +70,15 @@ export default function LoginScreen({ navigation }) {
         errorText={password.error}
         secureTextEntry
       />
-      <DropDownPicker
-        open={opencontrollerNo}
-        value={controllerNo}
-        items={controllerItems}
-        setOpen={setopencontrollerNo}
-        setValue={setcontrollerNo}
-        setItems={setControllerItems}
-      />
+      <View style={styles.dropdownStyle}>
+        <DropDownPicker
+          open={opencontrollerNo}
+          value={controllerNo}
+          items={controllerItems}
+          setOpen={setopencontrollerNo}
+          setValue={setcontrollerNo}
+          setItems={setControllerItems}
+        /></View>
 
       <View style={styles.forgotPassword}>
         <TouchableOpacity
@@ -104,6 +105,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-end',
     marginBottom: 24,
+  },
+  dropdownStyle: {
+    marginTop: 15
   },
   row: {
     flexDirection: 'row',

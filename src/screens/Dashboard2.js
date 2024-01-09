@@ -7,6 +7,7 @@ import Button from '../components/Button'
 import {  StyleSheet } from 'react-native'
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { theme } from '../core/theme'
 export default function Dashboard({ navigation }) {
   const handleBack = () => {
     navigation.goBack();
@@ -20,7 +21,7 @@ export default function Dashboard({ navigation }) {
         <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Dashboard</Text>
       </View>
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -31,7 +32,7 @@ export default function Dashboard({ navigation }) {
         Logout
       </Button>
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -43,7 +44,7 @@ export default function Dashboard({ navigation }) {
       </Button>
 
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -54,7 +55,7 @@ export default function Dashboard({ navigation }) {
         Configuration settings
       </Button>
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -66,7 +67,7 @@ export default function Dashboard({ navigation }) {
       </Button>
 
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -86,4 +87,6 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
   },
-});
+  
+})
+

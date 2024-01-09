@@ -20,7 +20,7 @@ export default function Dashboard1({ navigation }) {
         <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Dashboard1</Text>
       </View>
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -31,7 +31,7 @@ export default function Dashboard1({ navigation }) {
         Logout
       </Button>
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -43,7 +43,7 @@ export default function Dashboard1({ navigation }) {
       </Button>
 
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -54,7 +54,7 @@ export default function Dashboard1({ navigation }) {
         Configuration settings
       </Button>
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,
@@ -66,7 +66,7 @@ export default function Dashboard1({ navigation }) {
       </Button>
 
       <Button
-        mode="outlined"
+        mode="contained"
         onPress={() =>
           navigation.reset({
             index: 0,

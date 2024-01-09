@@ -155,7 +155,7 @@ const CyclicSequenceScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <Button
-                    mode="outlined"
+                    mode="contained"
                     onPress={() =>
                         navigation.reset({
                             index: 0,

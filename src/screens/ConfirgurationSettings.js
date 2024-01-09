@@ -27,7 +27,7 @@ const ConfigurationSettingsScreen = ({ navigation }) => {
             <View style={styles.container}>
 
                 <Button
-                    mode="text"
+                    mode="contained"
                     onPress={() =>
                         navigation.reset({
                             index: 0,

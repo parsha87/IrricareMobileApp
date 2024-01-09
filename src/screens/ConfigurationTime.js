@@ -168,7 +168,7 @@ const ConfigurationTimeScreen = ({ navigation }) => {
                     <Text>ConfigurationTimeScreen</Text>
 
                     <Button
-                        mode="outlined"
+                        mode="contained"
                         onPress={() =>
                             navigation.reset({
                                 index: 0,
@@ -180,8 +180,8 @@ const ConfigurationTimeScreen = ({ navigation }) => {
                     </Button>
 
                 </View>
-                <Button mode="outlined" onPress={showDatepicker} title="Show date picker!" >Date</Button>
-                <Button mode="outlined" onPress={showTimepicker} title="Show time picker!" >Time</Button>
+                <Button mode="contained" onPress={showDatepicker} title="Show date picker!" >Date</Button>
+                <Button mode="contained" onPress={showTimepicker} title="Show time picker!" >Time</Button>
 
                 <Text>selected: {date.toLocaleString()}</Text>
                 <TextInput
