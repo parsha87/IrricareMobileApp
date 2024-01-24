@@ -41,7 +41,7 @@ const MainpageScreen = ({ navigation }) => {
                         })
                     }
                 >
-                    Dashboard
+                    Configuration settings
                 </Button>
             </View>
         </View>
