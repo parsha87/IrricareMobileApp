@@ -5,20 +5,23 @@ import Button from '../components/Button'
 
 const MainpageScreen = ({ navigation }) => {
 
-    const handleBack = () => {
-        navigation.goBack();
-    };
+    // const handleBack = () => {
+    //     navigation.reset({
+    //         index: 0,
+    //         routes: [{ name: 'SequenceSettings' }],
+    //     })
+    // };
     return (
 
         <View>
-            <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-                <TouchableOpacity onPress={handleBack}>
+            <View style={{ flexDirection: 'row', backgroundColor: '#276221', padding: 16 }}>
+                {/* <TouchableOpacity onPress={handleBack}>
                     <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-                </TouchableOpacity>
-                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Sequence2Screen</Text>
+                </TouchableOpacity> */}
+                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>IrriSprit</Text>
             </View>
             <View style={styles.container}>
-                <Button
+                {/* <Button
                     mode="outlined"
                     onPress={() =>
                         navigation.reset({
@@ -28,7 +31,7 @@ const MainpageScreen = ({ navigation }) => {
                     }
                 >
                     Back
-                </Button>
+                </Button> */}
                 <Button
                     mode="outlined"
                     onPress={() =>
