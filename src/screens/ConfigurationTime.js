@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/FontAwesome6';
+import { AxiosContext } from '../context/AxiosContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //reactnavigation.org - datepicker
 //https://github.com/react-native-datetimepicker/datetimepicker#usage
 const ConfigurationTimeScreen = ({ navigation }) => {
+    const { authAxios } = useContext(AxiosContext);
 
     const HHList = [
         { label: '1', value: '1' },
@@ -100,19 +104,38 @@ const ConfigurationTimeScreen = ({ navigation }) => {
         { label: '60', value: '60' },
 
     ]
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [controllerTimeObj, setControllerTimeObj] = useState({
+        id: 0,
+        currentDateServer: 0,
+        currentDayServer: 0,
+        currentMonthServer: 0,
+        currentYearServer: 0,
+        cuttentTimeServerHh: 0,
+        dayStartTimeHh: 0,
+        dayEndTimeHh: 0,
+        userId: "",
+        controllerId: 0,
+        controllerNo: "",
+        currentTimeServerMin: 0,
+        dayStartTimeMin: 0,
+        dayEndTimeMin: 0,
+        usermobileImeino: ""
+    }
+    )
+
+    const [date, setDate] = useState(new Date());
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    const [show, setShow] = useState(false);
+    const [showTime, setShowTime] = useState(false);
+
 
     const [currentDay, setcurrentDay] = useState({ value: '', error: '' })
     const [dayStart, setdayStart] = useState({ value: '', error: '' })
-
-
     const [dayEnd, setdayEnd] = useState({ value: '', error: '' })
-
-
     const [dayStartHH, setdayStartHH] = useState("")
     const [opendaystartHH, setopendaystartHH] = useState(false);
     const [itemsHH, setItemsHH] = useState(HHList);
-    // //dropdown daystart MM
     const [dayStartMM, setdayStartMM] = useState("")
     const [opendaystartMM, setopendaystartMM] = useState(false);
     const [ItemsMM, setItemsMM] = useState(MMList);
@@ -124,162 +147,151 @@ const ConfigurationTimeScreen = ({ navigation }) => {
     const [dayEndMM, setdayEndMM] = useState("")
     const [opendayEndMM, setopendayEndMM] = useState(false);
     const [itemsEndMM, setItemsEndMM] = useState(MMList);
+
+    const handleBack = () => {
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Dashboard' }],
+        })
+    };
+    const handleSubmit = () => {
+        // Handle form submission logic here
+        console.log('Form submitted with value:', inputValue);
+    };
+
     const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
         setDate(currentDate);
     };
 
-    const showMode = (currentMode) => {
-        DateTimePickerAndroid.open({
-            value: date,
-            onChange,
-            mode: currentMode,
-            is24Hour: true,
-        });
+    const onChangeTime = (event, selectedTime) => {
+        const currentTime = selectedTime || currentTime;
+        setShowTime(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
+        setCurrentTime(currentTime);
     };
 
-    const showDatepicker = () => {
-        showMode('date');
-    };
-
-    const showTimepicker = () => {
-        showMode('time');
-    };
-    const handleBack = () => {
-        navigation.goBack();
+    const showPicker = () => {
+        setShow(true);
     };
 
 
+    const showTimePicker = () => {
+        setShowTime(true);
+    };
+
+
+    useEffect(async () => {
+        const value = await AsyncStorage.getItem('selectedController');
+        let jsonVal = JSON.parse(value);
+        const id = jsonVal.value
+        const response = await authAxios.get('ControllerTimeSetting/ControllerTimeSettingByControllerId/' + id);
+        console.log(response.data);
+        Alert.alert('got time');
+    }, []);
 
 
     return (
+
         <SafeAreaView>
 
             <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                 <TouchableOpacity onPress={handleBack}>
                     <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                 </TouchableOpacity>
-                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>ConfigurationSettingsScreen</Text>
+                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Configuration Time Setting</Text>
             </View>
 
             <View style={styles.container}>
-
-                <View>
-                    <Text>ConfigurationTimeScreen</Text>
-
-                    <Button
-                        mode="contained"
-                        onPress={() =>
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'Dashboard' }],
-                            })
-                        }
-                    >
-                        Back
-                    </Button>
-
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.formGroup}>
+                            <Text style={styles.label}>Server Date:
+                            </Text>
+                            <TextInput
+                                label="current Day"
+                                returnKeyType="done"
+                                value={date}
+                                onChangeText={(text) => setDate(text)}
+                            />
+                        </View>
+                    </View>
+                    <View >
+                        <Icon style={{ marginTop: 47, padding: 4 }} name="calendar-days" size={25} color="#007500" onPress={showPicker} />
+                    </View>
                 </View>
-                <Button mode="contained" onPress={showDatepicker} title="Show date picker!" >Date</Button>
-                <Button mode="contained" onPress={showTimepicker} title="Show time picker!" >Time</Button>
+                {show && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={date}
+                        mode="datetime" // Options: 'date', 'time', 'datetime'
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChange}
+                    />
+                )}
 
-                <Text>selected: {date.toLocaleString()}</Text>
-                <TextInput
-                    label="current Day"
-                    returnKeyType="done"
-                    value={currentDay.value}
-                    onChangeText={(text) => setcurrentDay({ value: text, error: '' })}
-                    error={!!currentDay.error}
-                    errorText={currentDay.error}
-
-                />
-                {/* Day Start */}
-                {/* <TextInput
-                    label="dayStart"
-                    returnKeyType="done"
-                    value={dayStart.value}
-                    onChangeText={(text) => setdayStart({ value: text, error: '' })}
-                    error={!!dayStart.error}
-                    errorText={dayStart.error}
-
-                /> */}
-                {/* Day Start HH */}
-                <DropDownPicker
-                    open={opendaystartHH}
-                    value={dayStartHH}
-                    items={itemsHH}
-                    setOpen={setopendaystartHH}
-                    setValue={setdayStartHH}
-                    setItems={setItemsHH}
-                />
-
-                <DropDownPicker
-                    open={opendaystartMM}
-                    value={dayStartMM}
-                    items={itemsEndMM}
-                    setOpen={setopendaystartMM}
-                    setValue={setdayStartMM}
-                    setItems={setItemsMM}
-
-                />
-                {/* <TextInput
-                    label="dayEnd"
-                    returnKeyType="done"
-                    value={dayEnd.value}
-                    onChangeText={(text) => setdayEnd({ value: text, error: '' })}
-                    error={!!dayEnd.error}
-                    errorText={dayEnd.error}
-
-                /> */}
-                {/* Day End HH */}
-                <DropDownPicker
-                    open={openEndHH}
-                    value={dayEndHH}
-                    items={itemsHH}
-                    setOpen={setopenEndHH}
-                    setValue={setdayEndHH}
-                    setItems={setItemsHH}
-                />
-                <DropDownPicker
-                    open={opendayEndMM}
-                    value={dayEndMM}
-                    items={itemsEndMM}
-                    setOpen={setopendayEndMM}
-                    setValue={setdayEndMM}
-                    setItems={setItemsMM}
-                />
-                <Button
-                    mode="contained"
-                    onPress={() =>
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'SequenceSettings' }],
-                        })
-                    }
-                >
-                    Sumbit
-                </Button>
-
-
-
-
-
-
-
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 2 }}>
+                        <View style={styles.formGroup}>
+                            <Text style={styles.label}>Server Time:
+                            </Text>
+                            <TextInput
+                                label="Current Time"
+                                returnKeyType="done"
+                                value={currentTime}
+                                onChangeText={(text) => onChangeTime(text)}
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showTimePicker} />
+                    </View>
+                </View>
+                {showTime && (
+                    <DateTimePicker
+                        testID="dateTimePickerTime"
+                        value={currentTime}
+                        mode="time" // Options: 'date', 'time', 'datetime'
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeTime}
+                    />
+                )}
             </View>
-
-
         </SafeAreaView>
-
 
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    // container: {
 
+    //     padding: 20,
+    //     width: '100%',
+    // },
+    container: {
+        //flex: 1,
+        justifyContent: 'center',
         padding: 20,
-        width: '100%',
+    },
+    formGroup: {
+        marginBottom: 1,
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 0,
+    },
+    input: {
+        padding: 2,
+    },
+    dateTimePicker: {
+        backgroundColor: 'white',
+        borderRadius: 5,
+        borderColor: '#C5C5C5',
+        borderWidth: 1,
+        marginVertical: 10,
+        height: 43,
     },
 })
 export default ConfigurationTimeScreen;

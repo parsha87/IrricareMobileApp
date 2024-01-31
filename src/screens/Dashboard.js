@@ -1,13 +1,56 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Paragraph from '../components/Paragraph'
 import Button from '../components/Button'
 import { StyleSheet } from 'react-native'
-import { View, Text, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ImageBackground, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { AxiosContext } from '../context/AxiosContext';
+import { getItem } from '../Models/model'
+import { AuthContext } from '../context/AuthContext';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 export default function Dashboard({ navigation }) {
+  const { authAxios } = useContext(AxiosContext);
+  const authContext = useContext(AuthContext);
+  const items = [
+    { label: 'Option 1', value: 'option1' },
+    { label: 'Option 2', value: 'option2' },
+    { label: 'Option 3', value: 'option3' },
+  ];
+  const [selectedValue, setSelectedValue] = useState("");
+  const [open, setOpen] = useState(false);
+  const [itemsController, setItemsController] = useState([]);
+
+
+  useEffect(() => {
+    fetchMyAPI()
+  }, []);
+
+
+
+  const fetchMyAPI = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      let jsonVal = JSON.parse(value);
+      const response = await authAxios.get('ControllerUser/' + jsonVal.userId);
+      console.log(response.data);
+      let items = response.data.map(s => ({ label: s.ControllerNo, value: s.ControllerId }))
+      setItemsController(items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const changeSelectOptionHandler = async (value) => {
+    await AsyncStorage.setItem('selectedController', JSON.stringify(value));
+  };
+
   const handleBack = () => {
     navigation.reset({
       index: 0,
@@ -16,7 +59,9 @@ export default function Dashboard({ navigation }) {
   };
   return (
     <ImageBackground source={require("../assets/bg2.jpg")} resizeMode="cover" style={styles.backgroundImage}>
+
       <View>
+
         <View style={{ flexDirection: 'row', backgroundColor: '#276221', padding: 16 }}>
 
           <View style={{ flex: 1 }}>
@@ -44,6 +89,28 @@ export default function Dashboard({ navigation }) {
           </View>
 
 
+
+
+        </View>
+        <View>
+          <Text style={{marginLeft:8}}>Select Controller</Text>
+
+          <DropDownPicker
+            open={open}
+            value={selectedValue}
+            items={itemsController}
+            setOpen={setOpen}
+            setValue={setSelectedValue}
+            setItems={setItemsController}
+            containerStyle={{ padding: 8 }}
+            style={{ backgroundColor: '#fafafa' }}
+            dropDownContainerStyle={{ marginLeft: 8 }}
+            listItemLabelStyle={{ marginLeft: 10 }}
+            itemStyle={{
+              justifyContent: 'flex-start', marginLeft: 8
+            }}
+            onSelectItem={changeSelectOptionHandler}
+          />
 
 
         </View>
@@ -138,11 +205,6 @@ export default function Dashboard({ navigation }) {
           Logout
         </Button> */}
 
-
-
-
-
-
         </View>
       </View>
     </ImageBackground>
@@ -175,5 +237,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18,
     textAlign: 'center'
-  }
+  },
+
 });

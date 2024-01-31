@@ -24,20 +24,6 @@ export default function LoginScreen({ navigation }) {
   const baseUrl = "http://121.242.3.79:9402/api/";
 
 
-  const onLoginPressed = () => {
-    const emailError = emailValidator(userName.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
-    }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'MainpageScreen' }],
-    })
-  }
-
   const onLogin = async () => {
     const emailError = emailValidator(userName.value)
     const passwordError = passwordValidator(password.value)
@@ -56,11 +42,19 @@ export default function LoginScreen({ navigation }) {
       }
 
       const response = await publicAxios.post('/Auth', payload);
-
+      // Save data
       const { authToken, refreshToken } = response.data;
       let authTokenStr = response.data.authToken;
-      //await AsyncStorage.setItem('user', JSON.stringify(response.data));
-
+      console.log(authTokenStr);
+      try {
+        //console.log("saving" + JSON.stringify(response.data))
+        await AsyncStorage.setItem('user', JSON.stringify(response.data));
+        await AsyncStorage.setItem('token', authTokenStr);
+        console.log("Success saved")
+      } catch (error) {
+        console.log("SetItem error ", error)
+        return null;
+      }
 
       authContext.setAuthState({
         authTokenStr,
@@ -68,13 +62,13 @@ export default function LoginScreen({ navigation }) {
         authenticated: true,
       });
 
-      // await Keychain.setGenericPassword(
-      //   'token',
-      //   JSON.stringify({
-      //     authTokenStr,
-      //     authTokenStr, //refreshtoken
-      //   }),
-      // );
+      await Keychain.setGenericPassword(
+        'token',
+        JSON.stringify({
+          authTokenStr,
+          authTokenStr, //refreshtoken
+        }),
+      );
       if (authTokenStr != "") {
         navigation.reset({
           index: 0,
@@ -85,7 +79,7 @@ export default function LoginScreen({ navigation }) {
         Alert.alert('Login Failed');
       }
     } catch (error) {
-      Alert.alert('Login Failed', error);
+      Alert.alert('Login Failed', JSON.stringify(error));
     }
 
   };
@@ -95,48 +89,48 @@ export default function LoginScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       {/* <ImageBackground source={require("../assets/bg2.jpg")} resizeMode="cover" style={styles.backgroundImage}> */}
 
-        <Background>
-          {/* <BackButton goBack={navigation.goBack} /> */}
-          <Logo />
-          <Header>Welcome.</Header>
-          <TextInput
-            label="Email"
-            returnKeyType="next"
-            value={userName.value}
-            onChangeText={(text) => setEmail({ value: text, error: '' })}
-            error={!!userName.error}
-            errorText={userName.error}
-            autoCapitalize="none"
-            autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          />
-          <TextInput
-            label="Password"
-            returnKeyType="done"
-            value={password.value}
-            onChangeText={(text) => setPassword({ value: text, error: '' })}
-            error={!!password.error}
-            errorText={password.error}
-            secureTextEntry
-          />
-          <View style={styles.forgotPassword}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ResetPasswordScreen')}
-            >
-              <Text style={styles.forgot}>Forgot your password?</Text>
-            </TouchableOpacity>
-          </View>
-          <Button mode="outlined" onPress={onLogin}>
-            Login
-          </Button>
-          <View style={styles.row}>
-            <Text>Don’t have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
-              <Text style={styles.link}>Sign up</Text>
-            </TouchableOpacity>
-          </View>
-        </Background>
+      <Background>
+        {/* <BackButton goBack={navigation.goBack} /> */}
+        <Logo />
+        <Header>Welcome.</Header>
+        <TextInput
+          label="Email"
+          returnKeyType="next"
+          value={userName.value}
+          onChangeText={(text) => setEmail({ value: text, error: '' })}
+          error={!!userName.error}
+          errorText={userName.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <TextInput
+          label="Password"
+          returnKeyType="done"
+          value={password.value}
+          onChangeText={(text) => setPassword({ value: text, error: '' })}
+          error={!!password.error}
+          errorText={password.error}
+          secureTextEntry
+        />
+        <View style={styles.forgotPassword}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ResetPasswordScreen')}
+          >
+            <Text style={styles.forgot}>Forgot your password?</Text>
+          </TouchableOpacity>
+        </View>
+        <Button mode="outlined" onPress={onLogin}>
+          Login
+        </Button>
+        <View style={styles.row}>
+          <Text>Don’t have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
+            <Text style={styles.link}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
+      </Background>
       {/* </ImageBackground> */}
     </SafeAreaView>
 

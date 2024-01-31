@@ -4,6 +4,7 @@ import { AuthContext } from './AuthContext';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import * as Keychain from 'react-native-keychain';
 import { API_BASE_URL } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AxiosContext = createContext();
 const { Provider } = AxiosContext;
@@ -19,82 +20,73 @@ const AxiosProvider = ({ children }) => {
         baseURL: API_BASE_URL,
     });
 
-    publicAxios.interceptors.request.use(
-        config => {
-            // if (!config.headers.Authorization) {
-            //     config.headers.Authorization = `Bearer ${authContext.getAccessToken()}`;
-            // }
-
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        },
-    );
-
     authAxios.interceptors.request.use(
-        config => {
-            if (!config.headers.Authorization) {
-                config.headers.Authorization = `Bearer ${authContext.getAccessToken()}`;
-            }
-
-            return config;
+        async config => {
+          if (!config.headers.Authorization) {
+            const value = await AsyncStorage.getItem('token');
+            console.log(`Bearer ${value}`)
+            config.headers.Authorization = `Bearer ${value}`;
+          }
+    
+          return config;
         },
         error => {
-            return Promise.reject(error);
+          return Promise.reject(error);
         },
-    );
+      );
+    
 
-    const refreshAuthLogic = failedRequest => {
+      const refreshAuthLogic = failedRequest => {
         const data = {
-            refreshToken: authContext.authState.refreshToken,
+          refreshToken: authContext.authState.refreshToken,
         };
-
+    
         const options = {
-            method: 'POST',
-            data,
-            url: API_BASE_URL + '/refreshToken',
+          method: 'POST',
+          data,
+          url: 'http://localhost:3000/api/refreshToken',
         };
-
+    
         return axios(options)
-            .then(async tokenRefreshResponse => {
-                failedRequest.response.config.headers.Authorization =
-                    'Bearer ' + tokenRefreshResponse.data.authToken;
-
-                authContext.setAuthState({
-                    ...authContext.authState,
-                    authToken: tokenRefreshResponse.data.authToken,
-                });
-
-                await Keychain.setGenericPassword(
-                    'token',
-                    JSON.stringify({
-                        authToken: tokenRefreshResponse.data.authToken,
-                        refreshToken: authContext.authState.refreshToken,
-                    }),
-                );
-
-                return Promise.resolve();
-            })
-            .catch(e => {
-                authContext.setAuthState({
-                    authToken: null,
-                    refreshToken: null,
-                });
+          .then(async tokenRefreshResponse => {
+            failedRequest.response.config.headers.Authorization =
+              'Bearer ' + tokenRefreshResponse.data.accessToken;
+    
+            authContext.setAuthState({
+              ...authContext.authState,
+              accessToken: tokenRefreshResponse.data.accessToken,
             });
-    };
-
-    createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
-
-    return (
+    
+            await Keychain.setGenericPassword(
+              'token',
+              JSON.stringify({
+                accessToken: tokenRefreshResponse.data.accessToken,
+                refreshToken: authContext.authState.refreshToken,
+              }),
+            );
+    
+            return Promise.resolve();
+          })
+          .catch(e => {
+            authContext.setAuthState({
+              accessToken: null,
+              refreshToken: null,
+            });
+          });
+      };
+    
+      createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
+    
+      return (
         <Provider
-            value={{
-                authAxios,
-                publicAxios,
-            }}>
-            {children}
+          value={{
+            authAxios,
+            publicAxios,
+          }}>
+          {children}
         </Provider>
-    );
-};
-
-export { AxiosContext, AxiosProvider };
+      );
+    };
+    
+    export {AxiosContext, AxiosProvider};
+    
