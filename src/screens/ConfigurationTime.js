@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert } from 'react-native'
+import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
 import { Text } from 'react-native-paper'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
@@ -8,161 +9,117 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
+import { convertTwoDigitYearToFourDigit, createDateFromTimeString } from '../Models/model'
+import { useNavigation } from '@react-navigation/native';
+import DeviceInfo from 'react-native-device-info';
 
 //reactnavigation.org - datepicker
 //https://github.com/react-native-datetimepicker/datetimepicker#usage
-const ConfigurationTimeScreen = ({ navigation }) => {
+const ConfigurationTimeScreen = ({ route }) => {
+    const navigation = useNavigation();
+
     const { authAxios } = useContext(AxiosContext);
+    const { selectedControllerId, selectedControllerName } = route.params;
 
-    const HHList = [
-        { label: '1', value: '1' },
-        { label: '2', value: '2' },
-        { label: '3', value: '3' },
-        { label: '4', value: '4' },
-        { label: '5', value: '5' },
-        { label: '6', value: '6' },
-        { label: '7', value: '7' },
-        { label: '8', value: '8' },
-        { label: '9', value: '9' },
-        { label: '10', value: '10' },
-        { label: '11', value: '11' },
-        { label: '12', value: '12' },
-        { label: '13', value: '13' },
-        { label: '14', value: '14' },
-        { label: '15', value: '15' },
-        { label: '16', value: '16' },
-        { label: '17', value: '17' },
-        { label: '18', value: '18' },
-        { label: '19', value: '19' },
-        { label: '20', value: '20' },
-        { label: '21', value: '21' },
-        { label: '22', value: '22' },
-        { label: '23', value: '23' },
-        { label: '24', value: '24' }
-    ]
-
-    const MMList = [
-        { label: '1', value: '1' },
-        { label: '2', value: '2' },
-        { label: '3', value: '3' },
-        { label: '4', value: '4' },
-        { label: '5', value: '5' },
-        { label: '6', value: '6' },
-        { label: '7', value: '7' },
-        { label: '8', value: '8' },
-        { label: '9', value: '9' },
-        { label: '10', value: '10' },
-        { label: '11', value: '11' },
-        { label: '12', value: '12' },
-        { label: '13', value: '13' },
-        { label: '14', value: '14' },
-        { label: '15', value: '15' },
-        { label: '16', value: '16' },
-        { label: '17', value: '17' },
-        { label: '18', value: '18' },
-        { label: '19', value: '19' },
-        { label: '20', value: '20' },
-        { label: '21', value: '21' },
-        { label: '22', value: '22' },
-        { label: '23', value: '23' },
-        { label: '24', value: '24' },
-        { label: '25', value: '25' },
-        { label: '26', value: '26' },
-        { label: '27', value: '27' },
-        { label: '28', value: '28' },
-        { label: '29', value: '29' },
-        { label: '30', value: '30' },
-        { label: '31', value: '31' },
-        { label: '32', value: '32' },
-        { label: '33', value: '33' },
-        { label: '34', value: '34' },
-        { label: '35', value: '35' },
-        { label: '36', value: '36' },
-        { label: '37', value: '37' },
-        { label: '38', value: '38' },
-        { label: '39', value: '39' },
-        { label: '40', value: '40' },
-        { label: '41', value: '41' },
-        { label: '42', value: '42' },
-        { label: '43', value: '43' },
-        { label: '44', value: '44' },
-        { label: '45', value: '45' },
-        { label: '46', value: '46' },
-        { label: '47', value: '47' },
-        { label: '48', value: '48' },
-        { label: '49', value: '49' },
-        { label: '50', value: '50' },
-        { label: '51', value: '51' },
-        { label: '52', value: '52' },
-        { label: '53', value: '53' },
-        { label: '54', value: '54' },
-        { label: '55', value: '55' },
-        { label: '56', value: '56' },
-        { label: '57', value: '57' },
-        { label: '58', value: '58' },
-        { label: '59', value: '59' },
-        { label: '60', value: '60' },
-
-    ]
     const [controllerTimeObj, setControllerTimeObj] = useState({
-        id: 0,
-        currentDateServer: 0,
-        currentDayServer: 0,
-        currentMonthServer: 0,
-        currentYearServer: 0,
-        cuttentTimeServerHh: 0,
-        dayStartTimeHh: 0,
-        dayEndTimeHh: 0,
-        userId: "",
-        controllerId: 0,
-        controllerNo: "",
-        currentTimeServerMin: 0,
-        dayStartTimeMin: 0,
-        dayEndTimeMin: 0,
-        usermobileImeino: ""
+        Id: 0,
+        CurrentDateServer: '',
+        CurrentDayServer: 0,
+        CurrentMonthServer: 0,
+        CurrentYearServer: 0,
+        CuttentTimeServerHh: 0,
+        CurrentTimeServerMin: 0,
+        DayStartTimeHh: 0,
+        DayStartTimeMin: 0,
+        DayEndTimeHh: 0,
+        DayEndTimeMin: 0,
+        UserId: "",
+        ControllerId: 0,
+        ControllerNo: "",
+        UsermobileImeino: ""
     }
     )
+    const [isAdd, setIsAdd] = useState(true);
 
+    //Server Current date
     const [date, setDate] = useState(new Date());
+    //Server Current Time
     const [currentTime, setCurrentTime] = useState(new Date());
+    //Day Start Time
+    const [dayStartTime, setDayStarttime] = useState(new Date());
+    //Day End Time
+    const [dayEndTime, setDayEndtime] = useState(new Date());
 
+    //Show Date picker
     const [show, setShow] = useState(false);
+    //Show Time Picker
     const [showTime, setShowTime] = useState(false);
-
-
-    const [currentDay, setcurrentDay] = useState({ value: '', error: '' })
-    const [dayStart, setdayStart] = useState({ value: '', error: '' })
-    const [dayEnd, setdayEnd] = useState({ value: '', error: '' })
-    const [dayStartHH, setdayStartHH] = useState("")
-    const [opendaystartHH, setopendaystartHH] = useState(false);
-    const [itemsHH, setItemsHH] = useState(HHList);
-    const [dayStartMM, setdayStartMM] = useState("")
-    const [opendaystartMM, setopendaystartMM] = useState(false);
-    const [ItemsMM, setItemsMM] = useState(MMList);
-    //dropdrown dayEndHH
-    const [dayEndHH, setdayEndHH] = useState("")
-    const [openEndHH, setopenEndHH] = useState(false);
-    const [itemsendHH, setitemsendHH] = useState(HHList);
-    //
-    const [dayEndMM, setdayEndMM] = useState("")
-    const [opendayEndMM, setopendayEndMM] = useState(false);
-    const [itemsEndMM, setItemsEndMM] = useState(MMList);
+    //Show Day Start time picker
+    const [showDayStartTime, setShowDayStartTime] = useState(false);
+    //Show Day end Time Picker
+    const [showDayEndTime, setShowDayEndTime] = useState(false);
 
     const handleBack = () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'Dashboard' }],
-        })
+        navigation.navigate('Dashboard')
     };
-    const handleSubmit = () => {
-        // Handle form submission logic here
-        console.log('Form submitted with value:', inputValue);
+    const handleSubmit = async () => {
+        const value = await AsyncStorage.getItem('user');
+        let jsonVal = JSON.parse(value);
+        controllerTimeObj.UserId = jsonVal.userId;
+
+        const fullYear = date.getFullYear();
+        // Convert full year to two-digit year (YY)
+        const twoDigitYear = String(fullYear).slice(2, 4);
+        controllerTimeObj.CurrentDayServer = date.getDay()
+        controllerTimeObj.CurrentMonthServer = date.getMonth()
+        controllerTimeObj.CurrentYearServer = +twoDigitYear;
+        controllerTimeObj.CuttentTimeServerHh = currentTime.getHours() == NaN ? 0 : currentTime.getHours();
+        controllerTimeObj.CurrentTimeServerMin = currentTime.getMinutes() == NaN ? 0 : currentTime.getMinutes();
+        controllerTimeObj.DayStartTimeHh = dayStartTime.getHours() == NaN ? 0 : dayStartTime.getHours();
+        controllerTimeObj.DayStartTimeMin = dayStartTime.getMinutes() == NaN ? 0 : dayStartTime.getMinutes();
+        controllerTimeObj.DayEndTimeHh = dayEndTime.getHours() == NaN ? 0 : dayEndTime.getHours();
+        controllerTimeObj.DayEndTimeMin = dayEndTime.getMinutes() == NaN ? 0 : dayEndTime.getMinutes();
+        controllerTimeObj.ControllerId = selectedControllerId;
+        controllerTimeObj.ControllerNo = selectedControllerName;
+        console.log(controllerTimeObj)
+        if (isAdd) {
+            //Add
+            try {
+                console.log("adding")
+                const response = await authAxios.post('/ControllerTimeSetting', controllerTimeObj);
+                console.log('Response:', response.data);
+                setIsAdd(false)
+                //set controller object
+                setControllerTimeObj(response.data)
+            } catch (error) {
+                console.error('Error:', error);
+                // Handle the error here
+            }
+
+        }
+        else {
+            //Update
+            try {
+                console.log("Updating")
+                console.log("UserId" + controllerTimeObj.UserId)
+
+                const response = await authAxios.put('/ControllerTimeSetting/' + controllerTimeObj.Id, controllerTimeObj);
+                console.log('Response:', response.data);
+            } catch (error) {
+                console.error('Error:', error);
+                // Handle the error here
+            }
+
+
+        }
     };
 
     const onChange = (event, selectedDate) => {
+        console.warn(selectedDate)
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
-        setDate(currentDate);
+        setDate(selectedDate);
     };
 
     const onChangeTime = (event, selectedTime) => {
@@ -171,94 +128,228 @@ const ConfigurationTimeScreen = ({ navigation }) => {
         setCurrentTime(currentTime);
     };
 
+    const onChangeDayStartTime = (event, selectedTime) => {
+        const dayStartTime = selectedTime || dayStartTime;
+        setShowDayStartTime(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
+        setDayStarttime(dayStartTime);
+    };
+
+    const onChangeDayEndTime = (event, selectedTime) => {
+        const dayEndTime = selectedTime || dayEndTime;
+        setShowDayEndTime(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
+        setDayEndtime(dayEndTime);
+    };
+
     const showPicker = () => {
         setShow(true);
     };
-
 
     const showTimePicker = () => {
         setShowTime(true);
     };
 
+    const showDayStartTimePicker = () => {
+        setShowDayStartTime(true);
+    };
 
-    useEffect(async () => {
-        const value = await AsyncStorage.getItem('selectedController');
-        let jsonVal = JSON.parse(value);
-        const id = jsonVal.value
-        const response = await authAxios.get('ControllerTimeSetting/ControllerTimeSettingByControllerId/' + id);
-        console.log(response.data);
-        Alert.alert('got time');
+    const showDayEndimePicker = () => {
+        setShowDayEndTime(true);
+    };
+
+
+    useEffect(() => {
+
+        // const value = await AsyncStorage.getItem('selectedController');
+        // let jsonVal = JSON.parse(value);
+        // const id = jsonVal.value
+        // Define a function to fetch data from the API
+        const getIMEI = async () => {
+            try {
+                const imeiNumber = await DeviceInfo.getImei();
+                console.log('IMEI Number:', imeiNumber);
+                controllerTimeObj.UsermobileImeino = imeiNumber
+            } catch (error) {
+                console.error('Error getting IMEI:', error);
+            }
+        };
+
+        const fetchData = async () => {
+            try {
+                const response = await authAxios.get('ControllerTimeSetting/ControllerTimeSettingByControllerId/' + selectedControllerId);
+                // Update the state with the received data
+                let data = response.data[0]
+                if (data != null) {
+                    setIsAdd(false)
+                    //set controller object
+                    setControllerTimeObj(data)
+                    console.log("UserId" + controllerTimeObj.UserId)
+                    let currentYear = convertTwoDigitYearToFourDigit(data.CurrentYearServer);
+                    let serverDate = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer);
+                    setDate(serverDate);
+                    let timeServer = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.CuttentTimeServerHh, data.CurrentTimeServerMin);
+                    setCurrentTime(timeServer)
+                    let timeDayStart = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.DayStartTimeHh, data.DayStartTimeMin);
+                    setDayStarttime(timeDayStart)
+                    let timeDayEnd = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.DayEndTimeHh, data.DayEndTimeMin);
+                    setDayEndtime(timeDayEnd)
+                }
+                else {
+                    //Add
+                }
+
+                //setApiData(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        // getIMEI();
+        fetchData();
     }, []);
 
 
     return (
 
         <SafeAreaView>
-
             <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                 <TouchableOpacity onPress={handleBack}>
                     <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                 </TouchableOpacity>
                 <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Configuration Time Setting</Text>
             </View>
+            <Card>
+                <Card.Content style={{ padding: 5, margin: 5 }}>
+                    <View style={styles.container}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1 }}>
+                                <View style={styles.formGroup}>
+                                    <Text style={styles.label}>Controller No: {selectedControllerName}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
 
-            <View style={styles.container}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }}>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>Server Date:
-                            </Text>
-                            <TextInput
-                                label="current Day"
-                                returnKeyType="done"
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1 }}>
+                                <View style={styles.formGroup}>
+                                    <Text style={styles.label}>Server Date:
+                                    </Text>
+                                    <TextInput
+                                        label="Current Date"
+                                        returnKeyType="done"
+                                        editable={false}
+                                        value={moment(date).format('MMMM D, YYYY')}
+                                    />
+                                </View>
+                            </View>
+                            <View >
+                                <Icon style={{ marginTop: 47, padding: 4 }} name="calendar-days" size={25} color="#007500" onPress={showPicker} />
+                            </View>
+                        </View>
+                        {show && (
+                            <DateTimePicker
+                                label="Select Date"
                                 value={date}
-                                onChangeText={(text) => setDate(text)}
+                                mode="date"
+                                display="calendar"
+                                onChange={onChange}
+                                style={{ marginTop: 16 }}
                             />
-                        </View>
-                    </View>
-                    <View >
-                        <Icon style={{ marginTop: 47, padding: 4 }} name="calendar-days" size={25} color="#007500" onPress={showPicker} />
-                    </View>
-                </View>
-                {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={date}
-                        mode="datetime" // Options: 'date', 'time', 'datetime'
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChange}
-                    />
-                )}
+                        )}
 
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 2 }}>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>Server Time:
-                            </Text>
-                            <TextInput
-                                label="Current Time"
-                                returnKeyType="done"
-                                value={currentTime}
-                                onChangeText={(text) => onChangeTime(text)}
-                            />
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 2 }}>
+                                <View style={styles.formGroup}>
+                                    <Text style={styles.label}>Server Time:
+                                    </Text>
+                                    <TextInput
+                                        label="Current Time"
+                                        returnKeyType="done"
+                                        editable={false}
+                                        value={moment(currentTime).format('HH:mm')}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showTimePicker} />
+                            </View>
                         </View>
+                        {showTime && (
+                            <DateTimePicker
+                                testID="dateTimePickerTime"
+                                value={currentTime}
+                                mode="time" // Options: 'date', 'time', 'datetime'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangeTime}
+                            />
+                        )}
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 2 }}>
+                                <View style={styles.formGroup}>
+                                    <Text style={styles.label}>Day Start Time:
+                                    </Text>
+                                    <TextInput
+                                        label="Day Start Time"
+                                        returnKeyType="done"
+                                        editable={false}
+                                        value={moment(dayStartTime).format('HH:mm')}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showDayStartTimePicker} />
+                            </View>
+                        </View>
+                        {showDayStartTime && (
+                            <DateTimePicker
+                                testID="dateTimePickerTime"
+                                value={dayStartTime}
+                                mode="time" // Options: 'date', 'time', 'datetime'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangeDayStartTime}
+                            />
+                        )}
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 2 }}>
+                                <View style={styles.formGroup}>
+                                    <Text style={styles.label}>Day End Time:
+                                    </Text>
+                                    <TextInput
+                                        label="Day End Time"
+                                        returnKeyType="done"
+                                        editable={false}
+                                        value={moment(dayEndTime).format('HH:mm')}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showDayEndimePicker} />
+                            </View>
+                        </View>
+                        {showDayEndTime && (
+                            <DateTimePicker
+                                testID="dateTimePickerTime"
+                                value={dayEndTime}
+                                mode="time" // Options: 'date', 'time', 'datetime'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangeDayEndTime}
+                            />
+                        )}
+                        <Button
+                            mode="outlined"
+                            onPress={handleSubmit}
+                        >
+                            Save
+                        </Button>
                     </View>
-                    <View>
-                        <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showTimePicker} />
-                    </View>
-                </View>
-                {showTime && (
-                    <DateTimePicker
-                        testID="dateTimePickerTime"
-                        value={currentTime}
-                        mode="time" // Options: 'date', 'time', 'datetime'
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeTime}
-                    />
-                )}
-            </View>
+                </Card.Content>
+            </Card>
+
         </SafeAreaView>
 
     );
@@ -292,6 +383,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginVertical: 10,
         height: 43,
+    },
+    selectedDateLabel: {
+        marginTop: 8,
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 })
 export default ConfigurationTimeScreen;

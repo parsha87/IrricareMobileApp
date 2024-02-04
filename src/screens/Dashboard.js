@@ -15,7 +15,7 @@ import { AuthContext } from '../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function Dashboard({ navigation }) {
+const Dashboard = ({ navigation }) => {
   const { authAxios } = useContext(AxiosContext);
   const authContext = useContext(AuthContext);
   const items = [
@@ -23,7 +23,9 @@ export default function Dashboard({ navigation }) {
     { label: 'Option 2', value: 'option2' },
     { label: 'Option 3', value: 'option3' },
   ];
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState();
+  const [selectedController, setSelectedController] = useState();
+
   const [open, setOpen] = useState(false);
   const [itemsController, setItemsController] = useState([]);
 
@@ -48,7 +50,10 @@ export default function Dashboard({ navigation }) {
   };
 
   const changeSelectOptionHandler = async (value) => {
+    console.log(value)
+    setSelectedController(value)   
     await AsyncStorage.setItem('selectedController', JSON.stringify(value));
+
   };
 
   const handleBack = () => {
@@ -57,6 +62,15 @@ export default function Dashboard({ navigation }) {
       routes: [{ name: 'MainpageScreen' }],
     })
   };
+
+  const handleControllerTimeNavigation = () => {
+    console.log(selectedController)
+    navigation.navigate('ConfigurationTimeScreen', {
+      selectedControllerId: selectedController.value,
+      selectedControllerName: selectedController.label
+    })
+  };
+
   return (
     <ImageBackground source={require("../assets/bg2.jpg")} resizeMode="cover" style={styles.backgroundImage}>
 
@@ -93,7 +107,7 @@ export default function Dashboard({ navigation }) {
 
         </View>
         <View>
-          <Text style={{marginLeft:8}}>Select Controller</Text>
+          <Text style={{ marginLeft: 8 }}>Select Controller</Text>
 
           <DropDownPicker
             open={open}
@@ -116,12 +130,7 @@ export default function Dashboard({ navigation }) {
         </View>
         <View style={[styles.container, { flexDirection: 'row', }]}>
           <View style={{ flex: 2, margin: 6, padding: 6 }}>
-            <TouchableOpacity style={styles.touchable} onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'ConfigurationTimeScreen' }],
-              })
-            }>
+            <TouchableOpacity style={styles.touchable} onPress={handleControllerTimeNavigation}>
               <Image
                 source={require("../assets/controller.png")}
                 style={styles.image} />
@@ -212,6 +221,8 @@ export default function Dashboard({ navigation }) {
   )
 
 }
+export default Dashboard;
+
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
