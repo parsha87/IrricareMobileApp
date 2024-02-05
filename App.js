@@ -1,10 +1,9 @@
-import React, {useEffect, useContext, useState, useCallback } from 'react'
+import React, { useEffect, useContext, useState, useCallback } from 'react'
 import { Provider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import * as Keychain from 'react-native-keychain';
 import { theme } from './src/core/theme'
-
 import {
   StartScreen,
   LoginScreen,
@@ -14,6 +13,7 @@ import {
   Dashboard1,
 
 } from './src/screens'
+
 import ConfigurationSettingsScreen from './src/screens/ConfirgurationSettings'
 import ConfigurationTimeScreen from './src/screens/ConfigurationTime'
 import ValveSettingsScreen from './src/screens/ValveSettings'
@@ -201,7 +201,6 @@ const App = () => {
       </NavigationContainer>
       //   </AxiosProvider>
       // </AuthProvider>
-
     )
   }
 

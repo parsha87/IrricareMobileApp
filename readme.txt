@@ -13,5 +13,5 @@ yourProject/android/app/build/outputs/apk/debug/app-debug.apk
 Release 
 https://medium.com/geekculture/react-native-generate-apk-debug-and-release-apk-4e9981a2ea51
 
-
+Run react app
 react-native start --reset-cache

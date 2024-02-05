@@ -51,7 +51,7 @@ const Dashboard = ({ navigation }) => {
 
   const changeSelectOptionHandler = async (value) => {
     console.log(value)
-    setSelectedController(value)   
+    setSelectedController(value)
     await AsyncStorage.setItem('selectedController', JSON.stringify(value));
 
   };
@@ -66,6 +66,20 @@ const Dashboard = ({ navigation }) => {
   const handleControllerTimeNavigation = () => {
     console.log(selectedController)
     navigation.navigate('ConfigurationTimeScreen', {
+      selectedControllerId: selectedController.value,
+      selectedControllerName: selectedController.label
+    })
+  };
+  const handleMaxValveNavigation = () => {
+    console.log(selectedController)
+    navigation.navigate('ConfigurationSettings', {
+      selectedControllerId: selectedController.value,
+      selectedControllerName: selectedController.label
+    })
+  };
+  const handleValveSettingNavigation = () => {
+    console.log(selectedController)
+    navigation.navigate('ValveSettingsScreen', {
       selectedControllerId: selectedController.value,
       selectedControllerName: selectedController.label
     })
@@ -141,13 +155,7 @@ const Dashboard = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View style={{ flex: 2, margin: 6, padding: 6 }}>
-
-            <TouchableOpacity style={styles.touchable} onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'ConfigurationSettings' }],
-              })
-            }>
+            <TouchableOpacity style={styles.touchable} onPress={handleMaxValveNavigation}>
               <Image
                 source={require("../assets/data.png")}
                 style={styles.image} />
@@ -163,12 +171,7 @@ const Dashboard = ({ navigation }) => {
 
         <View style={[styles.container, { flexDirection: 'row', paddingTop: 20 }]}>
           <View style={{ flex: 2, margin: 6, padding: 6 }}>
-            <TouchableOpacity style={styles.touchable} onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'ValveSettingsScreen' }],
-              })
-            }>
+            <TouchableOpacity style={styles.touchable} onPress={handleValveSettingNavigation}>
               <Image
                 source={require("../assets/water-pipe.png")}
                 style={styles.image} />
