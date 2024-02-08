@@ -128,15 +128,12 @@ const ConfigurationSettingsScreen = ({ route }) => {
 
         <ScrollView>
             <SafeAreaView>
-
                 <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                     <TouchableOpacity onPress={handleBack}>
                         <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                     </TouchableOpacity>
                     <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Max Filter Max Valve Setting</Text>
                 </View>
-
-
                 <Card>
                     <Card.Content style={{ padding: 5, margin: 5 }}>
                         <View style={styles.container}>

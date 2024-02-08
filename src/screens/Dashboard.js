@@ -79,7 +79,7 @@ const Dashboard = ({ navigation }) => {
   };
   const handleValveSettingNavigation = () => {
     console.log(selectedController)
-    navigation.navigate('ValveSettingsScreen', {
+    navigation.navigate('ValveSettingsListScreen', {
       selectedControllerId: selectedController.value,
       selectedControllerName: selectedController.label
     })

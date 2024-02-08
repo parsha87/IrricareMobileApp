@@ -92,6 +92,7 @@ const ConfigurationTimeScreen = ({ route }) => {
                 setIsAdd(false)
                 //set controller object
                 setControllerTimeObj(response.data)
+                alert('Saved Successfully!');
             } catch (error) {
                 console.error('Error:', error);
                 // Handle the error here
@@ -106,6 +107,8 @@ const ConfigurationTimeScreen = ({ route }) => {
 
                 const response = await authAxios.put('/ControllerTimeSetting/' + controllerTimeObj.Id, controllerTimeObj);
                 console.log('Response:', response.data);
+                alert('Updated Successfully!');
+
             } catch (error) {
                 console.error('Error:', error);
                 // Handle the error here
