@@ -25,6 +25,8 @@ import MainpageScreen from './src/screens/Mainpage'
 import { AuthProvider } from './src/context/AuthContext';
 import { AuthContext } from './src/context/AuthContext';
 import { AxiosProvider } from './src/context/AxiosContext';
+import ValveSettingsListScreen from './src/screens/ValveSettingList';
+import SequenceSettingsListScreen from './src/screens/SequenceSettingList';
 const Stack = createStackNavigator()
 
 const App = () => {
@@ -130,6 +132,19 @@ const App = () => {
               headerShown: false
             }} />
 
+          <Stack.Screen name="ValveSettingsListScreen" component={ValveSettingsListScreen}
+            options={{
+              title: 'Valve List',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }} />
+
           <Stack.Screen name="SequenceSettings" component={SequenceSettingsScreen}
             options={{
               title: 'Sequence Settings',
@@ -143,6 +158,20 @@ const App = () => {
               headerShown: false
             }}
           />
+
+          <Stack.Screen name="SequenceSettingList" component={SequenceSettingsListScreen}
+            options={{
+              title: 'Sequence List',
+              headerStyle: {
+                backgroundColor: '#3498db', // Set your desired background color
+              },
+              headerTintColor: '#fff', // Set your desired text color
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerShown: false
+            }} />
+
           <Stack.Screen name="IrrigationSequenceScreen" component={IrrigationSequenceScreen}
             options={{
               title: 'Irrigation Sequence Screen',
