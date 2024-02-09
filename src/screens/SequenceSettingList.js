@@ -37,7 +37,9 @@ const SequenceSettingsListScreen = ({ route }) => {
         UserId: "",
         ControllerNo: "",
         ControllerId: 0,
-        UsermobileImeino: ""
+        UsermobileImeino: "",
+        FertilizerName: ""
+
     })
 
     const renderItem = ({ item }) => (
