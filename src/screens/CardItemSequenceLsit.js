@@ -6,8 +6,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const CardItemSequenceList= ({ item, onPress }) => {
     return (
         <TouchableOpacity onPress={() => onPress(item)} style={styles.card}>
-            <Text style={styles.gridItemText}>Sequence No: {item.sequenceNo}</Text>
-            <Text style={styles.gridItemText}>Pump No: {item.PumpNo}</Text>
+            <Text style={styles.gridItemText}>Sequence No: {item.SequenceNo}</Text>
+            <Text style={styles.gridItemText}>Pump No: {item.PumbNo}</Text>
         </TouchableOpacity>
     );
 };

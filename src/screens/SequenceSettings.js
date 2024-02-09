@@ -14,9 +14,9 @@ export default function SequenceSetting({ route }) {
   const handleBack = () => {
     navigation.navigate('Dashboard');
   };
+  
 
   const handleSequenceSettingNavigation = () => {
-    console.log(selectedController)
     navigation.navigate('SequenceSettingList', {
       selectedControllerId: selectedControllerId,
       selectedControllerName: selectedControllerName
@@ -33,14 +33,14 @@ export default function SequenceSetting({ route }) {
       </View>
       <View style={styles.container}>
         <Button
-          mode="contained"
+          mode="outlined"
           onPress={handleSequenceSettingNavigation}
         >
           Irrigation Sequence
         </Button>
 
         <Button
-          mode="contained"
+          mode="outlined"
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -51,7 +51,7 @@ export default function SequenceSetting({ route }) {
           FilterSequence
         </Button>
         <Button
-          mode="contained"
+          mode="outlined"
           onPress={() =>
             navigation.reset({
               index: 0,

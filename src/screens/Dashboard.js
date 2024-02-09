@@ -85,6 +85,13 @@ const Dashboard = ({ navigation }) => {
     })
   };
 
+  const handleSequenceListNavigation = () => {
+    console.log(selectedController)
+    navigation.navigate('SequenceSettings', {
+      selectedControllerId: selectedController.value,
+      selectedControllerName: selectedController.label
+    })
+  };
   return (
     <ImageBackground source={require("../assets/bg2.jpg")} resizeMode="cover" style={styles.backgroundImage}>
 
@@ -183,11 +190,7 @@ const Dashboard = ({ navigation }) => {
           </View>
           <View style={{ flex: 2, margin: 6, padding: 6 }}>
 
-            <TouchableOpacity style={styles.touchable} onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'SequenceSettings' }],
-              })
+            <TouchableOpacity style={styles.touchable} onPress={handleSequenceListNavigation
             }>
               <Image
                 source={require("../assets/productivity.png")}

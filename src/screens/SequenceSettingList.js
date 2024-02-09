@@ -68,9 +68,11 @@ const SequenceSettingsListScreen = ({ route }) => {
         // Define a function to fetch data from the API
         const fetchData = async () => {
             try {
-                const response = await authAxios.get('SequenceSetting/GetSequenceSettingByControllerId/' + selectedControllerId);
+                console.log(selectedControllerId)
+                const response = await authAxios.get('SequenceSetting/SequenceSettingByControllerId/' + selectedControllerId);
                 // Update the state with the received data
                 let data = response.data
+                console.log(data)
                 setFormDataList(data)
                 if (data != null) {
 
@@ -101,7 +103,7 @@ const SequenceSettingsListScreen = ({ route }) => {
                     </TouchableOpacity>
                     <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Valve Settings</Text>
                 </View>
-                <Button title="Click me" mode="outlined" onPress={handleButtonClick}>Add Valve Setting</Button>
+                <Button title="Click me" mode="outlined" onPress={handleButtonClick}>Add Sequence Setting</Button>
 
                 <FlatList
                     data={formDataList}
