@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, FlatList } from 'react-native'
-import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
+import { Provider as PaperProvider, Card, DefaultTheme, FAB, ActivityIndicator } from 'react-native-paper';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Text } from "react-native-paper";
@@ -14,6 +14,8 @@ import CardItem from './CardItem';
 import CardItemSequenceList from './CardItemSequenceLsit';
 
 const SequenceSettingsListScreen = ({ route }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
     const { selectedControllerId, selectedControllerName } = route.params;
@@ -69,6 +71,7 @@ const SequenceSettingsListScreen = ({ route }) => {
         })
     };
     useEffect(() => {
+        setIsLoading(true);
         // Define a function to fetch data from the API
         const fetchData = async () => {
             try {
@@ -84,9 +87,10 @@ const SequenceSettingsListScreen = ({ route }) => {
                 else {
                     //Add
                 }
-
+                setIsLoading(false);
                 //setApiData(data);
             } catch (error) {
+                setIsLoading(false);
                 console.error('Error fetching data:', error);
             }
         };
@@ -99,16 +103,15 @@ const SequenceSettingsListScreen = ({ route }) => {
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
                 <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                     <TouchableOpacity onPress={handleBack}>
                         <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                     </TouchableOpacity>
-                    <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Valve Settings</Text>
+                    <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Sequence Settings</Text>
                 </View>
-                <Button title="Click me" mode="outlined" onPress={handleButtonClick}>Add Sequence Setting</Button>
-
+                {/* <Button title="Click me" mode="outlined" onPress={handleButtonClick}>Add Sequence Setting</Button> */}
                 <FlatList
                     data={formDataList}
                     renderItem={({ item }) => <CardItemSequenceList item={item} onPress={handleCardItemPress} />}
@@ -116,6 +119,19 @@ const SequenceSettingsListScreen = ({ route }) => {
                     contentContainerStyle={styles.listContainer}
                 />
             </ScrollView>
+            <View style={styles.fabContainer}>
+                <FAB
+                    icon="plus"
+                    onPress={handleButtonClick}
+                    style={styles.fab}
+                />
+            </View>
+            {/* Show the spinner if isLoading is true */}
+            {isLoading && (
+                <View style={styles.spinnerContainer}>
+                    <ActivityIndicator size="large" color="green" />
+                </View>
+            )}
         </SafeAreaView>
     );
 }
@@ -157,6 +173,25 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingVertical: 8,
+    }, fabContainer: {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
     },
+    fab: {
+        color: 'white',
+        backgroundColor: 'green', // Adjust the color as needed
+    },
+    spinnerContainer: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
+
 });
 export default SequenceSettingsListScreen;

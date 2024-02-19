@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { TouchableOpacity, StyleSheet, View, SafeAreaView, Alert, ImageBackground } from 'react-native'
-import { Text } from 'react-native-paper'
+import { ActivityIndicator, Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -17,6 +17,8 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [userName, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const authContext = useContext(AuthContext);
@@ -25,6 +27,7 @@ export default function LoginScreen({ navigation }) {
 
 
   const onLogin = async () => {
+    setIsLoading(true); 
     const emailError = emailValidator(userName.value)
     const passwordError = passwordValidator(password.value)
     if (emailError || passwordError) {
@@ -78,8 +81,10 @@ export default function LoginScreen({ navigation }) {
       else {
         Alert.alert('Login Failed');
       }
+      setIsLoading(false);
     } catch (error) {
-      Alert.alert('Login Failed', JSON.stringify(error));
+      Alert.alert('Login Failed. Try Again');
+      setIsLoading(false);
     }
 
   };
@@ -132,6 +137,12 @@ export default function LoginScreen({ navigation }) {
         </View>
       </Background>
       {/* </ImageBackground> */}
+      {/* Show the spinner if isLoading is true */}
+      {isLoading && (
+        <View style={styles.spinnerContainer}>
+          <ActivityIndicator size="large" color="green" />
+        </View>
+      )}
     </SafeAreaView>
 
   )
@@ -168,5 +179,15 @@ const styles = StyleSheet.create({
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
+  },
+  spinnerContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
 })
