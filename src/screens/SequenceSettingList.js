@@ -20,16 +20,16 @@ const SequenceSettingsListScreen = ({ route }) => {
     const [formDataList, setFormDataList] = useState([]);
     const [formData, setFormData] = useState({
         Id: 0,
-        SequenceNo: "",
+        SequenceNo: 0,
         PumbNo: 0,
-        TimeSlot1Hh: "",
-        TimeSlot1Min: "",
-        TimeSlot2Hh: "",
-        TimeSlot2Min: "",
-        TimeSlot3Hh: "",
-        TimeSlot3Min: "",
-        TimeSlot4Hh: "",
-        TimeSlot4Min: "",
+        TimeSlot1Hh: 0,
+        TimeSlot1Min: 0,
+        TimeSlot2Hh: 0,
+        TimeSlot2Min: 0,
+        TimeSlot3Hh: 0,
+        TimeSlot3Min: 0,
+        TimeSlot4Hh: 0,
+        TimeSlot4Min: 0,
         WeekdaysString: "",
         ValveNos: "",
         ValveDurationReadonly: "",
@@ -41,6 +41,8 @@ const SequenceSettingsListScreen = ({ route }) => {
         FertilizerName: ""
 
     })
+
+
 
     const renderItem = ({ item }) => (
         <CardItem item={item} onPress={handleCardItemPress(item)}> </CardItem>
@@ -59,7 +61,7 @@ const SequenceSettingsListScreen = ({ route }) => {
 
     const handleButtonClick = () => {
         // Add functionality for button click here
-        navigation.navigate('ValveSettingsScreen', {
+        navigation.navigate('IrrigationSequenceScreen', {
             selectedControllerId: selectedControllerId,
             selectedControllerName: selectedControllerName,
             dataModel: formData,

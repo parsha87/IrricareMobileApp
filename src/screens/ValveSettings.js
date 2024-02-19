@@ -127,7 +127,7 @@ const ValveSettingsScreen = ({ route }) => {
         setFormData({
             ...formData,
             [field]: value,
-        });
+        });       
     };
 
     const onChangeDate = (event, selectedDate) => {
