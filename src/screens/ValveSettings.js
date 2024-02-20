@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView,ActivityIndicator } from 'react-native'
 import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -16,6 +16,7 @@ const ValveSettingsScreen = ({ route }) => {
     const { authAxios } = useContext(AxiosContext);
     const { selectedControllerId, selectedControllerName, dataModel, isAddData } = route.params;
     const [isAdd, setIsAdd] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
@@ -73,6 +74,7 @@ const ValveSettingsScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
+        setIsLoading(true);
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
         formData.UserId = jsonVal.userId;
@@ -98,9 +100,15 @@ const ValveSettingsScreen = ({ route }) => {
                 setIsAdd(false)
                 //set controller object
                 setFormData(response.data)
+                setIsLoading(false);
                 console.warn("Success Add");
+                navigation.navigate('ValveSettingsListScreen', {
+                    selectedControllerId: selectedControllerId,
+                    selectedControllerName: selectedControllerName,
+                  })
             } catch (error) {
                 console.error('Error:', error);
+                setIsLoading(false);
                 // Handle the error here
             }
 
@@ -114,8 +122,14 @@ const ValveSettingsScreen = ({ route }) => {
                 const response = await authAxios.put('/ValveSetting/' + formData.Id, formData);
                 console.log('Response:', response.data);
                 console.warn("Success edit");
+                setIsLoading(false);
+                navigation.navigate('ValveSettingsListScreen', {
+                    selectedControllerId: selectedControllerId,
+                    selectedControllerName: selectedControllerName,
+                  })
             } catch (error) {
                 console.error('Error:', error);
+                setIsLoading(false);
                 // Handle the error here
             }
 
@@ -172,6 +186,7 @@ const ValveSettingsScreen = ({ route }) => {
     };
 
     return (
+        <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
             <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                 <TouchableOpacity onPress={handleBack}>
@@ -383,6 +398,13 @@ const ValveSettingsScreen = ({ route }) => {
                 </Card.Content>
             </Card>
         </ScrollView>
+        {/* Show the spinner if isLoading is true */}
+        {isLoading && (
+            <View style={styles.spinnerContainer}>
+                <ActivityIndicator size="large" color="green" />
+            </View>
+        )}
+    </SafeAreaView>
 
 
     );
@@ -392,6 +414,16 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         width: '100%',
+    },
+    spinnerContainer: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 export default ValveSettingsScreen;
