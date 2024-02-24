@@ -72,7 +72,7 @@ const Dashboard = ({ navigation }) => {
   };
   const handleMaxValveNavigation = () => {
     console.log(selectedController)
-    navigation.navigate('ConfigurationSettings', {
+    navigation.navigate('MaxFilterValveSettingsScreen', {
       selectedControllerId: selectedController.value,
       selectedControllerName: selectedController.label
     })
@@ -97,7 +97,7 @@ const Dashboard = ({ navigation }) => {
 
       <View>
 
-        <View style={{ flexDirection: 'row', backgroundColor: '#276221', padding: 16 }}>
+        {/* <View style={{ flexDirection: 'row', backgroundColor: '#276221', padding: 16 }}>
 
           <View style={{ flex: 1 }}>
 
@@ -126,7 +126,7 @@ const Dashboard = ({ navigation }) => {
 
 
 
-        </View>
+        </View> */}
         <View>
           <Text style={{ marginLeft: 8 }}>Select Controller</Text>
 
@@ -150,7 +150,7 @@ const Dashboard = ({ navigation }) => {
 
         </View>
         <View style={[styles.container, { flexDirection: 'row', }]}>
-          <View style={{ flex: 2, margin: 6, padding: 6 }}>
+          <View style={{ flex: 3, margin: 6, padding: 6 }}>
             <TouchableOpacity style={styles.touchable} onPress={handleControllerTimeNavigation}>
               <Image
                 source={require("../assets/controller.png")}
@@ -161,7 +161,7 @@ const Dashboard = ({ navigation }) => {
 
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 2, margin: 6, padding: 6 }}>
+          <View style={{ flex: 3, margin: 6, padding: 6 }}>
             <TouchableOpacity style={styles.touchable} onPress={handleMaxValveNavigation}>
               <Image
                 source={require("../assets/data.png")}
@@ -173,11 +173,7 @@ const Dashboard = ({ navigation }) => {
             </TouchableOpacity>
 
           </View>
-
-        </View>
-
-        <View style={[styles.container, { flexDirection: 'row', paddingTop: 20 }]}>
-          <View style={{ flex: 2, margin: 6, padding: 6 }}>
+          <View style={{ flex: 3, margin: 6, padding: 6 }}>
             <TouchableOpacity style={styles.touchable} onPress={handleValveSettingNavigation}>
               <Image
                 source={require("../assets/water-pipe.png")}
@@ -188,7 +184,11 @@ const Dashboard = ({ navigation }) => {
 
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 2, margin: 6, padding: 6 }}>
+        </View>
+
+        <View style={[styles.container, { flexDirection: 'row', paddingTop: 20 }]}>
+      
+          {/* <View style={{ flex: 2, margin: 6, padding: 6 }}>
 
             <TouchableOpacity style={styles.touchable} onPress={handleSequenceListNavigation
             }>
@@ -201,7 +201,7 @@ const Dashboard = ({ navigation }) => {
 
             </TouchableOpacity>
 
-          </View>
+          </View> */}
 
         </View>
 
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 13,
     textAlign: 'center'
   },
 

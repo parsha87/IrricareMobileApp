@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, FlatList } from 'react-native'
-import { Provider as PaperProvider, Card, DefaultTheme, Checkbox, Modal, Text, Portal, Provider, ListItem } from 'react-native-paper';
+import { Provider as PaperProvider, Card, DefaultTheme, Checkbox, Modal, Text, Portal, Provider, ListItem,ActivityIndicator } from 'react-native-paper';
 
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -32,8 +32,9 @@ const IrrigationSequenceScreen = ({ route }) => {
     const [valveNo, setValveNo] = useState('');
     const [isFert, setIsFert] = useState(false);
     const [fertilizerName, setFertilizerName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [open, setOpen] = useState(false);
+   
 
     const [showTimeSlot1, setShowTimeSlot1] = useState(false);
     const [showTimeSlot2, setShowTimeSlot2] = useState(false);
@@ -43,7 +44,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     const [visible, setVisible] = useState(false);
 
     const hideModal = () => setVisible(false);
-
+   
     const [items, setItems] = useState([
         { label: 'Sunday', value: '1' },
         { label: 'Monday', value: '2' },
@@ -181,26 +182,29 @@ const IrrigationSequenceScreen = ({ route }) => {
     };
 
     const fetchValveData = async () => {
-        try {
+        try {setIsLoading(true)
             const response = await authAxios.get('ValveSetting/ValveSettingByControllerId/' + selectedControllerId);
             // Update the state with the received data
             let data = response.data
-            setValveList(data)
+            setValveList(data) 
+            
             if (data != null) {
 
             }
             else {
                 //Add
             }
-
+            setIsLoading(false)
             //setApiData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
+            setIsLoading(false)
         }
     };
 
     useEffect(() => {
         fetchValveData()
+        setIsLoading(true)
         setIsAdd(isAddData);
         setFormData(dataModel);
         //If edit
@@ -228,7 +232,7 @@ const IrrigationSequenceScreen = ({ route }) => {
             }
         }
 
-
+        setIsLoading(false)
     }, []);
 
     const handleTextInputChange = (field, value) => {
@@ -271,6 +275,7 @@ const IrrigationSequenceScreen = ({ route }) => {
 
     };
     const handleSubmit = async () => {
+        setIsLoading(true);
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
         formData.UserId = jsonVal.userId;
@@ -295,12 +300,18 @@ const IrrigationSequenceScreen = ({ route }) => {
                 console.log("adding")
                 const response = await authAxios.post('/SequenceSetting', formData);
                 console.log('Response:', response.data);
-                setIsAdd(false)
                 //set controller object
                 setFormData(response.data)
                 alert("Success Add");
+                setIsLoading(false);
+
+                navigation.navigate('SequenceSettingList', {
+                    selectedControllerId: selectedControllerId,
+                    selectedControllerName: selectedControllerName
+                  })
             } catch (error) {
                 alert('Error:', error);
+                setIsLoading(false);
                 // Handle the error here
             }
 
@@ -314,8 +325,15 @@ const IrrigationSequenceScreen = ({ route }) => {
                 const response = await authAxios.put('/SequenceSetting/' + formData.Id, formData);
                 console.log('Response:', response.data);
                 alert("Success edit");
+                setIsLoading(false);
+
+                navigation.navigate('SequenceSettingList', {
+                    selectedControllerId: selectedControllerId,
+                    selectedControllerName: selectedControllerName
+                  })
             } catch (error) {
                 alert('Error:', error);
+                setIsLoading(false);
                 // Handle the error here
             }
 
@@ -328,6 +346,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     };
 
     return (
+        <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
             <Provider>
                 <View>
@@ -551,7 +570,14 @@ const IrrigationSequenceScreen = ({ route }) => {
                 </View>
             </Provider>
 
-        </ScrollView>
+        </ScrollView> 
+        {/* Show the spinner if isLoading is true */}
+            {isLoading && (
+                <View style={styles.spinnerContainer}>
+                    <ActivityIndicator size="large" color="green" />
+                </View>
+            )}
+        </SafeAreaView>
     );
 }
 
@@ -590,6 +616,24 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },fabContainer: {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+    },
+    fab: {
+        color: 'white',
+        backgroundColor: 'green', // Adjust the color as needed
+    },
+    spinnerContainer: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 export default IrrigationSequenceScreen;

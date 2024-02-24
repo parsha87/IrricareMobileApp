@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { TouchableOpacity, StyleSheet, View, SafeAreaView, Alert, ImageBackground } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, SafeAreaView, Alert, ImageBackground, Image } from 'react-native'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -27,7 +27,7 @@ export default function LoginScreen({ navigation }) {
 
 
   const onLogin = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     const emailError = emailValidator(userName.value)
     const passwordError = passwordValidator(password.value)
     if (emailError || passwordError) {
@@ -73,10 +73,9 @@ export default function LoginScreen({ navigation }) {
         }),
       );
       if (authTokenStr != "") {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MainpageScreen' }],
-        })
+
+        navigation.navigate('MainpageScreen');
+
       }
       else {
         Alert.alert('Login Failed');
@@ -96,7 +95,10 @@ export default function LoginScreen({ navigation }) {
 
       <Background>
         {/* <BackButton goBack={navigation.goBack} /> */}
-        <Logo />
+        <Image
+       source={require('../assets/JainLogo.png')}
+        style={styles.image}
+      />
         <Header>Welcome.</Header>
         <TextInput
           label="Email"
@@ -189,5 +191,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  image: {    
+    resizeMode: 'cover', // or 'contain', 'stretch', 'center'
   },
 })

@@ -10,7 +10,7 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 // import { Toastify } from 'react-native-toastify';
 
-const ConfigurationSettingsScreen = ({ route }) => {
+const MaxFilterValveSettingsScreen = ({ route }) => {
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
     const { selectedControllerId, selectedControllerName } = route.params;
@@ -264,4 +264,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 })
-export default ConfigurationSettingsScreen;
+export default MaxFilterValveSettingsScreen;

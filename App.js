@@ -1,237 +1,173 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react'
-import { Provider } from 'react-native-paper'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import * as Keychain from 'react-native-keychain';
-import { theme } from './src/core/theme'
-import {
-  StartScreen,
-  LoginScreen,
-  RegisterScreen,
-  ResetPasswordScreen,
-  Dashboard,
-  Dashboard1,
-
-} from './src/screens'
-
-import ConfigurationSettingsScreen from './src/screens/ConfirgurationSettings'
-import ConfigurationTimeScreen from './src/screens/ConfigurationTime'
-import ValveSettingsScreen from './src/screens/ValveSettings'
-import SequenceSettingsScreen from './src/screens/SequenceSettings'
-import IrrigationSequenceScreen from './src/screens/IrrigationSequence'
-import CyclicSequenceScreen from './src/screens/CyclicSequence'
-import FilterSequenceScreen from './src/screens/FilterSequence'
-import MainpageScreen from './src/screens/Mainpage'
-import { AuthProvider } from './src/context/AuthContext';
-import { AuthContext } from './src/context/AuthContext';
-import { AxiosProvider } from './src/context/AxiosContext';
+import 'react-native-gesture-handler';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { Text, View, Button } from 'react-native';
+import { LoginScreen, RegisterScreen, ResetPasswordScreen } from './src/screens';
+import Dashboard from './src/screens/Dashboard';
+import ConfigurationTimeScreen from './src/screens/ConfigurationTime';
+import ValveSettingsScreen from './src/screens/ValveSettings';
 import ValveSettingsListScreen from './src/screens/ValveSettingList';
 import SequenceSettingsListScreen from './src/screens/SequenceSettingList';
-const Stack = createStackNavigator()
+import IrrigationSequenceScreen from './src/screens/IrrigationSequence';
+import FilterSequenceListScreen from './src/screens/FilterSequenceList';
+import FilterSequenceScreen from './src/screens/FilterSequence';
+import CyclicSequenceScreen from './src/screens/CyclicSequence';
+import MainpageScreen from './src/screens/MainpageScreen';
+import SequenceSetting from './src/screens/SequenceSettings';
+import { createStackNavigator } from '@react-navigation/stack';
+import MaxFilterValveSettingsScreen from './src/screens/MaxFilterValveSettings';
 
-const App = () => {
-  const authContext = useContext(AuthContext);
-  const [status, setStatus] = useState('loading');
-  const loadJWT = useCallback(async () => {
-    try {
-      const value = await Keychain.getGenericPassword();
-      const jwt = JSON.parse(value.password);
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
-      authContext.setAuthState({
-        accessToken: jwt.accessToken || null,
-        refreshToken: jwt.refreshToken || null,
-        authenticated: jwt.accessToken !== null,
-      });
-      setStatus('success');
-    } catch (error) {
-      setStatus('error');
-      console.log(`Keychain Error: ${error.message}`);
-      authContext.setAuthState({
-        accessToken: null,
-        refreshToken: null,
-        authenticated: false,
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    loadJWT();
-  }, [loadJWT]);
-
-
-  if (authContext?.authState?.authenticated === false) {
-    return <LoginScreen />;
-  }
-  else {
-    return (
-
-      // <AuthProvider>
-      //   <AxiosProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="LoginScreen"
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {/* <Stack.Screen name="StartScreen" component={StartScreen} /> */}
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="Dashboard"
-            component={Dashboard}
-            options={{
-              title: 'Dashboard',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
-          <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
+const ConfigurationStack = () => (
+  <Stack.Navigator>
+    {/* <Stack.Screen name="Dashboard" component={Dashboard} /> */}
+    <Drawer.Screen name="Dashboard" component={Dashboard} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="MaxFilterValveSettingsScreen" component={MaxFilterValveSettingsScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="ConfigurationTimeScreen" component={ConfigurationTimeScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="ValveSettingsScreen" component={ValveSettingsScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="ValveSettingsListScreen" component={ValveSettingsListScreen} options={{
+      headerShown: false
+    }} />
+  </Stack.Navigator>
+);
 
 
-          <Stack.Screen name="ConfigurationSettings" component={ConfigurationSettingsScreen}
-            options={{
-              title: 'Configuration Settings Screen ',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }} />
-          <Stack.Screen name="ConfigurationTimeScreen" component={ConfigurationTimeScreen}
-            options={{
-              title: 'Configuration Settings Screen',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
-          <Stack.Screen name="ValveSettingsScreen" component={ValveSettingsScreen}
-            options={{
-              title: 'Valve Settings Screen',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }} />
+const ScheduleStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="SequenceSetting" component={SequenceSetting} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="SequenceSettingList" component={SequenceSettingsListScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="IrrigationSequenceScreen" component={IrrigationSequenceScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="FilterSequenceList" component={FilterSequenceListScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="FilterSequenceScreen" component={FilterSequenceScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="CyclicSequenceScreen" component={CyclicSequenceScreen} options={{
+      headerShown: false
+    }} />
+  </Stack.Navigator>
+);
 
-          <Stack.Screen name="ValveSettingsListScreen" component={ValveSettingsListScreen}
-            options={{
-              title: 'Valve List',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }} />
+// Custom Drawer Content Component
+function CustomDrawerContent(props) {
+  const { navigation } = props;
 
-          <Stack.Screen name="SequenceSettings" component={SequenceSettingsScreen}
-            options={{
-              title: 'Sequence Settings',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
+  const handleLogout = () => {
+    // Handle logout logic here
+  };
 
-          <Stack.Screen name="SequenceSettingList" component={SequenceSettingsListScreen}
-            options={{
-              title: 'Sequence List',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }} />
+  return (
+    <DrawerContentScrollView {...props}>
+      {/* App Name */}
+      <View style={{ alignItems: 'center', marginVertical: 20 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>IRISMART</Text>
+        {/* Horizontal Divider */}
+        <View style={{ backgroundColor: 'black', height: 1, width: '80%', marginVertical: 10 }} />
+      </View>
 
-          <Stack.Screen name="IrrigationSequenceScreen" component={IrrigationSequenceScreen}
-            options={{
-              title: 'Irrigation Sequence Screen',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
+      {/* Drawer Items */}
+      <View>
+        <DrawerItem
+          label="Dashboard"
+          onPress={() => navigation.navigate('MainpageScreen')}
+        />
+        <DrawerItem
+          label="Configuration Settings"
+          onPress={() => navigation.navigate('Dashboard')}
+        />
+        <DrawerItem
+          label="Sequence Settings"
+          onPress={() => navigation.navigate('SequenceSettings')}
+        />
+        {/* Add more DrawerItems as needed */}
+        <DrawerItem
+          label="Logout"
+          onPress={handleLogout}
+        />
+      </View>
 
-          <Stack.Screen name="FilterSequenceScreen" component={FilterSequenceScreen}
-            options={{
-              title: 'Filter Sequence Screen',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
-          <Stack.Screen name="CyclicSequenceScreen" component={CyclicSequenceScreen}
-            options={{
-              title: 'Cyclic Sequence Screen',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
-          <Stack.Screen name="MainpageScreen" component={MainpageScreen}
-            options={{
-              title: 'Cyclic Sequence Screen',
-              headerStyle: {
-                backgroundColor: '#3498db', // Set your desired background color
-              },
-              headerTintColor: '#fff', // Set your desired text color
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerShown: false
-            }}
-          />
-
-        </Stack.Navigator>
-      </NavigationContainer>
-      //   </AxiosProvider>
-      // </AuthProvider>
-    )
-  }
-
+      {/* App Version */}
+      <View style={{ alignItems: 'center', marginTop: 20 }}>
+        <Text>App Version: 1.0</Text>
+      </View>
+    </DrawerContentScrollView>
+  );
 }
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator
+        drawerContent={(props) => <CustomDrawerContent {...props} />} // Custom Drawer Content Component
+        drawerStyle={{
+          backgroundColor: 'green',
+          width: 250,
+        }}
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#276221',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          }
+        }}
+        initialRouteName="Login"
+      >
+        <Drawer.Screen
+          name="Login"
+          options={{
+            drawerLabel: 'Login',
+            title: 'Login',
+            headerShown: false
+          }}
+          component={LoginScreen}
+        />
+        <Drawer.Screen
+          name="MainpageScreen"
+          options={{
+            drawerLabel: 'Dashboard',
+            title: 'Dashboard',
+          }}
+          component={MainpageScreen}
+        />
+        <Drawer.Screen
+          name="Dashboard"
+          options={{
+            drawerLabel: 'Configuration Setting',
+            title: 'Configuration Setting',
+          }}
+          component={ConfigurationStack}
+        />
+        <Drawer.Screen
+          name="SequenceSettings"
+          options={{
+            drawerLabel: 'Sequence settings',
+            title: 'Sequence settings',
+          }}
+          component={ScheduleStack}
+        />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+}
+
 export default App;
