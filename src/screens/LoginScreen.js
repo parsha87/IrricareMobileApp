@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, SafeAreaView, Alert, ImageBackground, Image } from 'react-native'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -25,7 +25,16 @@ export default function LoginScreen({ navigation }) {
   const { publicAxios } = useContext(AxiosContext);
   const baseUrl = "http://121.242.3.79:9402/api/";
 
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, []);
 
+  const checkIfLoggedIn = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (token) {
+      navigation.navigate('MainpageScreen');
+    }
+  };
   const onLogin = async () => {
     setIsLoading(true);
     const emailError = emailValidator(userName.value)
@@ -96,9 +105,9 @@ export default function LoginScreen({ navigation }) {
       <Background>
         {/* <BackButton goBack={navigation.goBack} /> */}
         <Image
-       source={require('../assets/JainLogo.png')}
-        style={styles.image}
-      />
+          source={require('../assets/JainLogo.png')}
+          style={styles.image}
+        />
         <Header>Welcome.</Header>
         <TextInput
           label="Email"
@@ -192,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
-  image: {    
+  image: {
     resizeMode: 'cover', // or 'contain', 'stretch', 'center'
   },
 })

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert } from 'react-native'
-import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
+import { Provider as PaperProvider, Card, DefaultTheme, ActivityIndicator } from 'react-native-paper';
 import { Text } from 'react-native-paper'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
@@ -13,6 +13,7 @@ import moment from 'moment';
 import { convertTwoDigitYearToFourDigit, createDateFromTimeString } from '../Models/model'
 import { useNavigation } from '@react-navigation/native';
 import DeviceInfo from 'react-native-device-info';
+import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
 
 //reactnavigation.org - datepicker
 //https://github.com/react-native-datetimepicker/datetimepicker#usage
@@ -20,7 +21,11 @@ const ConfigurationTimeScreen = ({ route }) => {
     const navigation = useNavigation();
 
     const { authAxios } = useContext(AxiosContext);
-    const { selectedControllerId, selectedControllerName } = route.params;
+    // const { selectedControllerId, selectedControllerName } = route.params;
+    const [controller, setSelectedController] = useState({
+        selectedControllerId: 0,
+        selectedControllerName: ''
+    })
 
     const [controllerTimeObj, setControllerTimeObj] = useState({
         Id: 0,
@@ -60,10 +65,14 @@ const ConfigurationTimeScreen = ({ route }) => {
     //Show Day end Time Picker
     const [showDayEndTime, setShowDayEndTime] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleBack = () => {
         navigation.navigate('Dashboard')
     };
     const handleSubmit = async () => {
+        setIsLoading(true);
+
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
         controllerTimeObj.UserId = jsonVal.userId;
@@ -80,8 +89,8 @@ const ConfigurationTimeScreen = ({ route }) => {
         controllerTimeObj.DayStartTimeMin = dayStartTime.getMinutes() == NaN ? 0 : dayStartTime.getMinutes();
         controllerTimeObj.DayEndTimeHh = dayEndTime.getHours() == NaN ? 0 : dayEndTime.getHours();
         controllerTimeObj.DayEndTimeMin = dayEndTime.getMinutes() == NaN ? 0 : dayEndTime.getMinutes();
-        controllerTimeObj.ControllerId = selectedControllerId;
-        controllerTimeObj.ControllerNo = selectedControllerName;
+        controllerTimeObj.ControllerId = controller.selectedControllerId;
+        controllerTimeObj.ControllerNo = controller.selectedControllerName;
         console.log(controllerTimeObj)
         if (isAdd) {
             //Add
@@ -93,8 +102,12 @@ const ConfigurationTimeScreen = ({ route }) => {
                 //set controller object
                 setControllerTimeObj(response.data)
                 alert('Saved Successfully!');
+                setIsLoading(false);
+                navigation.navigate('Dashboard')
             } catch (error) {
                 console.error('Error:', error);
+                setIsLoading(false);
+
                 // Handle the error here
             }
 
@@ -108,9 +121,13 @@ const ConfigurationTimeScreen = ({ route }) => {
                 const response = await authAxios.put('/ControllerTimeSetting/' + controllerTimeObj.Id, controllerTimeObj);
                 console.log('Response:', response.data);
                 alert('Updated Successfully!');
+                setIsLoading(false);
+                navigation.navigate('Dashboard')
 
             } catch (error) {
                 console.error('Error:', error);
+                setIsLoading(false);
+
                 // Handle the error here
             }
 
@@ -160,210 +177,227 @@ const ConfigurationTimeScreen = ({ route }) => {
     };
 
 
-    useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsLoading(true);
+            // Retrieve selected controller from AsyncStorage
+            const retrieveSelectedController = async () => {
+                try {
 
-        // const value = await AsyncStorage.getItem('selectedController');
-        // let jsonVal = JSON.parse(value);
-        // const id = jsonVal.value
-        // Define a function to fetch data from the API
-        const getIMEI = async () => {
-            try {
-                const imeiNumber = await DeviceInfo.getImei();
-                console.log('IMEI Number:', imeiNumber);
-                controllerTimeObj.UsermobileImeino = imeiNumber
-            } catch (error) {
-                console.error('Error getting IMEI:', error);
-            }
-        };
+                    const value = await AsyncStorage.getItem('selectedController');
+                    if (value !== null) {
 
-        const fetchData = async () => {
-            try {
-                const response = await authAxios.get('ControllerTimeSetting/ControllerTimeSettingByControllerId/' + selectedControllerId);
-                // Update the state with the received data
-                let data = response.data[0]
-                if (data != null) {
-                    setIsAdd(false)
-                    //set controller object
-                    setControllerTimeObj(data)
-                    console.log("UserId" + controllerTimeObj.UserId)
-                    let currentYear = convertTwoDigitYearToFourDigit(data.CurrentYearServer);
-                    let serverDate = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer);
-                    setDate(serverDate);
-                    let timeServer = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.CuttentTimeServerHh, data.CurrentTimeServerMin);
-                    setCurrentTime(timeServer)
-                    let timeDayStart = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.DayStartTimeHh, data.DayStartTimeMin);
-                    setDayStarttime(timeDayStart)
-                    let timeDayEnd = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.DayEndTimeHh, data.DayEndTimeMin);
-                    setDayEndtime(timeDayEnd)
+                        let jsonVal = JSON.parse(value);
+                        let controller = {
+                            selectedControllerId: jsonVal.value,
+                            selectedControllerName: jsonVal.label
+                        }
+                        setSelectedController(controller);
+                        fetchData(jsonVal.value);
+                    }
+                    else {
+                        alert("Select controller no form dashboard")
+                        setIsLoading(false);
+                    }
+                } catch (error) {
+                    console.error('Error retrieving selected controller:', error);
+                    alert("Select controller no form dashboard")
+                    setIsLoading(false);
                 }
-                else {
-                    //Add
+            };
+
+
+            // const value = await AsyncStorage.getItem('selectedController');
+            // let jsonVal = JSON.parse(value);
+            // const id = jsonVal.value
+            // Define a function to fetch data from the API
+            const getIMEI = async () => {
+                try {
+                    const imeiNumber = await DeviceInfo.getImei();
+                    console.log('IMEI Number:', imeiNumber);
+                    controllerTimeObj.UsermobileImeino = imeiNumber
+                } catch (error) {
+                    console.error('Error getting IMEI:', error);
                 }
+            };
 
-                //setApiData(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        // getIMEI();
-        fetchData();
-    }, []);
+            const fetchData = async (id) => {
+                try {
+                    //alert(controller.selectedControllerName)
+                    const response = await authAxios.get('ControllerTimeSetting/ControllerTimeSettingByControllerId/' + id);
+                    // Update the state with the received data
+                    let data = response.data[0]
+                    if (data != null) {
+                        setIsAdd(false)
+                        //alert(controllerTimeObj.UserId)
+                        //set controller object
+                        setControllerTimeObj(data)
+                        console.log("UserId" + controllerTimeObj.UserId)
+                        let currentYear = convertTwoDigitYearToFourDigit(data.CurrentYearServer);
+                        let serverDate = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer);
+                        setDate(serverDate);
+                        let timeServer = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.CuttentTimeServerHh, data.CurrentTimeServerMin);
+                        setCurrentTime(timeServer)
+                        let timeDayStart = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.DayStartTimeHh, data.DayStartTimeMin);
+                        setDayStarttime(timeDayStart)
+                        let timeDayEnd = new Date(currentYear, data.CurrentMonthServer, data.CurrentDayServer, data.DayEndTimeHh, data.DayEndTimeMin);
+                        setDayEndtime(timeDayEnd)
+                        setIsLoading(false);
+                    }
+                    else {
+                        //Add
+                    }
 
+                    //setApiData(data);
+                } catch (error) {
+                    setIsLoading(false);
+                    console.error('Error fetching data:', error);
+                }
+            };
+            // getIMEI();
+            retrieveSelectedController();
+        }, [authAxios]) // Make sure to include any dependencies of the effect
+    );
 
     return (
 
-        <SafeAreaView>
-            <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-                <TouchableOpacity onPress={handleBack}>
-                    <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-                </TouchableOpacity>
-                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Configuration Time Setting</Text>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+                <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Configuration Time Setting</Text>
             </View>
-            <Card>
-                <Card.Content style={{ padding: 5, margin: 5 }}>
-                    <View style={styles.container}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
-                                <View style={styles.formGroup}>
-                                    <Text style={styles.label}>Controller No: {selectedControllerName}
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
 
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
-                                <View style={styles.formGroup}>
-                                    <Text style={styles.label}>Server Date:
-                                    </Text>
-                                    <TextInput
-                                        label="Current Date"
-                                        returnKeyType="done"
-                                        editable={false}
-                                        value={moment(date).format('MMMM D, YYYY')}
-                                    />
-                                </View>
-                            </View>
-                            <View >
-                                <Icon style={{ marginTop: 47, padding: 4 }} name="calendar-days" size={25} color="#007500" onPress={showPicker} />
-                            </View>
+            <View style={styles.container}>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.formGroup}>
+                            <Text style={styles.label}>Controller No: {controller.selectedControllerName}
+                            </Text>
                         </View>
-                        {show && (
-                            <DateTimePicker
-                                label="Select Date"
-                                value={date}
-                                mode="date"
-                                display="calendar"
-                                onChange={onChange}
-                                style={{ marginTop: 16 }}
-                            />
-                        )}
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 2 }}>
-                                <View style={styles.formGroup}>
-                                    <Text style={styles.label}>Server Time:
-                                    </Text>
-                                    <TextInput
-                                        label="Current Time"
-                                        returnKeyType="done"
-                                        editable={false}
-                                        value={moment(currentTime).format('HH:mm')}
-                                    />
-                                </View>
-                            </View>
-                            <View>
-                                <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showTimePicker} />
-                            </View>
-                        </View>
-                        {showTime && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={currentTime}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeTime}
-                            />
-                        )}
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 2 }}>
-                                <View style={styles.formGroup}>
-                                    <Text style={styles.label}>Day Start Time:
-                                    </Text>
-                                    <TextInput
-                                        label="Day Start Time"
-                                        returnKeyType="done"
-                                        editable={false}
-                                        value={moment(dayStartTime).format('HH:mm')}
-                                    />
-                                </View>
-                            </View>
-                            <View>
-                                <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showDayStartTimePicker} />
-                            </View>
-                        </View>
-                        {showDayStartTime && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={dayStartTime}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeDayStartTime}
-                            />
-                        )}
-
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 2 }}>
-                                <View style={styles.formGroup}>
-                                    <Text style={styles.label}>Day End Time:
-                                    </Text>
-                                    <TextInput
-                                        label="Day End Time"
-                                        returnKeyType="done"
-                                        editable={false}
-                                        value={moment(dayEndTime).format('HH:mm')}
-                                    />
-                                </View>
-                            </View>
-                            <View>
-                                <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showDayEndimePicker} />
-                            </View>
-                        </View>
-                        {showDayEndTime && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={dayEndTime}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeDayEndTime}
-                            />
-                        )}
-                        <Button
-                            mode="outlined"
-                            onPress={handleSubmit}
-                        >
-                            Save
-                        </Button>
                     </View>
-                </Card.Content>
-            </Card>
+                </View>
 
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.formGroup}>
+                            <TouchableOpacity onPress={showPicker}>
+                                <TextInput
+                                    label="Current Date"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(date).format('MMMM D, YYYY')}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                {show && (
+                    <DateTimePicker
+                        label="Select Date"
+                        value={date}
+                        mode="date"
+                        display="calendar"
+                        onChange={onChange}
+                        style={{ marginTop: 16 }}
+                    />
+                )}
+
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 2 }}>
+                        <View style={styles.formGroup}>
+                            <TouchableOpacity onPress={showTimePicker}>
+                                <TextInput
+                                    label="Server Time"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(currentTime).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+                </View>
+                {showTime && (
+                    <DateTimePicker
+                        testID="dateTimePickerTime"
+                        value={currentTime}
+                        mode="time" // Options: 'date', 'time', 'datetime'
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeTime}
+                    />
+                )}
+
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 2 }}>
+                        <View style={styles.formGroup}>
+                            <TouchableOpacity onPress={showDayStartTimePicker}>
+                                <TextInput
+                                    label="Day Start Time"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(dayStartTime).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+                </View>
+                {showDayStartTime && (
+                    <DateTimePicker
+                        testID="dateTimePickerTime"
+                        value={dayStartTime}
+                        mode="time" // Options: 'date', 'time', 'datetime'
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeDayStartTime}
+                    />
+                )}
+
+
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 2 }}>
+                        <View style={styles.formGroup}>
+                            <TouchableOpacity onPress={showDayEndimePicker}>
+                                <TextInput
+                                    label="Day End Time"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(dayEndTime).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                {showDayEndTime && (
+                    <DateTimePicker
+                        testID="dateTimePickerTime"
+                        value={dayEndTime}
+                        mode="time" // Options: 'date', 'time', 'datetime'
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeDayEndTime}
+                    />
+                )}
+                <Button
+                    mode="outlined"
+                    onPress={handleSubmit}
+                >
+                    Save
+                </Button>
+            </View>
+
+            {/* Show the spinner if isLoading is true */}
+            {isLoading && (
+                <View style={styles.spinnerContainer}>
+                    <ActivityIndicator size="large" color="green" />
+                </View>
+            )}
         </SafeAreaView>
 
     );
 }
 
 const styles = StyleSheet.create({
-    // container: {
-
-    //     padding: 20,
-    //     width: '100%',
-    // },
     container: {
         //flex: 1,
         justifyContent: 'center',
@@ -373,8 +407,9 @@ const styles = StyleSheet.create({
         marginBottom: 1,
     },
     label: {
-        fontSize: 14,
-        marginBottom: 0,
+        fontSize: 16,
+        marginBottom: 2,
+        fontWeight: 'bold',
     },
     input: {
         padding: 2,
@@ -391,6 +426,17 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 16,
         fontWeight: 'bold',
+    },
+
+    spinnerContainer: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 })
 export default ConfigurationTimeScreen;

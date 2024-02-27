@@ -1,140 +1,153 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Text } from 'react-native-paper'
-import Button from '../components/Button'
-import Background from '../components/Background'
-import { useNavigation } from '@react-navigation/native';
-import DropDownPicker from 'react-native-dropdown-picker'
-import { AxiosContext } from '../context/AxiosContext';
-import { getItem } from '../Models/model'
-import { AuthContext } from '../context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { Text } from 'react-native-paper';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SequenceSetting({ route }) {
-  const { authAxios } = useContext(AxiosContext);
-
   const navigation = useNavigation();
-  const [selectedValue, setSelectedValue] = useState();
-  const [selectedController, setSelectedController] = useState();
-  const [open, setOpen] = useState(false);
-  const [itemsController, setItemsController] = useState([]);
-  
-  useEffect(() => {
-    fetchMyAPI()
-  }, []);
-
-  const changeSelectOptionHandler = async (value) => {
-    console.log(value)
-    setSelectedController(value)
-    await AsyncStorage.setItem('selectedController', JSON.stringify(value));
-
-  };
-
-  const fetchMyAPI = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user');
-      let jsonVal = JSON.parse(value);
-      const response = await authAxios.get('ControllerUser/' + jsonVal.userId);
-      console.log(response.data);
-      let items = response.data.map(s => ({ label: s.ControllerNo, value: s.ControllerId }))
-      setItemsController(items);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
-
-  const handleBack = () => {
-    navigation.navigate('Dashboard');
-  };
-
+  const [controller, setSelectedController] = useState({
+    selectedControllerId: 0,
+    selectedControllerName: ''
+  })
 
   const handleSequenceSettingNavigation = () => {
-    navigation.navigate('SequenceSettingList', {
-      selectedControllerId: selectedController.value,
-      selectedControllerName: selectedController.label
-    })
+    navigation.navigate('SequenceSettingList');
   };
-
-
   const handleFilterSettingNavigation = () => {
-    navigation.navigate('FilterSequenceList', {
-      selectedControllerId: selectedController.value,
-      selectedControllerName: selectedController.label
-    })
+    navigation.navigate('FilterSequenceList');
   };
-  return (
 
-    <View>
-        <View>
-          <Text style={{ marginLeft: 8 }}>Select Controller</Text>
+  useFocusEffect(
+    React.useCallback(() => {
+      // Retrieve selected controller from AsyncStorage
+      const retrieveSelectedController = async () => {
+        try {
+          const value = await AsyncStorage.getItem('selectedController');
+          if (value !== null) {
 
-          <DropDownPicker
-            open={open}
-            value={selectedValue}
-            items={itemsController}
-            setOpen={setOpen}
-            setValue={setSelectedValue}
-            setItems={setItemsController}
-            containerStyle={{ padding: 8 }}
-            style={{ backgroundColor: '#fafafa' }}
-            dropDownContainerStyle={{ marginLeft: 8 }}
-            listItemLabelStyle={{ marginLeft: 10 }}
-            itemStyle={{
-              justifyContent: 'flex-start', marginLeft: 8
-            }}
-            onSelectItem={changeSelectOptionHandler}
-          />
-
-
-        </View>
-      {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-        <TouchableOpacity onPress={handleBack}>
-          <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-        </TouchableOpacity>
-        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Sequence Settings</Text>
-      </View> */}
-      <View style={styles.container}>
-        <Button
-          mode="outlined"
-          onPress={handleSequenceSettingNavigation}
-        >
-          Irrigation Sequence
-        </Button>
-
-        <Button
-          mode="outlined"
-          onPress={handleFilterSettingNavigation}
-        >
-          FilterSequence
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'CyclicSequenceScreen' }],
-            })
+            let jsonVal = JSON.parse(value);
+            let controller = {
+              selectedControllerId: jsonVal.value,
+              selectedControllerName: jsonVal.label
+            }
+            setSelectedController(controller);
           }
-        >
-          CyclicSequence
-        </Button>
+          else {
+            alert("Select controlle r no form dashboard")
+          }
+        } catch (error) {
+          console.error('Error retrieving selected controller:', error);
+          alert("Select controller no form dashboard")
+        }
+      };
 
+      retrieveSelectedController();
+    }, []) // Make sure to include any dependencies of the effect
+  );
 
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>      
 
+        <Text style={styles.title}>Sequence Configuration</Text>
+        <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+
+        <View style={styles.gridContainer}>
+          <View style={[styles.gridItem, { flex: 3 }]}>
+            <TouchableOpacity style={styles.touchable} onPress={handleSequenceSettingNavigation}>
+              <Image
+                source={require("../assets/irrigationseq.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}>Irrigation Sequence </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.gridItem, { flex: 3 }]}>
+            <TouchableOpacity style={styles.touchable} onPress={handleFilterSettingNavigation}>
+              <Image
+                source={require("../assets/irrigation-system.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}> Filter Sequence</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.gridItem, { flex: 3 }]}>
+            <TouchableOpacity style={styles.touchable} onPress={handleFilterSettingNavigation}>
+              <Image
+                source={require("../assets/plant.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}> Cyclic Sequence</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.gridItem, { flex: 3 }]}>
+            <TouchableOpacity style={styles.touchable} onPress={handleFilterSettingNavigation}>
+              <Image
+                source={require("../assets/irrigation.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}> Valve Cyclic</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          {/* Additional grid items */}
+        </View>
       </View>
-
-    </View>
-
-
-
-  )
-
+    </SafeAreaView>
+  );
 }
+
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    width: '100%',
+    flex: 1,
+    paddingTop: 10, 
+    paddingHorizontal: 20,
+    backgroundColor: '#d3f9e8', // Light green background
+
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: 'center',
+    color: 'green'
+
+  }, controllerName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    color: 'green'
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    margin: 6,
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  view: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    paddingTop: 100,
+  },
+  image: {
+
+  },
+  touchable: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    color: 'black',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

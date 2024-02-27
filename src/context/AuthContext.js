@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {createContext, useState} from 'react';
 import * as Keychain from 'react-native-keychain';
 
@@ -18,8 +19,19 @@ const AuthProvider = ({children}) => {
       refreshToken: null,
       authenticated: false,
     });
+     // Call the function whenever you want to clear AsyncStorage
+     clearAsyncStorage();
+    
   };
-
+  // Function to clear AsyncStorage
+  const clearAsyncStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('AsyncStorage successfully cleared.');
+    } catch (error) {
+      console.error('Error clearing AsyncStorage:', error);
+    }
+  };
   const getAccessToken = () => {
     return authState.accessToken;
   };

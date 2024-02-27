@@ -6,7 +6,7 @@ import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -202,38 +202,45 @@ const IrrigationSequenceScreen = ({ route }) => {
         }
     };
 
-    useEffect(() => {
-        fetchValveData()
-        setIsLoading(true)
-        setIsAdd(isAddData);
-        setFormData(dataModel);
-        //If edit
-        if (isAddData == false) {
-            let currentYear = new Date().getFullYear();
-            let CurrentMonthServer = new Date().getMonth();
-            let CurrentDayServer = new Date().getDay();
-            let timeSlot1 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot1Hh, dataModel.TimeSlot1Min);
-            setTimeSlot1(timeSlot1)
-            let timeSlot2 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot2Hh, dataModel.TimeSlot2Min);
-            setTimeSlot2(timeSlot2)
-            let timeSlot3 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot3Hh, dataModel.TimeSlot3Min);
-            setTimeSlot3(timeSlot3)
-            let timeSlot4 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot4Hh, dataModel.TimeSlot4Min);
-            setTimeSlot4(timeSlot4)
-            const arrayOfWeeksItems = dataModel.WeekdaysString.split(',');
-            console.log(arrayOfWeeksItems)
-            setSelectedDays(arrayOfWeeksItems)
-            if (dataModel.ValveNos != "") {
-                const jsonObject = JSON.parse(dataModel.ValveNos);
-                console.log("_____________________________________________________")
-                console.log("_____________________________________________________")
-                console.log(dataModel.ValveNos)
-                setValveArray(jsonObject)
-            }
-        }
 
-        setIsLoading(false)
-    }, []);
+    
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsLoading(true);
+            fetchValveData()
+            setIsLoading(true)
+            setIsAdd(isAddData);
+            setFormData(dataModel);
+            //If edit
+            if (isAddData == false) {
+                let currentYear = new Date().getFullYear();
+                let CurrentMonthServer = new Date().getMonth();
+                let CurrentDayServer = new Date().getDay();
+                let timeSlot1 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot1Hh, dataModel.TimeSlot1Min);
+                setTimeSlot1(timeSlot1)
+                let timeSlot2 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot2Hh, dataModel.TimeSlot2Min);
+                setTimeSlot2(timeSlot2)
+                let timeSlot3 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot3Hh, dataModel.TimeSlot3Min);
+                setTimeSlot3(timeSlot3)
+                let timeSlot4 = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.TimeSlot4Hh, dataModel.TimeSlot4Min);
+                setTimeSlot4(timeSlot4)
+                const arrayOfWeeksItems = dataModel.WeekdaysString.split(',');
+                console.log(arrayOfWeeksItems)
+                setSelectedDays(arrayOfWeeksItems)
+                if (dataModel.ValveNos != "") {
+                    const jsonObject = JSON.parse(dataModel.ValveNos);
+                    console.log("_____________________________________________________")
+                    console.log("_____________________________________________________")
+                    console.log(dataModel.ValveNos)
+                    setValveArray(jsonObject)
+                }
+            }
+    
+            setIsLoading(false)
+        }, [authAxios]) // Make sure to include any dependencies of the effect
+    );
+
+
 
     const handleTextInputChange = (field, value) => {
         setFormData({

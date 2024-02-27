@@ -17,14 +17,15 @@ import MainpageScreen from './src/screens/MainpageScreen';
 import SequenceSetting from './src/screens/SequenceSettings';
 import { createStackNavigator } from '@react-navigation/stack';
 import MaxFilterValveSettingsScreen from './src/screens/MaxFilterValveSettings';
+import { AuthContext } from './src/context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const ConfigurationStack = () => (
   <Stack.Navigator>
-    {/* <Stack.Screen name="Dashboard" component={Dashboard} /> */}
-    <Drawer.Screen name="Dashboard" component={Dashboard} options={{
+    <Stack.Screen name="Dashboard" component={Dashboard} options={{
       headerShown: false
     }} />
     <Drawer.Screen name="MaxFilterValveSettingsScreen" component={MaxFilterValveSettingsScreen} options={{
@@ -69,9 +70,13 @@ const ScheduleStack = () => (
 // Custom Drawer Content Component
 function CustomDrawerContent(props) {
   const { navigation } = props;
+const authContext = React.useContext(AuthContext);
 
   const handleLogout = () => {
+
     // Handle logout logic here
+    authContext.logout();
+    navigation.navigate('Login');
   };
 
   return (
@@ -91,11 +96,17 @@ function CustomDrawerContent(props) {
         />
         <DrawerItem
           label="Configuration Settings"
-          onPress={() => navigation.navigate('Dashboard')}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'Dashboard' }],
+          })}
         />
         <DrawerItem
           label="Sequence Settings"
-          onPress={() => navigation.navigate('SequenceSettings')}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'SequenceSettings' }],
+          })}
         />
         {/* Add more DrawerItems as needed */}
         <DrawerItem
@@ -113,6 +124,7 @@ function CustomDrawerContent(props) {
 }
 
 function App() {
+
   return (
     <NavigationContainer>
       <Drawer.Navigator

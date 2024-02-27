@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView,ActivityIndicator } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Text } from "react-native-paper";
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -14,10 +14,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const ValveSettingsScreen = ({ route }) => {
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
-    const { selectedControllerId, selectedControllerName, dataModel, isAddData } = route.params;
+    const { dataModel, isAddData } = route.params;
     const [isAdd, setIsAdd] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [controller, setSelectedController] = useState({
+        selectedControllerId: 0,
+        selectedControllerName: ''
+    })
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
     //Server Current Time
@@ -60,16 +63,70 @@ const ValveSettingsScreen = ({ route }) => {
         ControllerNo: '',
     })
 
-    useEffect(() => {
-        setIsAdd(isAddData);
-        setFormData(dataModel);
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsLoading(true);
+            // Retrieve selected controller from AsyncStorage
+            const retrieveSelectedController = async () => {
+                try {
+
+                    const value = await AsyncStorage.getItem('selectedController');
+                    if (value !== null) {
+
+                        let jsonVal = JSON.parse(value);
+                        let controller = {
+                            selectedControllerId: jsonVal.value,
+                            selectedControllerName: jsonVal.label
+                        }
+                        setSelectedController(controller);
+                        fetchData(jsonVal.value);
+                    }
+                    else {
+                        alert("Select controller no form dashboard")
+                        setIsLoading(false);
+                    }
+                } catch (error) {
+                    console.error('Error retrieving selected controller:', error);
+                    alert("Select controller no form dashboard")
+                    setIsLoading(false);
+                }
+            };
+
+
+            // const value = await AsyncStorage.getItem('selectedController');
+            // let jsonVal = JSON.parse(value);
+            // const id = jsonVal.value
+            // Define a function to fetch data from the API
+            const getIMEI = async () => {
+                try {
+                    const imeiNumber = await DeviceInfo.getImei();
+                    console.log('IMEI Number:', imeiNumber);
+                    controllerTimeObj.UsermobileImeino = imeiNumber
+                } catch (error) {
+                    console.error('Error getting IMEI:', error);
+                }
+            };
+
+            const fetchData = async (id) => {
+                try {
+                    setIsAdd(isAddData);
+                    setFormData(dataModel);
+                    setIsLoading(false);
+
+                    //setApiData(data);
+                } catch (error) {
+                    setIsLoading(false);
+                    console.error('Error fetching data:', error);
+                }
+            };
+            // getIMEI();
+            retrieveSelectedController();
+        }, [authAxios]) // Make sure to include any dependencies of the effect
+    );
+
 
     const handleBack = () => {
-        navigation.navigate('ValveSettingsListScreen', {
-            selectedControllerId: selectedControllerId,
-            selectedControllerName: selectedControllerName
-        })
+        navigation.navigate('ValveSettingsListScreen')
         // navigation.navigate('Dashboard')
     };
 
@@ -85,8 +142,8 @@ const ValveSettingsScreen = ({ route }) => {
         formData.FbTimeMin = fbTIme.getMinutes() == NaN ? 0 : fbTIme.getMinutes();
         formData.FoTimeHh = foTime.getHours() == NaN ? 0 : foTime.getHours();
         formData.FoTimeMin = foTime.getMinutes() == NaN ? 0 : foTime.getMinutes();
-        formData.ControllerId = selectedControllerId;
-        formData.ControllerNo = selectedControllerName;
+        formData.ControllerId = controller.selectedControllerId;
+        formData.ControllerNo = controller.selectedControllerName;
         formData.CropSowingDate = date
         formData.UsermobileImeino = ""
 
@@ -102,10 +159,7 @@ const ValveSettingsScreen = ({ route }) => {
                 setFormData(response.data)
                 setIsLoading(false);
                 console.warn("Success Add");
-                navigation.navigate('ValveSettingsListScreen', {
-                    selectedControllerId: selectedControllerId,
-                    selectedControllerName: selectedControllerName,
-                  })
+                navigation.navigate('ValveSettingsListScreen')
             } catch (error) {
                 console.error('Error:', error);
                 setIsLoading(false);
@@ -123,10 +177,7 @@ const ValveSettingsScreen = ({ route }) => {
                 console.log('Response:', response.data);
                 console.warn("Success edit");
                 setIsLoading(false);
-                navigation.navigate('ValveSettingsListScreen', {
-                    selectedControllerId: selectedControllerId,
-                    selectedControllerName: selectedControllerName,
-                  })
+                navigation.navigate('ValveSettingsListScreen')
             } catch (error) {
                 console.error('Error:', error);
                 setIsLoading(false);
@@ -141,7 +192,7 @@ const ValveSettingsScreen = ({ route }) => {
         setFormData({
             ...formData,
             [field]: value,
-        });       
+        });
     };
 
     const onChangeDate = (event, selectedDate) => {
@@ -187,224 +238,224 @@ const ValveSettingsScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-            <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-                <TouchableOpacity onPress={handleBack}>
-                    <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-                </TouchableOpacity>
-                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Valve Settings</Text>
-            </View>
-            <Card>
-                <Card.Content style={{ padding: 5, margin: 5 }}>
-                    <View style={styles.container}>
-                        <View>
-                            <TextInput
-                                label="MainValveNo"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.MainValveNo.toString()}
-                                onChangeText={(value) => handleTextInputChange('MainValveNo', value)}
+            <ScrollView>
+                <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+                    <TouchableOpacity onPress={handleBack}>
+                        <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
+                    </TouchableOpacity>
+                    <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Valve Settings</Text>
+                </View>
+                <Card>
+                    <Card.Content style={{ padding: 5, margin: 5 }}>
+                        <View style={styles.container}>
+                            <View>
+                                <TextInput
+                                    label="MainValveNo"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.MainValveNo.toString()}
+                                    onChangeText={(value) => handleTextInputChange('MainValveNo', value)}
 
-                            />
-                            <TextInput
-                                label="TagName"
-                                returnKeyType="done"
-                                value={formData.TagName}
-                                onChangeText={(value) => handleTextInputChange('TagName', value)}
-                            />
+                                />
+                                <TextInput
+                                    label="TagName"
+                                    returnKeyType="done"
+                                    value={formData.TagName}
+                                    onChangeText={(value) => handleTextInputChange('TagName', value)}
+                                />
 
 
 
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={{ flex: 2 }}>
-                                    <View style={styles.formGroup}>
-                                        <Text style={styles.label}>Duration:
-                                        </Text>
-                                        <TextInput
-                                            label="Duration"
-                                            returnKeyType="done"
-                                            editable={false}
-                                            value={moment(duration).format('HH:mm')}
-                                        />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flex: 2 }}>
+                                        <View style={styles.formGroup}>
+                                            <Text style={styles.label}>Duration:
+                                            </Text>
+                                            <TextInput
+                                                label="Duration"
+                                                returnKeyType="done"
+                                                editable={false}
+                                                value={moment(duration).format('HH:mm')}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showDurartionTimePicker} />
                                     </View>
                                 </View>
-                                <View>
-                                    <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showDurartionTimePicker} />
-                                </View>
-                            </View>
-                            {showDurationTime && (
-                                <DateTimePicker
-                                    testID="dateTimePickerTime"
-                                    value={duration}
-                                    mode="time" // Options: 'date', 'time', 'datetime'
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={onChangeTime}
+                                {showDurationTime && (
+                                    <DateTimePicker
+                                        testID="dateTimePickerTime"
+                                        value={duration}
+                                        mode="time" // Options: 'date', 'time', 'datetime'
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={onChangeTime}
+                                    />
+                                )}
+
+                                <TextInput
+                                    label=" PumpNo"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.PumpNo.toString()}
+                                    onChangeText={(value) => handleTextInputChange('PumpNo', value)}
                                 />
-                            )}
 
-                            <TextInput
-                                label=" PumpNo"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.PumpNo.toString()}
-                                onChangeText={(value) => handleTextInputChange('PumpNo', value)}
-                            />
-
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={{ flex: 2 }}>
-                                    <View style={styles.formGroup}>
-                                        <Text style={styles.label}>FB Time:
-                                        </Text>
-                                        <TextInput
-                                            label="FB Time"
-                                            returnKeyType="done"
-                                            editable={false}
-                                            value={moment(fbTIme).format('HH:mm')}
-                                        />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flex: 2 }}>
+                                        <View style={styles.formGroup}>
+                                            <Text style={styles.label}>FB Time:
+                                            </Text>
+                                            <TextInput
+                                                label="FB Time"
+                                                returnKeyType="done"
+                                                editable={false}
+                                                value={moment(fbTIme).format('HH:mm')}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showFbimePicker} />
                                     </View>
                                 </View>
-                                <View>
-                                    <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showFbimePicker} />
-                                </View>
-                            </View>
-                            {showFbTime && (
-                                <DateTimePicker
-                                    testID="dateTimePickerTime"
-                                    value={fbTIme}
-                                    mode="time" // Options: 'date', 'time', 'datetime'
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={onChangeFb}
-                                />
-                            )}
+                                {showFbTime && (
+                                    <DateTimePicker
+                                        testID="dateTimePickerTime"
+                                        value={fbTIme}
+                                        mode="time" // Options: 'date', 'time', 'datetime'
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={onChangeFb}
+                                    />
+                                )}
 
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={{ flex: 2 }}>
-                                    <View style={styles.formGroup}>
-                                        <Text style={styles.label}>FO Time:
-                                        </Text>
-                                        <TextInput
-                                            label="FO Time"
-                                            returnKeyType="done"
-                                            editable={false}
-                                            value={moment(foTime).format('HH:mm')}
-                                        />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flex: 2 }}>
+                                        <View style={styles.formGroup}>
+                                            <Text style={styles.label}>FO Time:
+                                            </Text>
+                                            <TextInput
+                                                label="FO Time"
+                                                returnKeyType="done"
+                                                editable={false}
+                                                value={moment(foTime).format('HH:mm')}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showFoTimePicker} />
                                     </View>
                                 </View>
-                                <View>
-                                    <Icon style={{ marginTop: 47, padding: 4 }} name="clock" size={25} color="#007500" onPress={showFoTimePicker} />
-                                </View>
-                            </View>
-                            {showDFoTime && (
-                                <DateTimePicker
-                                    testID="dateTimePickerTime"
-                                    value={foTime}
-                                    mode="time" // Options: 'date', 'time', 'datetime'
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={onChangeFO}
+                                {showDFoTime && (
+                                    <DateTimePicker
+                                        testID="dateTimePickerTime"
+                                        value={foTime}
+                                        mode="time" // Options: 'date', 'time', 'datetime'
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={onChangeFO}
+                                    />
+                                )}
+
+                                <TextInput
+                                    label="CoValveSetting"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.CoValveSetting}
+                                    onChangeText={(value) => handleTextInputChange('CoValveSetting', value)}
                                 />
-                            )}
 
-                            <TextInput
-                                label="CoValveSetting"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.CoValveSetting}
-                                onChangeText={(value) => handleTextInputChange('CoValveSetting', value)}
-                            />
+                                <TextInput
+                                    label="CoValveNo1"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.CoValveNo1.toString()}
+                                    onChangeText={(value) => handleTextInputChange('CoValveNo1', value)}
+                                />
+                                <TextInput
+                                    label="CoValveNo2"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.CoValveNo2.toString()}
+                                    onChangeText={(value) => handleTextInputChange('CoValveNo2', value)}
+                                />
 
-                            <TextInput
-                                label="CoValveNo1"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.CoValveNo1.toString()}
-                                onChangeText={(value) => handleTextInputChange('CoValveNo1', value)}
-                            />
-                            <TextInput
-                                label="CoValveNo2"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.CoValveNo2.toString()}
-                                onChangeText={(value) => handleTextInputChange('CoValveNo2', value)}
-                            />
+                                <TextInput
+                                    label="CoValveNo3"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.CoValveNo3.toString()}
+                                    onChangeText={(value) => handleTextInputChange('CoValveNo3', value)}
+                                />
 
-                            <TextInput
-                                label="CoValveNo3"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.CoValveNo3.toString()}
-                                onChangeText={(value) => handleTextInputChange('CoValveNo3', value)}
-                            />
-
-                            <TextInput
-                                label="CropName"
-                                returnKeyType="done"
-                                value={formData.CropName}
-                                onChangeText={(value) => handleTextInputChange('CropName', value)}
-                            />
-                            <TextInput
-                                label="CropType"
-                                returnKeyType="done"
-                                value={formData.CropType}
-                                onChangeText={(value) => handleTextInputChange('CropType', value)}
-                            />
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={{ flex: 1 }}>
-                                    <View style={styles.formGroup}>
-                                        <Text style={styles.label}>Crop Sowing Date:
-                                        </Text>
-                                        <TextInput
-                                            label="Crop Sowing Date"
-                                            returnKeyType="done"
-                                            editable={false}
-                                            value={moment(date).format('MMMM D, YYYY')}
-                                        />
+                                <TextInput
+                                    label="CropName"
+                                    returnKeyType="done"
+                                    value={formData.CropName}
+                                    onChangeText={(value) => handleTextInputChange('CropName', value)}
+                                />
+                                <TextInput
+                                    label="CropType"
+                                    returnKeyType="done"
+                                    value={formData.CropType}
+                                    onChangeText={(value) => handleTextInputChange('CropType', value)}
+                                />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flex: 1 }}>
+                                        <View style={styles.formGroup}>
+                                            <Text style={styles.label}>Crop Sowing Date:
+                                            </Text>
+                                            <TextInput
+                                                label="Crop Sowing Date"
+                                                returnKeyType="done"
+                                                editable={false}
+                                                value={moment(date).format('MMMM D, YYYY')}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View >
+                                        <Icon style={{ marginTop: 47, padding: 4 }} name="calendar-days" size={25} color="#007500" onPress={showPicker} />
                                     </View>
                                 </View>
-                                <View >
-                                    <Icon style={{ marginTop: 47, padding: 4 }} name="calendar-days" size={25} color="#007500" onPress={showPicker} />
-                                </View>
-                            </View>
-                            {show && (
-                                <DateTimePicker
-                                    label="Select Date"
-                                    value={date}
-                                    mode="date"
-                                    display="calendar"
-                                    onChange={onChangeDate}
-                                    style={{ marginTop: 16 }}
+                                {show && (
+                                    <DateTimePicker
+                                        label="Select Date"
+                                        value={date}
+                                        mode="date"
+                                        display="calendar"
+                                        onChange={onChangeDate}
+                                        style={{ marginTop: 16 }}
+                                    />
+                                )}
+                                <TextInput
+                                    label="ValveArea"
+                                    returnKeyType="done"
+                                    keyboardType="numeric"
+                                    value={formData.ValveArea}
+                                    onChangeText={(value) => handleTextInputChange('ValveArea', value)}
                                 />
-                            )}
-                            <TextInput
-                                label="ValveArea"
-                                returnKeyType="done"
-                                keyboardType="numeric"
-                                value={formData.ValveArea}
-                                onChangeText={(value) => handleTextInputChange('ValveArea', value)}
-                            />
-                            <Button
-                                mode="outlined"
-                                onPress={handleSubmit}
-                            >
-                                Sumbit
-                            </Button>
+                                <Button
+                                    mode="outlined"
+                                    onPress={handleSubmit}
+                                >
+                                    Sumbit
+                                </Button>
 
+
+                            </View>
 
                         </View>
-
-                    </View>
-                </Card.Content>
-            </Card>
-        </ScrollView>
-        {/* Show the spinner if isLoading is true */}
-        {isLoading && (
-            <View style={styles.spinnerContainer}>
-                <ActivityIndicator size="large" color="green" />
-            </View>
-        )}
-    </SafeAreaView>
+                    </Card.Content>
+                </Card>
+            </ScrollView>
+            {/* Show the spinner if isLoading is true */}
+            {isLoading && (
+                <View style={styles.spinnerContainer}>
+                    <ActivityIndicator size="large" color="green" />
+                </View>
+            )}
+        </SafeAreaView>
 
 
     );
