@@ -80,16 +80,16 @@ const authContext = React.useContext(AuthContext);
   };
 
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} style={{backgroundColor:'#a3e5c4'}}>
       {/* App Name */}
       <View style={{ alignItems: 'center', marginVertical: 20 }}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>IRISMART</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color:'green' }}>IRISMART</Text>
         {/* Horizontal Divider */}
         <View style={{ backgroundColor: 'black', height: 1, width: '80%', marginVertical: 10 }} />
       </View>
 
       {/* Drawer Items */}
-      <View>
+      <View >
         <DrawerItem
           label="Dashboard"
           onPress={() => navigation.navigate('MainpageScreen')}
@@ -117,7 +117,7 @@ const authContext = React.useContext(AuthContext);
 
       {/* App Version */}
       <View style={{ alignItems: 'center', marginTop: 20 }}>
-        <Text>App Version: 1.0</Text>
+        <Text>App Version: 1.2</Text>
       </View>
     </DrawerContentScrollView>
   );

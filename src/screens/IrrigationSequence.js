@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, FlatList } from 'react-native'
-import { Provider as PaperProvider, Card, DefaultTheme, Checkbox, Modal, Text, Portal, Provider, ListItem,ActivityIndicator } from 'react-native-paper';
+import { Provider as PaperProvider, Card, DefaultTheme, Checkbox, Modal, Text, Portal, Provider, ListItem, ActivityIndicator } from 'react-native-paper';
 
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -34,7 +34,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     const [fertilizerName, setFertilizerName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-   
+
 
     const [showTimeSlot1, setShowTimeSlot1] = useState(false);
     const [showTimeSlot2, setShowTimeSlot2] = useState(false);
@@ -44,7 +44,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     const [visible, setVisible] = useState(false);
 
     const hideModal = () => setVisible(false);
-   
+
     const [items, setItems] = useState([
         { label: 'Sunday', value: '1' },
         { label: 'Monday', value: '2' },
@@ -72,20 +72,35 @@ const IrrigationSequenceScreen = ({ route }) => {
 
     const addValveDetails = () => {
         console.log(formValveData)
-        if (formValveData.ValveNos.trim() !== '') {
-            // let valveInfo = valveList.filter(x => x.MainValveNo == formValveData.ValveNos)
-            const newItem = {
-                ValveNos: formValveData.ValveNos,
-                IsFert: checked,
-                ValveDurationReadonly: formValveData.ValveDurationReadonly,
-                FertilizerName: formValveData.FertilizerName
-            };
-            setValveArray([...valveArray, newItem]);
-            setIsFert(false);
-            setValveDuration("")
-            setChecked(false)
-            console.log("_____________________________________________")
-            console.log(valveArray)
+        if (valveArray.some(x => x.ValveNos == formValveData.ValveNos)) {
+            alert("Valve no alreay exists in added list");
+        }
+        else {
+            if (formValveData.ValveNos.trim() !== '') {
+                // let valveInfo = valveList.filter(x => x.MainValveNo == formValveData.ValveNos)
+                const newItem = {
+                    ValveNos: formValveData.ValveNos,
+                    IsFert: checked,
+                    ValveDurationReadonly: valveDuration,
+                    FertilizerName: formValveData.FertilizerName
+                };
+                setValveArray([...valveArray, newItem]);
+                setIsFert(false);
+                setValveDuration("")
+                setChecked(false)
+                setValveData
+
+                const newItemReset = {
+                    ValveNos: 0,
+                    IsFert: false,
+                    ValveDurationReadonly: '',
+                    FertilizerName: ''
+                };
+                setValveData(newItemReset);
+                console.log("_____________________________________________")
+                console.log(valveArray)
+            }
+
         }
 
         setVisible(false)
@@ -182,12 +197,13 @@ const IrrigationSequenceScreen = ({ route }) => {
     };
 
     const fetchValveData = async () => {
-        try {setIsLoading(true)
+        try {
+            setIsLoading(true)
             const response = await authAxios.get('ValveSetting/ValveSettingByControllerId/' + selectedControllerId);
             // Update the state with the received data
             let data = response.data
-            setValveList(data) 
-            
+            setValveList(data)
+
             if (data != null) {
 
             }
@@ -203,7 +219,12 @@ const IrrigationSequenceScreen = ({ route }) => {
     };
 
 
-    
+    const onDeleteItem = (itemToDelete) => {
+        // Filter out the item to delete from the array
+        const updatedArray = valveArray.filter(item => item !== itemToDelete);
+        // Update state with the new array
+        setValveArray(updatedArray);
+      };
     useFocusEffect(
         React.useCallback(() => {
             setIsLoading(true);
@@ -235,7 +256,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                     setValveArray(jsonObject)
                 }
             }
-    
+
             setIsLoading(false)
         }, [authAxios]) // Make sure to include any dependencies of the effect
     );
@@ -267,12 +288,12 @@ const IrrigationSequenceScreen = ({ route }) => {
                     setValveDuration(valDur)
                     formValveData.ValveDurationReadonly = valDur;
                 }
-                else{
+                else {
                     let valDur = "";
                     setValveDuration(valDur)
                     formValveData.ValveDurationReadonly = valDur;
                 }
-                
+
                 // setValveData({
                 //     ...formValveData,
                 //     ["ValveDurationReadonly"]: valDur,
@@ -306,16 +327,29 @@ const IrrigationSequenceScreen = ({ route }) => {
             try {
                 console.log("adding")
                 const response = await authAxios.post('/SequenceSetting', formData);
-                console.log('Response:', response.data);
-                //set controller object
-                setFormData(response.data)
-                alert("Success Add");
-                setIsLoading(false);
+                if (response.data.result) {
+                    console.log('Response:', response.data);
+                    setIsAdd(false)
+                    //set controller object
+                    //setFormData(response.data)
+                    setIsLoading(false);
+                    alert("Data Saved Successfully.")
+                    navigation.navigate('SequenceSettingList', {
+                        selectedControllerId: selectedControllerId,
+                        selectedControllerName: selectedControllerName
+                    })
+                }
+                else {
+                    alert(response.data.message)
+                    setIsLoading(false);
+                }
+                // console.log('Response:', response.data);
+                // //set controller object
+                // setFormData(response.data)
+                // alert("Success Add");
+                // setIsLoading(false);
 
-                navigation.navigate('SequenceSettingList', {
-                    selectedControllerId: selectedControllerId,
-                    selectedControllerName: selectedControllerName
-                  })
+
             } catch (error) {
                 alert('Error:', error);
                 setIsLoading(false);
@@ -333,11 +367,11 @@ const IrrigationSequenceScreen = ({ route }) => {
                 console.log('Response:', response.data);
                 alert("Success edit");
                 setIsLoading(false);
-
+                alert("Data Saved Successfully.")
                 navigation.navigate('SequenceSettingList', {
                     selectedControllerId: selectedControllerId,
                     selectedControllerName: selectedControllerName
-                  })
+                })
             } catch (error) {
                 alert('Error:', error);
                 setIsLoading(false);
@@ -352,122 +386,135 @@ const IrrigationSequenceScreen = ({ route }) => {
         // })
     };
 
+    const renderItem = ({ item, onDelete  }) => (
+        <View style={styles.container}>
+        <View style={styles.detailsContainer}>
+          <View>
+            <Text style={styles.valveNos}>ValveNos: {item.ValveNos}</Text>
+            <Text>Valve Duration: {item.ValveDurationReadonly}</Text>
+            <Text>Fertilizer Name: {item.FertilizerName}</Text>
+            <Text>Is Fert: {item.IsFert ? 'Yes' : 'No'}</Text>
+          </View>
+          <TouchableOpacity onPress={() => onDelete(item)} style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
     return (
         <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-            <Provider>
-                <View>
-                    <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+            <ScrollView>
+                <Provider>
+                    <View>
+                        <Text style={styles.title}>Sequence Configuration</Text>
+                        <Text style={styles.controllerName}>{selectedControllerName}</Text>
+                        {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                         <TouchableOpacity onPress={handleBack}>
                             <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                         </TouchableOpacity>
                         <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Irrigation Sequence</Text>
-                    </View>
-                    <View style={styles.container}>
-                        <TextInput
-                            label="SequenceNo"
-                            returnKeyType="done"
-                            keyboardType="numeric"
-                            value={formData.SequenceNo.toString()}
-                            onChangeText={(value) => handleTextInputChange('SequenceNo', value)}
-
-                        />
-                        <TextInput
-                            label="PumpNo"
-                            returnKeyType="done"
-                            keyboardType="numeric"
-                            value={formData.PumbNo.toString()}
-                            onChangeText={(value) => handleTextInputChange('PumbNo', value)}
-
-                        />
-                        <Text style={styles.label}>Time Slot 1
-                        </Text>
-                        <TouchableOpacity onPress={showTimeSlot1Picker}>
+                    </View> */}
+                        <View style={styles.container}>
                             <TextInput
-                                label="Time Slot 1"
+                                label="SequenceNo"
                                 returnKeyType="done"
-                                editable={false}
-                                value={moment(timeSlot1).format('HH:mm')}
-                            />
-                        </TouchableOpacity>
-                        {showTimeSlot1 && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={timeSlot1}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeTimeSlot1}
-                            />
-                        )}
+                                keyboardType="numeric"
+                                value={formData.SequenceNo.toString()}
+                                onChangeText={(value) => handleTextInputChange('SequenceNo', value)}
 
-
-                        <TouchableOpacity onPress={showTimeSlot2Picker}>
-                            <Text style={styles.label}>Time Slot 2
-                            </Text>
+                            />
                             <TextInput
-                                label="Time Slot 2"
+                                label="PumpNo"
                                 returnKeyType="done"
-                                editable={false}
-                                value={moment(timeSlot2).format('HH:mm')}
-                            />
-                        </TouchableOpacity>
-                        {showTimeSlot2 && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={timeSlot2}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeTimeSlot2}
-                            />
-                        )}
+                                keyboardType="numeric"
+                                value={formData.PumbNo.toString()}
+                                onChangeText={(value) => handleTextInputChange('PumbNo', value)}
 
-                        <TouchableOpacity onPress={showTimeSlot3Picker}>
-                            <Text style={styles.label}>Time Slot 3
-                            </Text>
-                            <TextInput
-                                label="Time Slot 3"
-                                returnKeyType="done"
-                                editable={false}
-                                value={moment(timeSlot3).format('HH:mm')}
                             />
-                        </TouchableOpacity>
-
-                        {showTimeSlot3 && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={timeSlot3}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeTimeSlot3}
-                            />
-                        )}
-
-                        <TouchableOpacity onPress={showTimeSlot4Picker}>
-                            <Text style={styles.label}>Time Slot 4
-                            </Text>
-                            <TextInput
-                                label="Time Slot 4"
-                                returnKeyType="done"
-                                editable={false}
-                                value={moment(timeSlot4).format('HH:mm')}
-                            />
-                        </TouchableOpacity>
-                        {showTimeSlot4 && (
-                            <DateTimePicker
-                                testID="dateTimePickerTime"
-                                value={timeSlot4}
-                                mode="time" // Options: 'date', 'time', 'datetime'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChangeTimeSlot4}
-                            />
-                        )}
+                     
+                            <TouchableOpacity onPress={showTimeSlot1Picker}>
+                                <TextInput
+                                    label="Time Slot 1"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(timeSlot1).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+                            {showTimeSlot1 && (
+                                <DateTimePicker
+                                    testID="dateTimePickerTime"
+                                    value={timeSlot1}
+                                    mode="time" // Options: 'date', 'time', 'datetime'
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={onChangeTimeSlot1}
+                                />
+                            )}
 
 
-                        {/* <DropDownPicker
+                            <TouchableOpacity onPress={showTimeSlot2Picker}>
+                             
+                                <TextInput
+                                    label="Time Slot 2"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(timeSlot2).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+                            {showTimeSlot2 && (
+                                <DateTimePicker
+                                    testID="dateTimePickerTime"
+                                    value={timeSlot2}
+                                    mode="time" // Options: 'date', 'time', 'datetime'
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={onChangeTimeSlot2}
+                                />
+                            )}
+
+                            <TouchableOpacity onPress={showTimeSlot3Picker}>
+                            
+                                <TextInput
+                                    label="Time Slot 3"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(timeSlot3).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+
+                            {showTimeSlot3 && (
+                                <DateTimePicker
+                                    testID="dateTimePickerTime"
+                                    value={timeSlot3}
+                                    mode="time" // Options: 'date', 'time', 'datetime'
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={onChangeTimeSlot3}
+                                />
+                            )}
+
+                            <TouchableOpacity onPress={showTimeSlot4Picker}>
+                              
+                                <TextInput
+                                    label="Time Slot 4"
+                                    returnKeyType="done"
+                                    editable={false}
+                                    value={moment(timeSlot4).format('HH:mm')}
+                                />
+                            </TouchableOpacity>
+                            {showTimeSlot4 && (
+                                <DateTimePicker
+                                    testID="dateTimePickerTime"
+                                    value={timeSlot4}
+                                    mode="time" // Options: 'date', 'time', 'datetime'
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={onChangeTimeSlot4}
+                                />
+                            )}
+
+
+                            {/* <DropDownPicker
                             open={open}
                             value={selectedValue}
                             items={items}
@@ -483,102 +530,109 @@ const IrrigationSequenceScreen = ({ route }) => {
                             }}
                             onChangeValue={(value) => console.log(value)}
                         /> */}
-                        <View style={styles.containerWeekDays}>
-                            <Text style={styles.label}>Week Days
-                            </Text>
-                            <ScrollView
-                                horizontal
-                                contentContainerStyle={styles.weekdaysContainer}
-                                showsHorizontalScrollIndicator={false}
-                            >
-                                {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={[
-                                            styles.dayButton,
-                                            selectedDays.includes(day) && styles.selectedDayButton
-                                        ]}
-                                        onPress={() => toggleDay(day)}
-                                    >
-                                        <Text style={styles.dayButtonText}>{day.slice(0, 3)}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </ScrollView>
-                        </View>
-                        <Button
-                            mode="outlined"
-                            onPress={showModal}
-
-                        >
-                            Add Valves
-                        </Button>
-                        <FlatList
-                            data={valveArray}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => (
-                                <View>
-                                    <Text>ValveNos: {item.ValveNos}</Text>
-                                    <Text>Valve Duration: {item.ValveDurationReadonly}</Text>
-                                    <Text>Fertilizer Name: {item.FertilizerName}</Text>
-                                    <Text>Is Fert: {item.IsFert ? 'Yes' : 'No'}</Text>
-                                </View>
-                            )}
-                        />
-                        <Portal>
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContent}>
-                                    <View style={{ backgroundColor: 'white', padding: 20 }}>
-                                        <TextInput
-                                            label="ValveNos"
-                                            returnKeyType="done"
-                                            keyboardType="numeric"
-                                            value={formValveData.ValveNos}
-                                            onChangeText={(value) => handleTextInputChangeValve('ValveNos', value)}
-                                        />
-                                        <Text style={styles.label}>Valve Duration
-                                        </Text>
-                                        <TextInput
-                                            label="Valve Duration"
-                                            returnKeyType="done"
-                                            value={valveDuration}
-                                        />
-                                        <Checkbox.Item
-                                            label="IsFert"
-                                            status={checked ? 'checked' : 'unchecked'}
-                                            onPress={() => {
-                                                setChecked(!checked);
-                                            }}
-                                        />
-                                        <TextInput
-                                            label="Fertilizer Name"
-                                            returnKeyType="done"
-                                            value={formValveData.FertilizerName}
-                                            onChangeText={(value) => handleTextInputChangeValve('FertilizerName', value)}
-
-                                        />
-                                        <Button
-                                            mode="outlined"
-                                            onPress={addValveDetails}
-
+                            <View style={styles.containerWeekDays}>
+                                <Text style={styles.label}>Week Days
+                                </Text>
+                                <ScrollView
+                                    horizontal
+                                    contentContainerStyle={styles.weekdaysContainer}
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                    {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => (
+                                        <TouchableOpacity
+                                            key={index}
+                                            style={[
+                                                styles.dayButton,
+                                                selectedDays.includes(day) && styles.selectedDayButton
+                                            ]}
+                                            onPress={() => toggleDay(day)}
                                         >
-                                            Add Valve Details
-                                        </Button>
+                                            <Text style={styles.dayButtonText}>{day.slice(0, 3)}</Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </ScrollView>
+                            </View>
+                            <Button
+                                mode="outlined"
+                                onPress={showModal}
+
+                            >
+                                Add Valves
+                            </Button>
+                            {/* <FlatList
+                                data={valveArray}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item }) => (
+                                    <View>
+                                        <Text>ValveNos: {item.ValveNos}</Text>
+                                        <Text>Valve Duration: {item.ValveDurationReadonly}</Text>
+                                        <Text>Fertilizer Name: {item.FertilizerName}</Text>
+                                        <Text>Is Fert: {item.IsFert ? 'Yes' : 'No'}</Text>
                                     </View>
-                                </Modal></View>
-                        </Portal>
+                                )}
+                            /> */}
 
-                        <Button
-                            mode="contained"
-                            onPress={handleSubmit}>
-                            Save
-                        </Button>
+                            <FlatList
+                                data={valveArray}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item }) => renderItem({ item, onDelete: onDeleteItem })}
+                                />
+                            <Portal>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContent}>
+                                        <View style={{ backgroundColor: 'white', padding: 20 }}>
+                                            <TextInput
+                                                label="ValveNos"
+                                                returnKeyType="done"
+                                                keyboardType="numeric"
+                                                value={formValveData.ValveNos}
+                                                onChangeText={(value) => handleTextInputChangeValve('ValveNos', value)}
+                                            />
+                                            <Text style={styles.label}>Valve Duration:
+                                            </Text>
+                                            <TextInput
+                                                label="Valve Duration"
+                                                returnKeyType="done"
+                                                value={valveDuration}
+                                            />
+                                            <Checkbox.Item
+                                                label="IsFert"
+                                                status={checked ? 'checked' : 'unchecked'}
+                                                onPress={() => {
+                                                    setChecked(!checked);
+                                                }}
+                                            />
+                                            <TextInput
+                                                label="Fertilizer Name"
+                                                returnKeyType="done"
+                                                value={formValveData.FertilizerName}
+                                                onChangeText={(value) => handleTextInputChangeValve('FertilizerName', value)}
 
+                                            />
+                                           <Button
+                                                mode="outlined"
+                                                onPress={addValveDetails}
+
+                                            >
+                                                Add Valve Details
+                                            </Button>
+
+                                        </View>
+                                    </Modal></View>
+                            </Portal>
+
+                            <Button
+                                mode="outlined"
+                                onPress={handleSubmit}>
+                                Save
+                            </Button>
+
+                        </View>
                     </View>
-                </View>
-            </Provider>
+                </Provider>
 
-        </ScrollView> 
-        {/* Show the spinner if isLoading is true */}
+            </ScrollView>
+            {/* Show the spinner if isLoading is true */}
             {isLoading && (
                 <View style={styles.spinnerContainer}>
                     <ActivityIndicator size="large" color="green" />
@@ -623,7 +677,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    },fabContainer: {
+    }, fabContainer: {
         position: 'absolute',
         bottom: 16,
         right: 16,
@@ -641,6 +695,54 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }, title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
+    }, valveNos: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 4,
     },
+    valveDuration: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    fertilizerName: {
+        fontSize: 16,
+        marginBottom: 4,
+    },
+    isFert: {
+        fontSize: 16,
+        color: '#00aa00', // Green color for 'Yes'
+    },
+    deleteButton: {
+      backgroundColor: 'red',
+      padding: 8,
+      borderRadius: 5,
+    },
+    deleteButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+
+
+    detailsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }, 
+
+
 });
 export default IrrigationSequenceScreen;

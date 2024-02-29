@@ -142,6 +142,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                 //set setFormData
                 setFormData(response.data)
                 Toast.show('Setting Saved Sucessfully', Toast.SHORT);
+                alert("Data Saved Successfully.")
                 setIsLoading(false);
                 navigation.navigate('Dashboard')
             } catch (error) {
@@ -164,6 +165,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                 const response = await authAxios.put('/MaxFiltervalveSetting/' + formData.Id, formData);
                 console.log('Response:', response.data);
                 setIsLoading(false);
+                alert("Data Saved Successfully.")
                 navigation.navigate('Dashboard')
             } catch (error) {
                 console.error('Error:', error);
@@ -207,7 +209,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                         {/* <Text style={styles.label}>Total Filter Valve Pump 1:
                         </Text> */}
                         <TextInput
-                            label="Total Filter Valve Pump1"
+                            label="Nos of Filters on Pump 1"
                             returnKeyType="done"
                             keyboardType="numeric"
                             value={formData.TotalFilterValvePump1.toString()}
@@ -216,7 +218,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                         {/* <Text style={styles.label}>Total Filter Valve Pump 1:
                         </Text> */}
                         <TextInput
-                            label="Total Filter Valve With Pump1"
+                            label="Nos of Filters on Pump 2"
                             returnKeyType="done"
                             keyboardType="numeric"
                             value={formData.FilterValveWithPump1.toString()}
@@ -224,7 +226,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
 
 
                         />
-                        <TextInput
+                        {/* <TextInput
                             label="Total Filter Valve Pump 2"
                             returnKeyType="done"
                             value={formData.TotalFilterValvePump2.toString()}
@@ -238,9 +240,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             keyboardType="numeric"
                             value={formData.FilterValveWithPump2.toString()}
                             onChangeText={(value) => handleTextInputChange('FilterValveWithPump2', value)}
-
-
-                        />
+                            /> */}
                         <TextInput
                             label="MaxValve"
                             returnKeyType="done"
@@ -249,15 +249,13 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             onChangeText={(value) => handleTextInputChange('MaxValve', value)}
 
                         />
-                        <TextInput
+                        {/* <TextInput
                             label="Irrigation Valve"
                             returnKeyType="done"
                             keyboardType="numeric"
                             value={formData.IrrigateValve.toString()}
                             onChangeText={(value) => handleTextInputChange('IrrigateValve', value)}
-
-
-                        />
+                        /> */}
                         <Button
                             mode="outlined"
                             onPress={handleSubmit}

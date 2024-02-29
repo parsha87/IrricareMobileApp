@@ -158,12 +158,8 @@ const FilterSequenceListScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
 
             <ScrollView>
-                <View style={{ flexDirection: 'row', justifyContent: '', backgroundColor: '#3498db', padding: 16 }}>
-                    <TouchableOpacity onPress={handleBack}>
-                        <Text style={{ color: '#fff', fontSize: 18 }}>{'< Back'}</Text>
-                    </TouchableOpacity>
-                    <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Filter Sequence Settings</Text>
-                </View>
+            <Text style={styles.title}>Filter Sequences</Text>
+                <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
                 <FlatList
                     data={formDataList}
                     renderItem={({ item }) => <CardItemFilterList item={item} onPress={handleCardItemPress} />}
@@ -208,6 +204,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }, title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
     },
 
 });

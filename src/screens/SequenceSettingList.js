@@ -142,12 +142,14 @@ const SequenceSettingsListScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-                <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
+                <Text style={styles.title}>Sequences</Text>
+                <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+                {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                     <TouchableOpacity onPress={handleBack}>
                         <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
                     </TouchableOpacity>
                     <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Sequence Settings</Text>
-                </View>
+                </View> */}
                 {/* <Button title="Click me" mode="outlined" onPress={handleButtonClick}>Add Sequence Setting</Button> */}
                 <FlatList
                     data={formDataList}
@@ -228,6 +230,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }, title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
     },
 
 });

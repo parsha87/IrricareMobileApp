@@ -101,7 +101,7 @@ const ConfigurationTimeScreen = ({ route }) => {
                 setIsAdd(false)
                 //set controller object
                 setControllerTimeObj(response.data)
-                alert('Saved Successfully!');
+                alert("Data Saved Successfully.")
                 setIsLoading(false);
                 navigation.navigate('Dashboard')
             } catch (error) {
@@ -122,6 +122,7 @@ const ConfigurationTimeScreen = ({ route }) => {
                 console.log('Response:', response.data);
                 alert('Updated Successfully!');
                 setIsLoading(false);
+                alert("Data Saved Successfully.")
                 navigation.navigate('Dashboard')
 
             } catch (error) {

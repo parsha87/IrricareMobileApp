@@ -129,7 +129,7 @@ const FilterSequenceScreen = ({ route }) => {
                 setIsAdd(false)
                 //set controller object
                 setFormData(response.data)
-                alert('Saved Successfully!');
+                alert("Data Saved Successfully.")
                 navigation.navigate('FilterSequenceList')
             } catch (error) {
                 console.error('Error:', error);
@@ -143,7 +143,7 @@ const FilterSequenceScreen = ({ route }) => {
                 console.log("Updating")
                 const response = await authAxios.put('/FilterSequenceSetting/' + formData.Id, formData);
                 console.log('Response:', response.data);
-                alert('Updated Successfully!');
+                alert("Data Saved Successfully.");
                 navigation.navigate('FilterSequenceList')
 
             } catch (error) {
@@ -172,91 +172,77 @@ const FilterSequenceScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-                <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-                    <TouchableOpacity onPress={handleBack}>
-                        <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-                    </TouchableOpacity>
-                    <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Filter Sequence</Text>
-                </View>
-                <Card>
-                    <Card.Content style={{ padding: 11, margin: 12 }}>
+                <Text style={styles.title}>Filter Sequences</Text>
+                <Text style={styles.controllerName}>{selectedControllerName}</Text>
+
+                <View>
+                    <View style={styles.container}>
+                        <TextInput style={{ color: 'black', backgroundColor: 'white' }}
+                            label="Max Filter Valve"
+                            returnKeyType="done"
+                            keyboardType="numeric"
+                            editable={false}
+                            value={formData.MaxFilterValve.toString()}
+                            onChangeText={(value) => handleTextInputChange('MaxFilterValve', value)}
+                        />
+                        <TextInput style={{ color: 'black', backgroundColor: 'white' }}
+                            label="Pump No"
+                            returnKeyType="done"
+                            keyboardType="numeric"
+                            value={formData.PumpNo.toString()}
+                            onChangeText={(value) => handleTextInputChange('PumpNo', value)}
+                        />
+                        <TextInput style={{ color: 'black', backgroundColor: 'white' }}
+                            label="Flush TIme (Min)"
+                            returnKeyType="done"
+                            keyboardType="numeric"
+                            value={formData.FlushTimeMin.toString()}
+                            onChangeText={(value) => handleTextInputChange('FlushTimeMin', value)}
+                        />
+                        <TextInput style={{ color: 'black', backgroundColor: 'white' }}
+                            label="Flush TIme (Sec)"
+                            returnKeyType="done"
+                            keyboardType="numeric"
+                            value={formData.FlushTimeSec.toString()}
+                            onChangeText={(value) => handleTextInputChange('FlushTimeSec', value)}
+                        />
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
+                            <View style={{ flex: 2 }}>
                                 <View style={styles.formGroup}>
-                                    <Text style={styles.label}>Controller No: {selectedControllerName}
-                                    </Text>
+                                    <TouchableOpacity onPress={showFbimePicker}>
+                                        <TextInput
+                                            label="Interval"
+                                            returnKeyType="done"
+                                            editable={false}
+                                            value={moment(fbTIme).format('HH:mm')}
+                                        />
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
-                        <View>
-                            <View style={styles.container}>
-                                <TextInput style={{ color: 'black', backgroundColor: 'white' }}
-                                    label="Max Filter Valve"
-                                    returnKeyType="done"
-                                    keyboardType="numeric"
-                                    editable={false}
-                                    value={formData.MaxFilterValve.toString()}
-                                    onChangeText={(value) => handleTextInputChange('MaxFilterValve', value)}
-                                />
-                                <TextInput style={{ color: 'black', backgroundColor: 'white' }}
-                                    label="Pump No"
-                                    returnKeyType="done"
-                                    keyboardType="numeric"
-                                    value={formData.PumpNo.toString()}
-                                    onChangeText={(value) => handleTextInputChange('PumpNo', value)}
-                                />
-                                <TextInput style={{ color: 'black', backgroundColor: 'white' }}
-                                    label="Flush TIme (Min)"
-                                    returnKeyType="done"
-                                    keyboardType="numeric"
-                                    value={formData.FlushTimeMin.toString()}
-                                    onChangeText={(value) => handleTextInputChange('FlushTimeMin', value)}
-                                />
-                                <TextInput style={{ color: 'black', backgroundColor: 'white' }}
-                                    label="Flush TIme (Sec)"
-                                    returnKeyType="done"
-                                    keyboardType="numeric"
-                                    value={formData.FlushTimeSec.toString()}
-                                    onChangeText={(value) => handleTextInputChange('FlushTimeSec', value)}
-                                />
-                                <View style={{ flexDirection: 'row' }}>
-                                    <View style={{ flex: 2 }}>
-                                        <View style={styles.formGroup}>
-                                            <TouchableOpacity onPress={showFbimePicker}>
-                                                <TextInput
-                                                    label="Interval"
-                                                    returnKeyType="done"
-                                                    editable={false}
-                                                    value={moment(fbTIme).format('HH:mm')}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View>
-                                {showFbTime && (
-                                    <DateTimePicker
-                                        testID="dateTimePickerTime"
-                                        value={fbTIme}
-                                        mode="time" // Options: 'date', 'time', 'datetime'
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={onChangeFb}
-                                    />
-                                )}
+                        {showFbTime && (
+                            <DateTimePicker
+                                testID="dateTimePickerTime"
+                                value={fbTIme}
+                                mode="time" // Options: 'date', 'time', 'datetime'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangeFb}
+                            />
+                        )}
 
 
-                                <Button
-                                    mode="contained"
-                                    onPress={handleSubmit}
-                                >
-                                    Sumbit
-                                </Button>
+                        <Button
+                            mode="outlined"
+                            onPress={handleSubmit}
+                        >
+                            Sumbit
+                        </Button>
 
 
-                            </View>
-                        </View>
-                    </Card.Content>
-                </Card>
+                    </View>
+                </View>
+
             </ScrollView>
             {/* Show the spinner if isLoading is true */}
             {isLoading && (
@@ -282,6 +268,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }, title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
     },
 });
 export default FilterSequenceScreen;
