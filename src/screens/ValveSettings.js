@@ -110,6 +110,21 @@ const ValveSettingsScreen = ({ route }) => {
             const fetchData = async (id) => {
                 try {
                     setIsAdd(isAddData);
+
+                    if (isAddData == false) {
+                        let currentYear = new Date().getFullYear();
+                        let CurrentMonthServer = new Date().getMonth();
+                        let CurrentDayServer = new Date().getDay();
+                        let duration = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.DurationHh, dataModel.DurationMm);
+                        setDuration(duration)
+                        let fotime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.FoTimeHh, dataModel.FoTimeMin);
+                        setFoTime(fotime)
+                        let ftime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.FbTimeHh, dataModel.FbTimeMin);
+                        setFbTime(ftime)
+                        setDate(new Date(currentYear, CurrentMonthServer, CurrentDayServer))
+                    }
+
+
                     setFormData(dataModel);
                     setIsLoading(false);
 
