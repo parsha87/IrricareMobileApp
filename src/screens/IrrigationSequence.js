@@ -104,7 +104,7 @@ const IrrigationSequenceScreen = ({ route }) => {
 
         }
 
-        setVisible(false)
+        //setVisible(false)
     };
 
     const onChangeTimeSlot1 = (event, selectedTime) => {
@@ -560,25 +560,10 @@ const IrrigationSequenceScreen = ({ route }) => {
                             >
                                 Add Valves
                             </Button>
-                            {/* <FlatList
-                                data={valveArray}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => (
-                                    <View>
-                                        <Text>ValveNos: {item.ValveNos}</Text>
-                                        <Text>Valve Duration: {item.ValveDurationReadonly}</Text>
-                                        <Text>Fertilizer Name: {item.FertilizerName}</Text>
-                                        <Text>Is Fert: {item.IsFert ? 'Yes' : 'No'}</Text>
-                                    </View>
-                                )}
-                            /> */}
-
                             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                                 <Portal>
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContent}>
-
-
                                             <View style={styles.modalHeader}>
                                                 <IconButton
                                                     icon="close"
@@ -629,7 +614,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                                 renderItem={({ item }) => renderItem({ item, onDelete: onDeleteItem })}
                                             /> */}
                                             <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
-                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert']} style={styles.head} textStyle={styles.text} />
+                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert']} style={styles.head} textStyle={{color:'black'}} />
                                                 {
                                                     valveArray.map((item, index) => (
                                                         <Row
@@ -642,7 +627,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                                                 item.IsFert ? 'Yes' : 'No'
                                                             ]}
 
-                                                            textStyle={styles.text}
+                                                            textStyle={{color:'black'}}
                                                         />
                                                     ))
                                                 }
