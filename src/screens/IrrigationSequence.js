@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, FlatList } from 'react-native'
-import { Provider as PaperProvider, Card, DefaultTheme, Checkbox, Modal, Text, Portal, Provider, ListItem, ActivityIndicator } from 'react-native-paper';
+import { Provider as PaperProvider, Card, DefaultTheme, Checkbox, Modal, Text, Portal, Provider, ListItem, ActivityIndicator, IconButton } from 'react-native-paper';
 
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -11,6 +11,7 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Table, Row } from 'react-native-table-component';
 
 const IrrigationSequenceScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -224,7 +225,7 @@ const IrrigationSequenceScreen = ({ route }) => {
         const updatedArray = valveArray.filter(item => item !== itemToDelete);
         // Update state with the new array
         setValveArray(updatedArray);
-      };
+    };
     useFocusEffect(
         React.useCallback(() => {
             setIsLoading(true);
@@ -386,20 +387,20 @@ const IrrigationSequenceScreen = ({ route }) => {
         // })
     };
 
-    const renderItem = ({ item, onDelete  }) => (
+    const renderItem = ({ item, onDelete }) => (
         <View style={styles.container}>
-        <View style={styles.detailsContainer}>
-          <View>
-            <Text style={styles.valveNos}>ValveNos: {item.ValveNos}</Text>
-            <Text>Valve Duration: {item.ValveDurationReadonly}</Text>
-            <Text>Fertilizer Name: {item.FertilizerName}</Text>
-            <Text>Is Fert: {item.IsFert ? 'Yes' : 'No'}</Text>
-          </View>
-          <TouchableOpacity onPress={() => onDelete(item)} style={styles.deleteButton}>
-            <Text style={styles.deleteButtonText}>X</Text>
-          </TouchableOpacity>
+            <View style={styles.detailsContainer}>
+                <View>
+                    <Text style={styles.valveNos}>ValveNos: {item.ValveNos}</Text>
+                    <Text>Valve Duration: {item.ValveDurationReadonly}</Text>
+                    <Text>Fertilizer Name: {item.FertilizerName}</Text>
+                    <Text>Is Fert: {item.IsFert ? 'Yes' : 'No'}</Text>
+                </View>
+                <TouchableOpacity onPress={() => onDelete(item)} style={styles.deleteButton}>
+                    <Text style={styles.deleteButtonText}>X</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-      </View>
     );
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -431,7 +432,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                 onChangeText={(value) => handleTextInputChange('PumbNo', value)}
 
                             />
-                     
+
                             <TouchableOpacity onPress={showTimeSlot1Picker}>
                                 <TextInput
                                     label="Time Slot 1"
@@ -453,7 +454,7 @@ const IrrigationSequenceScreen = ({ route }) => {
 
 
                             <TouchableOpacity onPress={showTimeSlot2Picker}>
-                             
+
                                 <TextInput
                                     label="Time Slot 2"
                                     returnKeyType="done"
@@ -473,7 +474,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                             )}
 
                             <TouchableOpacity onPress={showTimeSlot3Picker}>
-                            
+
                                 <TextInput
                                     label="Time Slot 3"
                                     returnKeyType="done"
@@ -494,7 +495,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                             )}
 
                             <TouchableOpacity onPress={showTimeSlot4Picker}>
-                              
+
                                 <TextInput
                                     label="Time Slot 4"
                                     returnKeyType="done"
@@ -572,55 +573,86 @@ const IrrigationSequenceScreen = ({ route }) => {
                                 )}
                             /> */}
 
-                            <FlatList
-                                data={valveArray}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => renderItem({ item, onDelete: onDeleteItem })}
-                                />
-                            <Portal>
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContent}>
-                                        <View style={{ backgroundColor: 'white', padding: 20 }}>
-                                            <TextInput
-                                                label="ValveNos"
-                                                returnKeyType="done"
-                                                keyboardType="numeric"
-                                                value={formValveData.ValveNos}
-                                                onChangeText={(value) => handleTextInputChangeValve('ValveNos', value)}
-                                            />
-                                            <Text style={styles.label}>Valve Duration:
-                                            </Text>
-                                            <TextInput
-                                                label="Valve Duration"
-                                                returnKeyType="done"
-                                                value={valveDuration}
-                                            />
-                                            <Checkbox.Item
-                                                label="IsFert"
-                                                status={checked ? 'checked' : 'unchecked'}
-                                                onPress={() => {
-                                                    setChecked(!checked);
-                                                }}
-                                            />
-                                            <TextInput
-                                                label="Fertilizer Name"
-                                                returnKeyType="done"
-                                                value={formValveData.FertilizerName}
-                                                onChangeText={(value) => handleTextInputChangeValve('FertilizerName', value)}
+                            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                                <Portal>
+                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContent}>
 
-                                            />
-                                           <Button
-                                                mode="outlined"
-                                                onPress={addValveDetails}
 
-                                            >
-                                                Add Valve Details
-                                            </Button>
+                                            <View style={styles.modalHeader}>
+                                                <IconButton
+                                                    icon="close"
+                                                    color="black"
+                                                    size={20}
+                                                    onPress={hideModal}
+                                                />
+                                            </View>
+                                            <View style={{ backgroundColor: 'white', padding: 20 }}>
+                                                <TextInput
+                                                    label="ValveNos"
+                                                    returnKeyType="done"
+                                                    keyboardType="numeric"
+                                                    value={formValveData.ValveNos}
+                                                    onChangeText={(value) => handleTextInputChangeValve('ValveNos', value)}
+                                                />
+                                                <TextInput
+                                                    label="Valve Duration"
+                                                    returnKeyType="done"
+                                                    value={valveDuration}
+                                                />
+                                                <Checkbox.Item
+                                                    label="IsFert"
+                                                    status={checked ? 'checked' : 'unchecked'}
+                                                    onPress={() => {
+                                                        setChecked(!checked);
+                                                    }}
+                                                />
+                                                <TextInput
+                                                    label="Fertilizer Name"
+                                                    returnKeyType="done"
+                                                    value={formValveData.FertilizerName}
+                                                    onChangeText={(value) => handleTextInputChangeValve('FertilizerName', value)}
 
-                                        </View>
-                                    </Modal></View>
-                            </Portal>
+                                                />
+                                                <Button
+                                                    mode="outlined"
+                                                    onPress={addValveDetails}
 
+                                                >
+                                                    Add Valve Details
+                                                </Button>
+
+                                            </View>
+                                            {/* <FlatList
+                                                data={valveArray}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                renderItem={({ item }) => renderItem({ item, onDelete: onDeleteItem })}
+                                            /> */}
+                                            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert']} style={styles.head} textStyle={styles.text} />
+                                                {
+                                                    valveArray.map((item, index) => (
+                                                        <Row
+                                                            key={index}
+                                                            data={[
+
+                                                                item.ValveNos,
+                                                                item.ValveDurationReadonly,
+                                                                item.FertilizerName,
+                                                                item.IsFert ? 'Yes' : 'No'
+                                                            ]}
+
+                                                            textStyle={styles.text}
+                                                        />
+                                                    ))
+                                                }
+                                            </Table>
+
+                                        </Modal>
+
+                                    </View>
+                                </Portal>
+                            </ScrollView>
                             <Button
                                 mode="outlined"
                                 onPress={handleSubmit}>
@@ -727,13 +759,13 @@ const styles = StyleSheet.create({
         color: '#00aa00', // Green color for 'Yes'
     },
     deleteButton: {
-      backgroundColor: 'red',
-      padding: 8,
-      borderRadius: 5,
+        backgroundColor: 'red',
+        padding: 8,
+        borderRadius: 5,
     },
     deleteButtonText: {
-      color: '#fff',
-      fontWeight: 'bold',
+        color: '#fff',
+        fontWeight: 'bold',
     },
 
 
@@ -741,8 +773,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-      }, 
+    },
+    scrollViewContent: {
+        flexGrow: 1,
 
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+    },
+    label: {
+        marginTop: 10,
+    },
+    tableContainer: {
+        marginTop: 20,
+        paddingHorizontal: 20,
+    },
 
 });
 export default IrrigationSequenceScreen;
