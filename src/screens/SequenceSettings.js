@@ -51,7 +51,7 @@ export default function SequenceSetting({ route }) {
       <View style={styles.container}>      
 
         <Text style={styles.title}>Sequence Configuration</Text>
-        <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+        <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
 
         <View style={styles.gridContainer}>
           <View style={[styles.gridItem, { flex: 3 }]}>

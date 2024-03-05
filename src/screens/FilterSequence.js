@@ -173,7 +173,7 @@ const FilterSequenceScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
                 <Text style={styles.title}>Filter Sequences</Text>
-                <Text style={styles.controllerName}>{selectedControllerName}</Text>
+                <Text style={styles.controllerName}>Controller No: {selectedControllerName}</Text>
 
                 <View>
                     <View style={styles.container}>

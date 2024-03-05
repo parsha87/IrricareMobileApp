@@ -57,7 +57,7 @@ const Dashboard = ({ navigation }) => {
       <View style={styles.container}>
       
         <Text style={styles.title}>Controller Configuration</Text>
-        <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+        <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
         <View style={styles.gridContainer}>
           <View style={[styles.gridItem, { flex: 3 }]}>
             <TouchableOpacity style={styles.touchable} onPress={handleControllerTimeNavigation}>

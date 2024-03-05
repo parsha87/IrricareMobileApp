@@ -248,7 +248,7 @@ const ValveSettingsScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
                 <Text style={styles.title}>Valve Setting</Text>
-                <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+                <Text style={styles.label}>Controller No:{controller.selectedControllerName}</Text>
 
                 <View style={styles.container}>
                     <View>

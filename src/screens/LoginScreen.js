@@ -15,9 +15,11 @@ import * as Keychain from 'react-native-keychain';
 import { AxiosContext } from '../context/AxiosContext';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 
 export default function LoginScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [userName, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
@@ -28,6 +30,12 @@ export default function LoginScreen({ navigation }) {
   useEffect(() => {
     checkIfLoggedIn();
   }, []);
+
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
 
   const checkIfLoggedIn = async () => {
     const token = await AsyncStorage.getItem('token');
@@ -42,6 +50,7 @@ export default function LoginScreen({ navigation }) {
     if (emailError || passwordError) {
       setEmail({ ...userName, error: emailError })
       setPassword({ ...password, error: passwordError })
+      setIsLoading(false);
       return
     }
     let useName = userName.value
@@ -82,16 +91,14 @@ export default function LoginScreen({ navigation }) {
         }),
       );
       if (authTokenStr != "") {
-
         navigation.navigate('MainpageScreen');
-
       }
       else {
-        Alert.alert('Login Failed');
+        Alert.alert('Login Failed',"Please try again");
       }
       setIsLoading(false);
     } catch (error) {
-      Alert.alert('Login Failed. Try Again');
+      Alert.alert('Login Failed. Try Again',"Username or password incorrect.");
       setIsLoading(false);
     }
 
@@ -108,28 +115,35 @@ export default function LoginScreen({ navigation }) {
           source={require('../assets/JainLogo.png')}
           style={styles.image}
         />
-        <Header>Welcome.</Header>
+        <Header>Welcome.</Header> 
         <TextInput
-          label="Email"
-          returnKeyType="next"
-          value={userName.value}
-          onChangeText={(text) => setEmail({ value: text, error: '' })}
-          error={!!userName.error}
-          errorText={userName.error}
-          autoCapitalize="none"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
-        />
-        <TextInput
-          label="Password"
-          returnKeyType="done"
-          value={password.value}
-          onChangeText={(text) => setPassword({ value: text, error: '' })}
-          error={!!password.error}
-          errorText={password.error}
-          secureTextEntry
-        />
+            label="Email"
+            returnKeyType="next"
+            value={userName.value}
+            onChangeText={(text) => setEmail({ value: text, error: '' })}
+            error={!!userName.error}
+            errorText={userName.error}
+            autoCapitalize="none"
+            autoCompleteType="email"
+            textContentType="emailAddress"
+            keyboardType="email-address"
+          />
+   <TextInput
+            label="Password"
+            returnKeyType="done"
+            value={password.value}
+            onChangeText={(text) => setPassword({ value: text, error: '' })}
+            error={!!password.error}
+            errorText={password.error}
+
+            secureTextEntry={!showPassword}
+          />
+        <View style={{width:100}}>
+          <TouchableOpacity onPress={toggleShowPassword} style={{ position: 'absolute', top:- 50, right: -80 }}>
+            <Icon name={showPassword ? 'eye' : 'eye-slash'} size={25} color="#007500" />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.forgotPassword}>
           <TouchableOpacity
             onPress={() => navigation.navigate('ResetPasswordScreen')}

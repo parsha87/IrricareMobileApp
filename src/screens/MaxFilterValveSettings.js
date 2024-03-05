@@ -204,6 +204,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             returnKeyType="done"
                             keyboardType="numeric"
                             value={formData.MaxFilter.toString()}
+                            maxLength={3}
                             onChangeText={(value) => handleTextInputChange('MaxFilter', value)}
                         />
                         {/* <Text style={styles.label}>Total Filter Valve Pump 1:

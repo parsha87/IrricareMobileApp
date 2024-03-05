@@ -159,7 +159,7 @@ const FilterSequenceListScreen = ({ route }) => {
 
             <ScrollView>
             <Text style={styles.title}>Filter Sequences</Text>
-                <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+                <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
                 <FlatList
                     data={formDataList}
                     renderItem={({ item }) => <CardItemFilterList item={item} onPress={handleCardItemPress} />}

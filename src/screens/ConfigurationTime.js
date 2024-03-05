@@ -277,6 +277,8 @@ const ConfigurationTimeScreen = ({ route }) => {
                     </View>
                 </View>
 
+               
+
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
                         <View style={styles.formGroup}>

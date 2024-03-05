@@ -408,7 +408,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                 <Provider>
                     <View>
                         <Text style={styles.title}>Sequence Configuration</Text>
-                        <Text style={styles.controllerName}>{selectedControllerName}</Text>
+                        <Text style={styles.controllerName}>Controller No: {selectedControllerName}</Text>
                         {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                         <TouchableOpacity onPress={handleBack}>
                             <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
@@ -614,7 +614,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                                 renderItem={({ item }) => renderItem({ item, onDelete: onDeleteItem })}
                                             /> */}
                                             <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
-                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert']} style={styles.head} textStyle={{color:'black'}} />
+                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert','Action']} style={styles.head} textStyle={{color:'black'}} />
                                                 {
                                                     valveArray.map((item, index) => (
                                                         <Row
@@ -624,7 +624,8 @@ const IrrigationSequenceScreen = ({ route }) => {
                                                                 item.ValveNos,
                                                                 item.ValveDurationReadonly,
                                                                 item.FertilizerName,
-                                                                item.IsFert ? 'Yes' : 'No'
+                                                                item.IsFert ? 'Yes' : 'No',
+                                                                ''
                                                             ]}
 
                                                             textStyle={{color:'black'}}
