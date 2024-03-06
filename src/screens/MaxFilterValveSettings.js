@@ -184,18 +184,19 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                     <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Max Filter & Max Valve setting</Text>
-                </View>
+                </View> */}<Text style={styles.title}>Max Filter & Max Valve setting</Text>
+                <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
                 <View style={styles.container}>
-                    <View style={{ flexDirection: 'row' }}>
+                    {/* <View style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1 }}>
                             <View style={styles.formGroup}>
                                 <Text style={styles.label}>Controller No: {controller.selectedControllerName}
                                 </Text>
                             </View>
                         </View>
-                    </View>
+                    </View> */}
                     <View style={styles.formGroup}>
                         {/* <Text style={styles.label}>Max Filter:
                         </Text> */}
@@ -322,6 +323,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
     },
 })
 export default MaxFilterValveSettingsScreen;

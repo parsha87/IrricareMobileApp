@@ -407,7 +407,7 @@ const IrrigationSequenceScreen = ({ route }) => {
             <ScrollView>
                 <Provider>
                     <View>
-                        <Text style={styles.title}>Sequence Configuration</Text>
+                        <Text style={styles.title}>Irrigation Sequence</Text>
                         <Text style={styles.controllerName}>Controller No: {selectedControllerName}</Text>
                         {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                         <TouchableOpacity onPress={handleBack}>

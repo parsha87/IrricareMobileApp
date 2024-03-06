@@ -263,19 +263,20 @@ const ConfigurationTimeScreen = ({ route }) => {
     return (
 
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+            {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                 <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Configuration Time Setting</Text>
-            </View>
-
+            </View> */}
+            <Text style={styles.title}>Configuration Time Setting</Text>
+                <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
             <View style={styles.container}>
-                <View style={{ flexDirection: 'row' }}>
+                {/* <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
                         <View style={styles.formGroup}>
                             <Text style={styles.label}>Controller No: {controller.selectedControllerName}
                             </Text>
                         </View>
                     </View>
-                </View>
+                </View> */}
 
                
 
@@ -440,6 +441,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
     },
 })
 export default ConfigurationTimeScreen;

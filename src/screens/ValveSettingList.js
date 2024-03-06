@@ -137,23 +137,26 @@ const ValveSettingsListScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                     <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Valve setting</Text>
-                </View>
+                </View> */}
+                   <Text style={styles.title}>Valve setting</Text>
+                <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
                 <FlatList
                     data={formDataList}
                     renderItem={({ item }) => <CardItem item={item} onPress={handleCardItemPress} />}
                     keyExtractor={item => item.id}
+                    
                     contentContainerStyle={styles.listContainer}
                 />
             </ScrollView>
-            <View style={styles.fabContainer}>
+            {/* <View style={styles.fabContainer}>
                 <FAB
                     icon="plus"
                     onPress={handleButtonClick}
                     style={styles.fab}
                 />
-            </View>
+            </View> */}
             {/* Show the spinner if isLoading is true */}
             {isLoading && (
                 <View style={styles.spinnerContainer}>
@@ -184,6 +187,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        color: 'green'
+
+    }, controllerName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        color: 'green'
     },
 
 });

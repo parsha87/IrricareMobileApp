@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, ActivityIndicator,FlatList } from 'react-native'
 import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -263,8 +263,8 @@ const ValveSettingsScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
                 <Text style={styles.title}>Valve Setting</Text>
-                <Text style={styles.label}>Controller No:{controller.selectedControllerName}</Text>
-
+                <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
+              
                 <View style={styles.container}>
                     <View>
                         <TextInput

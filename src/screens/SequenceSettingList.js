@@ -142,8 +142,8 @@ const SequenceSettingsListScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-                <Text style={styles.title}>Sequences</Text>
-                <Text style={styles.controllerName}>{controller.selectedControllerName}</Text>
+                <Text style={styles.title}>Irrigation Sequence</Text>
+                <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
                 {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
                     <TouchableOpacity onPress={handleBack}>
                         <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
