@@ -84,7 +84,7 @@ const authContext = React.useContext(AuthContext);
 <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1, backgroundColor: '#a3e5c4' }}>
   {/* App Name */}
   <View style={{ alignItems: 'center', marginVertical: 20 }}>
-    <Text style={{ fontSize: 20, fontWeight: 'bold', color:'green' }}>IRISMART</Text>
+    <Text style={{ fontSize: 20, fontWeight: 'bold', color:'green' }}>IRRICARE XYΦ</Text>
     {/* Horizontal Divider */}
     <View style={{ backgroundColor: 'black', height: 1, width: '80%', marginVertical: 10 }} />
   </View>
@@ -122,7 +122,7 @@ const authContext = React.useContext(AuthContext);
 
   {/* App Version */}
   <View style={{ alignItems: 'center', marginTop: 20 }}>
-    <Text>App Version: 1.5</Text>
+    <Text>App Version: 1.6</Text>
   </View>
 </DrawerContentScrollView>
 

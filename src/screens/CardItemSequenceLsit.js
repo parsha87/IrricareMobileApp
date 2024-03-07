@@ -1,26 +1,40 @@
-// CardItem.js
 import React from 'react';
-import { Card, Title, Paragraph } from 'react-native-paper';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { IconButton } from 'react-native-paper'; // Import IconButton from react-native-paper
 
-const CardItemSequenceList = ({ item, onPress }) => {
+const CardItemSequenceList = ({ item, onPress, onDelete }) => {
     return (
         <TouchableOpacity onPress={() => onPress(item)} style={styles.container}>
              <View style={styles.card}>
                 <View style={styles.row}>
                     <View style={styles.column}>
-                        <Text style={styles.boldLabel}>Sequence No: <Text style={styles.gridItemText}>{item.SequenceNo}</Text></Text>
-                        <Text style={styles.boldLabel}>TimeSlot1: <Text style={styles.gridItemText}>{item.TimeSlot1Hh}:{item.TimeSlot1Min}</Text></Text>
-                        <Text style={styles.boldLabel}>TimeSlot3: <Text style={styles.gridItemText}>{item.TimeSlot3Hh}:{item.TimeSlot3Min}</Text></Text>
+                        <Text style={styles.label}>Sequence No:</Text>
+                        <Text style={styles.value}>{item.SequenceNo}</Text>
+                        <Text style={styles.label}>TimeSlot1:</Text>
+                        <Text style={styles.value}>{item.TimeSlot1Hh}:{item.TimeSlot1Min}</Text>
+                        <Text style={styles.label}>TimeSlot3:</Text>
+                        <Text style={styles.value}>{item.TimeSlot3Hh}:{item.TimeSlot3Min}</Text>
                     </View>
                     <View style={styles.column}>
-                        <Text style={styles.boldLabel}>Pump No: <Text style={styles.gridItemText}>{item.PumbNo}</Text></Text>
-                        <Text style={styles.boldLabel}>TimeSlot2: <Text style={styles.gridItemText}>{item.TimeSlot2Hh}:{item.TimeSlot2Min}</Text></Text>
-                        <Text style={styles.boldLabel}>TimeSlot4: <Text style={styles.gridItemText}>{item.TimeSlot4Hh}:{item.TimeSlot4Min}</Text></Text>
+                        <Text style={styles.label}>Pump No:</Text>
+                        <Text style={styles.value}>{item.PumbNo}</Text>
+                        <Text style={styles.label}>TimeSlot2:</Text>
+                        <Text style={styles.value}>{item.TimeSlot2Hh}:{item.TimeSlot2Min}</Text>
+                        <Text style={styles.label}>TimeSlot4:</Text>
+                        <Text style={styles.value}>{item.TimeSlot4Hh}:{item.TimeSlot4Min}</Text>
                     </View>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.boldLabel}>Weekdays: <Text style={styles.gridItemText}>{item.WeekdaysString}</Text></Text>
+                    <Text style={styles.label}>Weekdays:</Text>
+                    <Text style={styles.value}>{item.WeekdaysString}</Text>
+                </View>
+                <View style={styles.deleteButtonContainer}>
+                    <IconButton
+                        icon="delete"
+                        color="#FFOOOO"
+                        size={30}
+                        onPress={() => onDelete(item.id)} // Pass the id or any identifier of the item to onDelete
+                    />
                 </View>
             </View>
         </TouchableOpacity>
@@ -29,15 +43,12 @@ const CardItemSequenceList = ({ item, onPress }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginBottom: 16,
     },
     card: {
-        backgroundColor: '#F4FFF0', // Green color gradient
+        backgroundColor: '#FFFFFF',
         borderRadius: 8,
         padding: 16,
-        margin: 8,
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowOffset: { width: 0, height: 2 },
@@ -46,21 +57,24 @@ const styles = StyleSheet.create({
     },
     column: {
         flex: 1,
-        paddingHorizontal: 5,
     },
-    boldLabel: {
-        fontSize: 16,
+    label: {
+        fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 5,
+        marginBottom: 4,
+        color: '#333333',
     },
-    gridItemText: {
-        fontSize: 16,
-        marginBottom: 5,
+    value: {
+        fontSize: 14,
+        marginBottom: 8,
+        color: '#666666',
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 1,
+    },
+    deleteButtonContainer: {
+        alignItems: 'flex-end', // Align the delete button to the right
     },
 });
 

@@ -8,7 +8,7 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Table, Row } from 'react-native-table-component';
@@ -46,7 +46,7 @@ const IrrigationSequenceScreen = ({ route }) => {
 
     const hideModal = () => setVisible(false);
 
-    const [items, setItems] = useState([      
+    const [items, setItems] = useState([
         { label: 'Monday', value: '1' },
         { label: 'Tuesday', value: '2' },
         { label: 'Wednesday', value: '3' },
@@ -73,6 +73,11 @@ const IrrigationSequenceScreen = ({ route }) => {
 
     const addValveDetails = () => {
         console.log(formValveData)
+        let valveInfo = valveList.filter(x => x.MainValveNo == +formValveData.ValveNos)[0]
+        if (valveInfo == undefined) {
+            alert("Valve not present. Enter different valve no");
+            return;
+        }
         if (valveArray.some(x => x.ValveNos == formValveData.ValveNos)) {
             alert("Valve no alreay exists in added list");
         }
@@ -284,6 +289,10 @@ const IrrigationSequenceScreen = ({ route }) => {
                 let valveInfo = valveList.filter(x => x.MainValveNo == value)[0]
                 console.log("--------------------")
                 console.log(valveInfo)
+                if (valveInfo == undefined) {
+                    alert("Valve not present. Enter different valve no");
+                    return;
+                }
                 if (valveInfo != undefined) {
                     let valDur = valveInfo.DurationHh + ":" + valveInfo.DurationMm;
                     setValveDuration(valDur)
@@ -304,6 +313,10 @@ const IrrigationSequenceScreen = ({ route }) => {
 
     };
     const handleSubmit = async () => {
+        if (+formData.SequenceNo > 8) {
+            alert("SequenceNo cannot be greater than 8");
+            return
+        }
         setIsLoading(true);
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
@@ -565,70 +578,81 @@ const IrrigationSequenceScreen = ({ route }) => {
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContent}>
                                             <View style={styles.modalHeader}>
-                                                <IconButton
-                                                    icon="close"
-                                                    color="black"
-                                                    size={20}
-                                                    onPress={hideModal}
-                                                />
+                                                <View><Text style={styles.controllerName}>Add Valves</Text></View>
+                                                <Icon onPress={hideModal} name="close" size={30} color="red" />
                                             </View>
-                                            <View style={{ backgroundColor: 'white', padding: 20 }}>
-                                                <TextInput
-                                                    label="ValveNos"
-                                                    returnKeyType="done"
-                                                    keyboardType="numeric"
-                                                    value={formValveData.ValveNos}
-                                                    onChangeText={(value) => handleTextInputChangeValve('ValveNos', value)}
-                                                />
-                                                <TextInput
-                                                    label="Valve Duration"
-                                                    returnKeyType="done"
-                                                    value={valveDuration}
-                                                />
-                                                <Checkbox.Item
-                                                    label="IsFert"
-                                                    status={checked ? 'checked' : 'unchecked'}
-                                                    onPress={() => {
-                                                        setChecked(!checked);
-                                                    }}
-                                                />
-                                                <TextInput
-                                                    label="Fertilizer Name"
-                                                    returnKeyType="done"
-                                                    value={formValveData.FertilizerName}
-                                                    onChangeText={(value) => handleTextInputChangeValve('FertilizerName', value)}
+                                            <View style={styles.formContainer}>
+                                                <View style={styles.column}>
+                                                    <TextInput
+                                                        label="ValveNos"
+                                                        returnKeyType="done"
+                                                        keyboardType="numeric"
+                                                        value={formValveData.ValveNos}
+                                                        onChangeText={(value) => handleTextInputChangeValve('ValveNos', value)}
+                                                    />
 
-                                                />
-                                                <Button
-                                                    mode="outlined"
-                                                    onPress={addValveDetails}
+                                                </View>
+                                                <View style={styles.column}>
+                                                    <TextInput
+                                                        label="Valve Duration"
+                                                        returnKeyType="done"
+                                                        value={valveDuration}
+                                                    />
 
-                                                >
-                                                    Add Valve Details
-                                                </Button>
+
+                                                </View>
 
                                             </View>
-                                            {/* <FlatList
-                                                data={valveArray}
-                                                keyExtractor={(item, index) => index.toString()}
-                                                renderItem={({ item }) => renderItem({ item, onDelete: onDeleteItem })}
-                                            /> */}
+                                            <View style={styles.formContainer}>
+                                                <View style={styles.column}>
+                                                    <Checkbox.Item
+                                                        label="IsFert"
+                                                        status={checked ? 'checked' : 'unchecked'}
+                                                        onPress={() => {
+                                                            setChecked(!checked);
+                                                        }}
+                                                    />
+                                                </View>
+                                                <View style={styles.column}>
+                                                    <TextInput
+                                                        label="Fertilizer Name"
+                                                        returnKeyType="done"
+                                                        value={formValveData.FertilizerName}
+                                                        onChangeText={(value) => handleTextInputChangeValve('FertilizerName', value)}
+                                                    />
+                                                </View>
+                                            </View>
+                                            <Button
+                                                mode="outlined"
+                                                onPress={addValveDetails}
+                                            >
+                                                Add Valve Details
+                                            </Button>
                                             <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
-                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert','Action']} style={styles.head} textStyle={{color:'black'}} />
+                                                <Row  data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert', 'Action']} style={styles.head} textStyle={{ color: 'black', textAlign: 'center' }} />
                                                 {
                                                     valveArray.map((item, index) => (
                                                         <Row
                                                             key={index}
                                                             data={[
+                                                                <View style={styles.iconContainer}>
+                                                                    <Text>{item.ValveNos}</Text>
+                                                                </View>,
+                                                                <View style={styles.iconContainer}>
+                                                                    <Text>{item.ValveDurationReadonly}</Text>
+                                                                </View>,
+                                                                <View style={styles.iconContainer}>
+                                                                    <Text>{item.FertilizerName}</Text>
+                                                                </View>,
+                                                                <View style={styles.iconContainer}>
+                                                                    <Text>{item.IsFert ? 'Yes' : 'No'}</Text>
+                                                                </View>,
+                                                                <View style={styles.iconContainer}>
+                                                                    <Icon onPress={() => onDeleteItem(item)} name="delete" size={30} color="red" />
+                                                                </View>
 
-                                                                item.ValveNos,
-                                                                item.ValveDurationReadonly,
-                                                                item.FertilizerName,
-                                                                item.IsFert ? 'Yes' : 'No',
-                                                                ''
                                                             ]}
-
-                                                            textStyle={{color:'black'}}
+                                                            textStyle={{ color: 'black' }}
                                                         />
                                                     ))
                                                 }
@@ -664,6 +688,15 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         width: '100%',
+    },
+    iconContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+    },
+    head: {
+        textAlign: 'center',
+        backgroundColor: 'lightgrey', // Add background color if needed
     },
     modalContent: {
         backgroundColor: 'white',
@@ -753,7 +786,14 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
-
+    formContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    column: {
+        flex: 1,
+        marginLeft: 10, // Adjust as needed for spacing between columns
+    },
 
     detailsContainer: {
         flexDirection: 'row',
@@ -775,6 +815,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingHorizontal: 20,
     },
-
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center', // Align the icon vertically
+        paddingHorizontal: 10, // Add horizontal padding for space
+    },
 });
 export default IrrigationSequenceScreen;

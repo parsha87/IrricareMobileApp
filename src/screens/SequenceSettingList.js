@@ -107,34 +107,56 @@ const SequenceSettingsListScreen = ({ route }) => {
 
 
             setIsLoading(true);
-            // Define a function to fetch data from the API
-            const fetchData = async (id) => {
-                try {
-                    const response = await authAxios.get('SequenceSetting/SequenceSettingByControllerId/' + id);
-                    // Update the state with the received data
-                    let data = response.data
-                    console.log(data)
-                    setFormDataList(data)
-                    if (data != null) {
 
-                    }
-                    else {
-                        //Add
-                    }
-                    setIsLoading(false);
-                    //setApiData(data);
-                } catch (error) {
-                    setIsLoading(false);
-                    console.error('Error fetching data:', error);
-                }
-            };
 
             retrieveSelectedController();
         }, [authAxios]) // Make sure to include any dependencies of the effect
     );
+    // Define a function to fetch data from the API
+    const fetchData = async (id) => {
+        try {
+            const response = await authAxios.get('SequenceSetting/SequenceSettingByControllerId/' + id);
+            // Update the state with the received data
+            let data = response.data
+            console.log(data)
+            setFormDataList(data)
+            if (data != null) {
+
+            }
+            else {
+                //Add
+            }
+            setIsLoading(false);
+            //setApiData(data);
+        } catch (error) {
+            setIsLoading(false);
+            console.error('Error fetching data:', error);
+        }
+    };
+    // Method to handle deletion of an item
+    const handleDelete = async (itemId) => {
+
+        // Show confirmation dialog before deleting
+        Alert.alert(
+            'Confirm Deletion',
+            'Are you sure you want to delete this item?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Delete', onPress: () => confirmDelete(itemId) }
+            ],
+            { cancelable: true }
+        );
+
+    };
 
 
-
+    const confirmDelete = async (itemId) => {
+        const response = await authAxios.delete('SequenceSetting/' + itemId);
+        let data = response.data
+        alert("Sequence Deleted Successfully")
+        fetchData(controller.selectedControllerId)
+    };
+    
     const handleBack = () => {
         navigation.navigate('Dashboard')
     };
@@ -153,8 +175,10 @@ const SequenceSettingsListScreen = ({ route }) => {
                 {/* <Button title="Click me" mode="outlined" onPress={handleButtonClick}>Add Sequence Setting</Button> */}
                 <FlatList
                     data={formDataList}
-                    renderItem={({ item }) => <CardItemSequenceList item={item} onPress={handleCardItemPress} />}
-                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => <CardItemSequenceList item={item}
+                        onPress={handleCardItemPress}
+                        onDelete={() => handleDelete(item.Id)} />}
+                    keyExtractor={item => item.Id}
                     contentContainerStyle={styles.listContainer}
                 />
             </ScrollView>

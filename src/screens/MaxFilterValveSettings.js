@@ -56,7 +56,8 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             selectedControllerName: jsonVal.label
                         }
                         setSelectedController(controller);
-                        fetchData(jsonVal.value);
+                        // fetchData(jsonVal.value); 
+                        setIsLoading(false);
                     }
                     else {
                         alert("Select controller no form dashboard")
@@ -124,6 +125,10 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
+        if (+formData.MaxFilter < (+formData.FilterValveWithPump1 + +formData.FilterValveWithPump2)) {
+            alert("Addition of Nos of Filters on pump 1 and pump 2 should be less than of Max Filter enter value")
+            return;
+        }
         setIsLoading(true);
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
@@ -214,6 +219,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             label="Nos of Filters on Pump 1"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={2}
                             value={formData.TotalFilterValvePump1.toString()}
                             onChangeText={(value) => handleTextInputChange('TotalFilterValvePump1', value)}
                         />
@@ -223,6 +229,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             label="Nos of Filters on Pump 2"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={2}
                             value={formData.FilterValveWithPump1.toString()}
                             onChangeText={(value) => handleTextInputChange('FilterValveWithPump1', value)}
 
@@ -247,6 +254,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             label="MaxValve"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={2}
                             value={formData.MaxValve.toString()}
                             onChangeText={(value) => handleTextInputChange('MaxValve', value)}
 
