@@ -10,12 +10,18 @@ export default function SequenceSetting({ route }) {
     selectedControllerId: 0,
     selectedControllerName: ''
   })
+  
 
   const handleSequenceSettingNavigation = () => {
     navigation.navigate('SequenceSettingList');
   };
+  
   const handleFilterSettingNavigation = () => {
     navigation.navigate('FilterSequenceList');
+  };
+  
+  const handleCyclicSequenceListNavigation = () => {
+    navigation.navigate('CyclicSequenceList');
   };
 
   useFocusEffect(
@@ -75,7 +81,7 @@ export default function SequenceSetting({ route }) {
             </TouchableOpacity>
           </View>
           <View style={[styles.gridItem, { flex: 3 }]}>
-            <TouchableOpacity style={styles.touchable} onPress={handleFilterSettingNavigation}>
+            <TouchableOpacity style={styles.touchable} onPress={handleCyclicSequenceListNavigation}>
               <Image
                 source={require("../assets/plant.png")}
                 style={styles.image} />

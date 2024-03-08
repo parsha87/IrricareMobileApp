@@ -20,6 +20,7 @@ import MaxFilterValveSettingsScreen from './src/screens/MaxFilterValveSettings';
 import { AuthContext } from './src/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
+import CyclicSequenceSettingsListScreen from './src/screens/CyclicSequenceLIst';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,6 +64,9 @@ const ScheduleStack = () => (
       headerShown: false
     }} />
     <Drawer.Screen name="CyclicSequenceScreen" component={CyclicSequenceScreen} options={{
+      headerShown: false
+    }} />
+     <Drawer.Screen name="CyclicSequenceList" component={CyclicSequenceSettingsListScreen} options={{
       headerShown: false
     }} />
   </Stack.Navigator>

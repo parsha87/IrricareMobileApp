@@ -56,7 +56,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             selectedControllerName: jsonVal.label
                         }
                         setSelectedController(controller);
-                        // fetchData(jsonVal.value); 
+                        fetchData(jsonVal.value); 
                         setIsLoading(false);
                     }
                     else {
@@ -125,7 +125,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
-        if (+formData.MaxFilter < (+formData.FilterValveWithPump1 + +formData.FilterValveWithPump2)) {
+        if (+formData.MaxFilter < (+formData.TotalFilterValvePump1 + +formData.TotalFilterValvePump2)) {
             alert("Addition of Nos of Filters on pump 1 and pump 2 should be less than of Max Filter enter value")
             return;
         }
@@ -213,7 +213,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             returnKeyType="done"
                             keyboardType="numeric"
                             value={formData.MaxFilter.toString()}
-                            maxLength={3}
+                            maxLength={2}
                             onChangeText={(value) => handleTextInputChange('MaxFilter', value)}
                         />
                         {/* <Text style={styles.label}>Total Filter Valve Pump 1:
@@ -233,8 +233,8 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                             returnKeyType="done"
                             keyboardType="numeric"
                             maxLength={2}
-                            value={formData.FilterValveWithPump1.toString()}
-                            onChangeText={(value) => handleTextInputChange('FilterValveWithPump1', value)}
+                            value={formData.TotalFilterValvePump2.toString()}
+                            onChangeText={(value) => handleTextInputChange('TotalFilterValvePump2', value)}
 
 
                         />
