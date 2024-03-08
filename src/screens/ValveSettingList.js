@@ -7,7 +7,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import CardItem from './CardItem';
 import { FAB } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Icon from 'react-native-vector-icons/FontAwesome6';
 const ValveSettingsListScreen = ({ route }) => {
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
@@ -137,6 +137,7 @@ const ValveSettingsListScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                     <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Valve setting</Text>
                 </View> */}
@@ -150,13 +151,13 @@ const ValveSettingsListScreen = ({ route }) => {
                     contentContainerStyle={styles.listContainer}
                 />
             </ScrollView>
-            {/* <View style={styles.fabContainer}>
+           <View style={styles.fabContainer}>
                 <FAB
                     icon="plus"
                     onPress={handleButtonClick}
                     style={styles.fab}
                 />
-            </View> */}
+            </View>
             {/* Show the spinner if isLoading is true */}
             {isLoading && (
                 <View style={styles.spinnerContainer}>

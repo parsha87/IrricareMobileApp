@@ -10,7 +10,7 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import Toast from 'react-native-toast-message';
 // import { Toastify } from 'react-native-toastify';
-
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
 const MaxFilterValveSettingsScreen = ({ route }) => {
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
@@ -191,7 +191,10 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
             <ScrollView>
                 {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                     <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Max Filter & Max Valve setting</Text>
-                </View> */}<Text style={styles.title}>Max Filter & Max Valve setting</Text>
+                </View> */}
+                            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
+
+                <Text style={styles.title}>Max Filter & Max Valve setting</Text>
                 <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
                 <View style={styles.container}>
                     {/* <View style={{ flexDirection: 'row' }}>

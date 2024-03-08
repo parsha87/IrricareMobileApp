@@ -199,7 +199,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     };
 
     const handleBack = () => {
-        navigation.navigate('Dashboard')
+        navigation.navigate('SequenceSettingList')
     };
 
     const fetchValveData = async () => {
@@ -418,6 +418,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Provider>
                     <View>
                         <Text style={styles.title}>Irrigation Sequence</Text>

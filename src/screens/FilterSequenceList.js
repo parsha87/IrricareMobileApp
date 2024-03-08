@@ -151,13 +151,14 @@ const FilterSequenceListScreen = ({ route }) => {
     }, []);
 
     const handleBack = () => {
-        navigation.navigate('Dashboard')
+        navigation.navigate('SequenceSetting')
     };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
 
             <ScrollView>
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
             <Text style={styles.title}>Filter Sequences</Text>
                 <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
                 <FlatList

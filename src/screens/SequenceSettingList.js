@@ -158,12 +158,13 @@ const SequenceSettingsListScreen = ({ route }) => {
     };
     
     const handleBack = () => {
-        navigation.navigate('Dashboard')
+        navigation.navigate('SequenceSetting')
     };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Text style={styles.title}>Irrigation Sequence</Text>
                 <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
                 {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>

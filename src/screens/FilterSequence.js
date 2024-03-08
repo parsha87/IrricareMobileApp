@@ -108,7 +108,7 @@ const FilterSequenceScreen = ({ route }) => {
         }
     };
     const handleBack = () => {
-        navigation.navigate('Dashboard')
+        navigation.navigate('FilterSequenceList')
     };
 
     const handleSubmit = async () => {
@@ -172,6 +172,7 @@ const FilterSequenceScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Text style={styles.title}>Filter Sequences</Text>
                 <Text style={styles.controllerName}>Controller No: {selectedControllerName}</Text>
 

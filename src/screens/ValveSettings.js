@@ -11,6 +11,7 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+
 const ValveSettingsScreen = ({ route }) => {
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
@@ -262,6 +263,7 @@ const ValveSettingsScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Text style={styles.title}>Valve Setting</Text>
                 <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
               

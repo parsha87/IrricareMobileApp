@@ -6,7 +6,7 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
@@ -263,11 +263,11 @@ const ConfigurationTimeScreen = ({ route }) => {
     return (
 
         <SafeAreaView style={{ flex: 1 }}>
-            {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-                <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Configuration Time Setting</Text>
-            </View> */}
+   
+            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
+
             <Text style={styles.title}>Configuration Time Setting</Text>
-                <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
+            <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
             <View style={styles.container}>
                 {/* <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
@@ -278,7 +278,7 @@ const ConfigurationTimeScreen = ({ route }) => {
                     </View>
                 </View> */}
 
-               
+
 
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
