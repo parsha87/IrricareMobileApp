@@ -126,7 +126,7 @@ const authContext = React.useContext(AuthContext);
 
   {/* App Version */}
   <View style={{ alignItems: 'center', marginTop: 20 }}>
-    <Text>App Version: 1.6</Text>
+    <Text>App Version: 1.7</Text>
   </View>
 </DrawerContentScrollView>
 
