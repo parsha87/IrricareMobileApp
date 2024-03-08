@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, ActivityIndicator,FlatList } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, ActivityIndicator, FlatList } from 'react-native'
 import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -147,6 +147,12 @@ const ValveSettingsScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
+        if (formData.PumpNo < 1 || formData.PumpNo > 2) {
+            alert("PumpNo should be 1 & 2 only")
+            return
+        }
+
+
         setIsLoading(true);
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
@@ -263,16 +269,17 @@ const ValveSettingsScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
+                <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Text style={styles.title}>Valve Setting</Text>
                 <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
-              
+
                 <View style={styles.container}>
                     <View>
                         <TextInput
                             label="MainValveNo"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={3}
                             value={formData.MainValveNo.toString()}
                             onChangeText={(value) => handleTextInputChange('MainValveNo', value)}
 
@@ -319,6 +326,7 @@ const ValveSettingsScreen = ({ route }) => {
                             label=" PumpNo"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={3}
                             value={formData.PumpNo.toString()}
                             onChangeText={(value) => handleTextInputChange('PumpNo', value)}
                         />
@@ -382,6 +390,7 @@ const ValveSettingsScreen = ({ route }) => {
                             label="CoValveNo1"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={3}
                             value={formData.CoValveNo1.toString()}
                             onChangeText={(value) => handleTextInputChange('CoValveNo1', value)}
                         />
@@ -389,6 +398,7 @@ const ValveSettingsScreen = ({ route }) => {
                             label="CoValveNo2"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={3}
                             value={formData.CoValveNo2.toString()}
                             onChangeText={(value) => handleTextInputChange('CoValveNo2', value)}
                         />
@@ -397,6 +407,7 @@ const ValveSettingsScreen = ({ route }) => {
                             label="CoValveNo3"
                             returnKeyType="done"
                             keyboardType="numeric"
+                            maxLength={3}
                             value={formData.CoValveNo3.toString()}
                             onChangeText={(value) => handleTextInputChange('CoValveNo3', value)}
                         />

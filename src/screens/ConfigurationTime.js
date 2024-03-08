@@ -310,7 +310,7 @@ const ConfigurationTimeScreen = ({ route }) => {
                         <View style={styles.formGroup}>
                             <TouchableOpacity onPress={showTimePicker}>
                                 <TextInput
-                                    label="Server Time"
+                                    label="Current Time"
                                     returnKeyType="done"
                                     editable={false}
                                     value={moment(currentTime).format('HH:mm')}
