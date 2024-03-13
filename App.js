@@ -21,6 +21,8 @@ import { AuthContext } from './src/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
 import CyclicSequenceSettingsListScreen from './src/screens/CyclicSequenceLIst';
+import ValveSequenceScreen from './src/screens/ValveSequence';
+import ValveSequenceListScreen from './src/screens/ValveSequenceList';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -66,7 +68,14 @@ const ScheduleStack = () => (
     <Drawer.Screen name="CyclicSequenceScreen" component={CyclicSequenceScreen} options={{
       headerShown: false
     }} />
-     <Drawer.Screen name="CyclicSequenceList" component={CyclicSequenceSettingsListScreen} options={{
+    <Drawer.Screen name="CyclicSequenceList" component={CyclicSequenceSettingsListScreen} options={{
+      headerShown: false
+    }} />
+
+    <Drawer.Screen name="ValveSequenceScreen" component={ValveSequenceScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="ValveSequenceList" component={ValveSequenceListScreen} options={{
       headerShown: false
     }} />
   </Stack.Navigator>
@@ -75,7 +84,7 @@ const ScheduleStack = () => (
 // Custom Drawer Content Component
 function CustomDrawerContent(props) {
   const { navigation } = props;
-const authContext = React.useContext(AuthContext);
+  const authContext = React.useContext(AuthContext);
 
   const handleLogout = () => {
 
@@ -85,50 +94,50 @@ const authContext = React.useContext(AuthContext);
   };
 
   return (
-<DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1, backgroundColor: '#a3e5c4' }}>
-  {/* App Name */}
-  <View style={{ alignItems: 'center', marginVertical: 20 }}>
-    <Text style={{ fontSize: 20, fontWeight: 'bold', color:'green' }}>IRRICARE XYΦ</Text>
-    {/* Horizontal Divider */}
-    <View style={{ backgroundColor: 'black', height: 1, width: '80%', marginVertical: 10 }} />
-  </View>
+    <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1, backgroundColor: '#a3e5c4' }}>
+      {/* App Name */}
+      <View style={{ alignItems: 'center', marginVertical: 20 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'green' }}>IRRICARE XYΦ</Text>
+        {/* Horizontal Divider */}
+        <View style={{ backgroundColor: 'black', height: 1, width: '80%', marginVertical: 10 }} />
+      </View>
 
-  {/* Drawer Items */}
-  <View>
-    <DrawerItem
-      label="Dashboard"
-      icon={() => <Icon name="dashboard-customize" size={25} color="green" />}
-      onPress={() => navigation.navigate('MainpageScreen')}
-    />
-    <DrawerItem
-      label="Configuration Settings"
-      icon={() => <Icon name="settings" size={25} color="green" />}
-      onPress={() => navigation.reset({
-        index: 0,
-        routes: [{ name: 'Dashboard' }],
-      })}
-    />
-    <DrawerItem
-      label="Sequence Settings"
-      icon={() => <Icon name="settings-input-component" size={25} color="green" />}
-      onPress={() => navigation.reset({
-        index: 0,
-        routes: [{ name: 'SequenceSettings' }],
-      })}
-    />
-    {/* Add more DrawerItems as needed */}
-    <DrawerItem
-      label="Logout"
-      icon={() => <Icon name="logout" size={25} color="green" />}
-      onPress={handleLogout}
-    />
-  </View>
+      {/* Drawer Items */}
+      <View>
+        <DrawerItem
+          label="Dashboard"
+          icon={() => <Icon name="dashboard-customize" size={25} color="green" />}
+          onPress={() => navigation.navigate('MainpageScreen')}
+        />
+        <DrawerItem
+          label="Configuration Settings"
+          icon={() => <Icon name="settings" size={25} color="green" />}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'Dashboard' }],
+          })}
+        />
+        <DrawerItem
+          label="Sequence Settings"
+          icon={() => <Icon name="settings-input-component" size={25} color="green" />}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'SequenceSettings' }],
+          })}
+        />
+        {/* Add more DrawerItems as needed */}
+        <DrawerItem
+          label="Logout"
+          icon={() => <Icon name="logout" size={25} color="green" />}
+          onPress={handleLogout}
+        />
+      </View>
 
-  {/* App Version */}
-  <View style={{ alignItems: 'center', marginTop: 20 }}>
-    <Text>App Version: 1.7</Text>
-  </View>
-</DrawerContentScrollView>
+      {/* App Version */}
+      <View style={{ alignItems: 'center', marginTop: 20 }}>
+        <Text>App Version: 1.7</Text>
+      </View>
+    </DrawerContentScrollView>
 
   );
 }

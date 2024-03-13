@@ -24,6 +24,10 @@ export default function SequenceSetting({ route }) {
     navigation.navigate('CyclicSequenceList');
   };
 
+  const handleValveSequenceListNavigation = () => {
+    navigation.navigate('ValveSequenceList');
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       // Retrieve selected controller from AsyncStorage
@@ -91,7 +95,7 @@ export default function SequenceSetting({ route }) {
             </TouchableOpacity>
           </View>
           <View style={[styles.gridItem, { flex: 3 }]}>
-            <TouchableOpacity style={styles.touchable} onPress={handleFilterSettingNavigation}>
+            <TouchableOpacity style={styles.touchable} onPress={handleValveSequenceListNavigation}>
               <Image
                 source={require("../assets/irrigation.png")}
                 style={styles.image} />
