@@ -319,6 +319,10 @@ const ValveSequenceScreen = ({ route }) => {
 
     };
     const handleSubmit = async () => {
+        if (formData.SequenceNo ==0 ) {
+            alert("SequenceNo should not be 0")
+            return
+        }
         if (+formData.SequenceNo != 10) {
             alert("SequenceNo should be equal to 10");
             return

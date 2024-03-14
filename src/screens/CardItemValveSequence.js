@@ -12,8 +12,7 @@ const CardItemValveSequenceList = ({ item, onPress, onDelete }) => {
                         <Text style={styles.value}>{item.SequenceNo}</Text>
                         <Text style={styles.label}>Start Time:</Text>
                         <Text style={styles.value}>{item.TimeSlot1Hh}:{item.TimeSlot1Min}</Text>
-                        <Text style={styles.label}>Interval:</Text>
-                        <Text style={styles.value}>{item.TimeSlot3Hh}:{item.TimeSlot3Min}</Text>
+                      
                     </View>
                     <View style={styles.column}>
                         <Text style={styles.label}>Pump No:</Text>

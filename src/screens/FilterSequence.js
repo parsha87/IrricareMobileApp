@@ -112,6 +112,8 @@ const FilterSequenceScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
+
+        
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);
         formData.UserId = jsonVal.userId;

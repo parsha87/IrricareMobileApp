@@ -207,7 +207,10 @@ const CyclicSequenceScreen = ({ route }) => {
             setIsLoading(true)
             const response = await authAxios.get('ValveSetting/ValveSettingByControllerId/' + selectedControllerId);
             // Update the state with the received data
-            let data = response.data
+
+            let data = response.data.filter(x=>x.PumpNo==2)
+            console.log(response.data)
+            console.log(data)
             setValveList(data)
 
             if (data != null) {
@@ -313,10 +316,24 @@ const CyclicSequenceScreen = ({ route }) => {
 
     };
     const handleSubmit = async () => {
+        if (formData.SequenceNo ==0 ) {
+            alert("SequenceNo should not be 0")
+            return
+        }
         if (+formData.SequenceNo != 9) {
             alert("SequenceNo should be equal to 9");
             return
         }
+
+        if(formData.PumbNo <2 || formData.PumbNo >2)
+        {
+            alert("Pump No should be 1 or 2");
+            return 
+        } 
+        //  if(formData.PumbNo ==1)
+        // {
+        //     alert("This is pump no 01 valve and hence not allowed to add in this sequence");         
+        // }
         setIsLoading(true);
         const value = await AsyncStorage.getItem('user');
         let jsonVal = JSON.parse(value);

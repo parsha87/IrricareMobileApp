@@ -147,6 +147,12 @@ const ValveSettingsScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
+        if (formData.MainValveNo ==0 ) {
+            alert("Valve no should not be 0")
+            return
+        }
+
+
         if (formData.PumpNo < 1 || formData.PumpNo > 2) {
             alert("PumpNo should be 1 & 2 only")
             return

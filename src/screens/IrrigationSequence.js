@@ -8,7 +8,8 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
+// import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desired icon library
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Table, Row } from 'react-native-table-component';
@@ -35,7 +36,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     const [fertilizerName, setFertilizerName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-
+    const [timeslotcount, settimeslotcount] = useState(1);
 
     const [showTimeSlot1, setShowTimeSlot1] = useState(false);
     const [showTimeSlot2, setShowTimeSlot2] = useState(false);
@@ -201,7 +202,9 @@ const IrrigationSequenceScreen = ({ route }) => {
     const handleBack = () => {
         navigation.navigate('SequenceSettingList')
     };
-
+    const handleaddtimeslot = () => {
+        settimeslotcount(timeslotcount + 1)
+    };
     const fetchValveData = async () => {
         try {
             setIsLoading(true)
@@ -313,6 +316,10 @@ const IrrigationSequenceScreen = ({ route }) => {
 
     };
     const handleSubmit = async () => {
+        if (formData.SequenceNo ==0 ) {
+            alert("SequenceNo should not be 0")
+            return
+        }
         if (+formData.SequenceNo > 8) {
             alert("SequenceNo cannot be greater than 8");
             return
@@ -418,7 +425,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
+                <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Provider>
                     <View>
                         <Text style={styles.title}>Irrigation Sequence</Text>
@@ -446,7 +453,9 @@ const IrrigationSequenceScreen = ({ route }) => {
                                 onChangeText={(value) => handleTextInputChange('PumbNo', value)}
 
                             />
-
+                            {/* <View>
+                                <Icon onPress={handleaddtimeslot} name="clock-plus-outline" size={30} color="green" />
+                            </View> */}
                             <TouchableOpacity onPress={showTimeSlot1Picker}>
                                 <TextInput
                                     label="Time Slot 1"
@@ -467,7 +476,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                             )}
 
 
-                            <TouchableOpacity onPress={showTimeSlot2Picker}>
+                            {timeslotcount =1 && <TouchableOpacity onPress={showTimeSlot2Picker}>
 
                                 <TextInput
                                     label="Time Slot 2"
@@ -475,7 +484,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                     editable={false}
                                     value={moment(timeSlot2).format('HH:mm')}
                                 />
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
                             {showTimeSlot2 && (
                                 <DateTimePicker
                                     testID="dateTimePickerTime"
@@ -487,7 +496,8 @@ const IrrigationSequenceScreen = ({ route }) => {
                                 />
                             )}
 
-                            <TouchableOpacity onPress={showTimeSlot3Picker}>
+
+                            {timeslotcount =1 && <TouchableOpacity onPress={showTimeSlot3Picker}>
 
                                 <TextInput
                                     label="Time Slot 3"
@@ -495,7 +505,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                     editable={false}
                                     value={moment(timeSlot3).format('HH:mm')}
                                 />
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
 
                             {showTimeSlot3 && (
                                 <DateTimePicker
@@ -508,7 +518,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                 />
                             )}
 
-                            <TouchableOpacity onPress={showTimeSlot4Picker}>
+                            {timeslotcount =1 && <TouchableOpacity onPress={showTimeSlot4Picker}>
 
                                 <TextInput
                                     label="Time Slot 4"
@@ -516,7 +526,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                     editable={false}
                                     value={moment(timeSlot4).format('HH:mm')}
                                 />
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
                             {showTimeSlot4 && (
                                 <DateTimePicker
                                     testID="dateTimePickerTime"
@@ -630,7 +640,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                                 Add Valve Details
                                             </Button>
                                             <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
-                                                <Row  data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert', 'Action']} style={styles.head} textStyle={{ color: 'black', textAlign: 'center' }} />
+                                                <Row data={['Valve Nos', 'Valve Duration', 'Fertilizer Name', 'Is Fert', 'Action']} style={styles.head} textStyle={{ color: 'black', textAlign: 'center' }} />
                                                 {
                                                     valveArray.map((item, index) => (
                                                         <Row
