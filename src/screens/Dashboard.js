@@ -24,6 +24,12 @@ const Dashboard = ({ navigation }) => {
   const handleValveSettingNavigation = () => {
     navigation.navigate('ValveSettingsListScreen')
   };
+  const handleRainSensorNavigation = () => {
+    navigation.navigate('RainSensorSettingsListScreen')
+  };
+  const handleWaterMeterNavigation = () => {
+    navigation.navigate('WaterMeterSettingsListScreen')
+  };
   useFocusEffect(
     React.useCallback(() => {
       // Retrieve selected controller from AsyncStorage
@@ -40,7 +46,7 @@ const Dashboard = ({ navigation }) => {
             setSelectedController(controller);
           }
           else {
-            alert("Select controlle r no form dashboard")
+            alert("Select controller no form dashboard")
           }
         } catch (error) {
           console.error('Error retrieving selected controller:', error);
@@ -59,7 +65,7 @@ const Dashboard = ({ navigation }) => {
         <Text style={styles.title}>Controller Configuration</Text>
         <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
         <View style={styles.gridContainer}>
-          <View style={[styles.gridItem, { flex: 3 }]}>
+          <View style={[styles.gridItem, { flex: 4 }]}>
             <TouchableOpacity style={styles.touchable} onPress={handleControllerTimeNavigation}>
               <Image
                 source={require("../assets/controller.png")}
@@ -69,7 +75,7 @@ const Dashboard = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={[styles.gridItem, { flex: 3 }]}>
+          <View style={[styles.gridItem, { flex: 4 }]}>
             <TouchableOpacity style={styles.touchable} onPress={handleMaxValveNavigation}>
               <Image
                 source={require("../assets/data.png")}
@@ -79,16 +85,51 @@ const Dashboard = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={[styles.gridItem, { flex: 3 }]}>
+          <View style={[styles.gridItem, { flex: 4 }]}>
             <TouchableOpacity style={styles.touchable} onPress={handleValveSettingNavigation}>
               <Image
-                source={require("../assets/water-pipe.png")}
+                source={require("../assets/valve.png")}
                 style={styles.image} />
               <View style={styles.view}>
                 <Text style={styles.text}> Valve Setting</Text>
               </View>
             </TouchableOpacity>
           </View>
+          
+        </View>
+        <View style={styles.gridContainerrow2}>
+          <View style={[styles.gridItem, { flex: 4 }]}>
+            <TouchableOpacity style={styles.touchable} onPress={handleRainSensorNavigation}>
+              <Image
+                source={require("../assets/rain.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}> Rain Sensor Setting</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.gridItem, { flex: 4 }]}>
+            <TouchableOpacity style={styles.touchable} onPress={handleWaterMeterNavigation}>
+              <Image
+                source={require("../assets/water-meter.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}>Water Meter Sensor Setting</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.gridItem, { flex: 4 }]}>
+          <TouchableOpacity style={styles.touchable} onPress={handleWaterMeterNavigation}>
+              <Image
+                source={require("../assets/water-meter.png")}
+                style={styles.image} />
+              <View style={styles.view}>
+                <Text style={styles.text}>Water Meter Sensor Setting</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          
+
         </View>
       </View>
     </SafeAreaView>
@@ -125,6 +166,11 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  gridContainerrow2: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop:30
   },
   gridItem: {
     margin: 6,

@@ -23,6 +23,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons'; // Import your desir
 import CyclicSequenceSettingsListScreen from './src/screens/CyclicSequenceLIst';
 import ValveSequenceScreen from './src/screens/ValveSequence';
 import ValveSequenceListScreen from './src/screens/ValveSequenceList';
+import RainSensorSettingsListScreen from './src/screens/RainSensorSettingList';
+import WaterMeterSettingsListScreen from './src/screens/WaterMeterSettingList';
+import RainSensorSettingScreen from './src/screens/RainSensorSetting';
+import SoilMoistureSettingsListScreen from './src/screens/SoilMoistureSettingList';
+
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -42,6 +47,18 @@ const ConfigurationStack = () => (
       headerShown: false
     }} />
     <Drawer.Screen name="ValveSettingsListScreen" component={ValveSettingsListScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="WaterMeterSettingsListScreen" component={WaterMeterSettingsListScreen} options={{
+      headerShown: false
+    }} />
+     <Drawer.Screen name="RainSensorSettingsListScreen" component={RainSensorSettingsListScreen} options={{
+      headerShown: false
+    }} />
+     <Drawer.Screen name="RainSensorSettingsScreen" component={RainSensorSettingScreen} options={{
+      headerShown: false
+    }} />
+    <Drawer.Screen name="SoilMoistureSettingsListScreen" component={SoilMoistureSettingsListScreen} options={{
       headerShown: false
     }} />
   </Stack.Navigator>
@@ -78,6 +95,7 @@ const ScheduleStack = () => (
     <Drawer.Screen name="ValveSequenceList" component={ValveSequenceListScreen} options={{
       headerShown: false
     }} />
+
   </Stack.Navigator>
 );
 

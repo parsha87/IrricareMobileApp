@@ -476,7 +476,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                             )}
 
 
-                            {timeslotcount =1 && <TouchableOpacity onPress={showTimeSlot2Picker}>
+                            {timeslotcount ==1 && <TouchableOpacity onPress={showTimeSlot2Picker}>
 
                                 <TextInput
                                     label="Time Slot 2"
@@ -497,7 +497,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                             )}
 
 
-                            {timeslotcount =1 && <TouchableOpacity onPress={showTimeSlot3Picker}>
+                            {timeslotcount ==1 && <TouchableOpacity onPress={showTimeSlot3Picker}>
 
                                 <TextInput
                                     label="Time Slot 3"
@@ -518,7 +518,7 @@ const IrrigationSequenceScreen = ({ route }) => {
                                 />
                             )}
 
-                            {timeslotcount =1 && <TouchableOpacity onPress={showTimeSlot4Picker}>
+                            {timeslotcount ==1 && <TouchableOpacity onPress={showTimeSlot4Picker}>
 
                                 <TextInput
                                     label="Time Slot 4"
