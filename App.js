@@ -190,6 +190,15 @@ function App() {
           component={LoginScreen}
         />
         <Drawer.Screen
+          name="RegisterScreen"
+          options={{
+            drawerLabel: 'Register',
+            title: 'Register',
+            headerShown: false
+          }}
+          component={RegisterScreen}
+        />
+        <Drawer.Screen
           name="MainpageScreen"
           options={{
             drawerLabel: 'Dashboard',
