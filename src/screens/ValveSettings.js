@@ -24,19 +24,24 @@ const ValveSettingsScreen = ({ route }) => {
     })
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
+
+
     //Server Current Time
     const [duration, setDuration] = useState(new Date());
     //Day Start Time
     const [fbTIme, setFbTime] = useState(new Date());
     //Day End Time
     const [foTime, setFoTime] = useState(new Date());
-
+    //Interval Time
+    const [valveInterval, setvalveInterval] = useState(new Date());
     //Show Time Picker
     const [showDurationTime, setShowDuration] = useState(false);
     //Show Day Start time picker
     const [showFbTime, setShowFbTime] = useState(false);
     //Show Day end Time Picker
     const [showDFoTime, setShowFoTime] = useState(false);
+    //Show Interval
+    const [showInterval, setShowInterval] = useState(false);
 
     const [formData, setFormData] = useState({
         Id: 0,
@@ -62,6 +67,8 @@ const ValveSettingsScreen = ({ route }) => {
         UsermobileImeino: '',
         ControllerId: 0,
         ControllerNo: '',
+        IntervalHh: 0,
+        IntervalMm: 0,
     })
 
     useFocusEffect(
@@ -122,6 +129,8 @@ const ValveSettingsScreen = ({ route }) => {
                         setFoTime(fotime)
                         let ftime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.FbTimeHh, dataModel.FbTimeMin);
                         setFbTime(ftime)
+                        let valvetime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.IntervalHh, dataModel.IntervalMm);
+                        setvalveInterval(valvetime)
                         setDate(new Date(currentYear, CurrentMonthServer, CurrentDayServer))
                     }
 
@@ -147,7 +156,7 @@ const ValveSettingsScreen = ({ route }) => {
     };
 
     const handleSubmit = async () => {
-        if (formData.MainValveNo ==0 ) {
+        if (formData.MainValveNo == 0) {
             alert("Valve no should not be 0")
             return
         }
@@ -170,6 +179,8 @@ const ValveSettingsScreen = ({ route }) => {
         formData.FbTimeMin = fbTIme.getMinutes() == NaN ? 0 : fbTIme.getMinutes();
         formData.FoTimeHh = foTime.getHours() == NaN ? 0 : foTime.getHours();
         formData.FoTimeMin = foTime.getMinutes() == NaN ? 0 : foTime.getMinutes();
+        formData.IntervalHh = valveInterval.getHours() == NaN ? 0 : valveInterval.getHours();
+        formData.IntervalMm = valveInterval.getMinutes() == NaN ? 0 : valveInterval.getMinutes();
         formData.ControllerId = controller.selectedControllerId;
         formData.ControllerNo = controller.selectedControllerName;
         formData.CropSowingDate = date
@@ -225,6 +236,12 @@ const ValveSettingsScreen = ({ route }) => {
     };
 
     const handleTextInputChange = (field, value) => {
+        if (field == "PumpNo") {
+            if (value > 2) {
+                alert("Pump number should be 1 or 2");
+                return;
+            }
+        }
         setFormData({
             ...formData,
             [field]: value,
@@ -250,6 +267,12 @@ const ValveSettingsScreen = ({ route }) => {
         setFoTime(foTime);
     };
 
+    const onChangeInterval = (event, selectedTime) => {
+        const valveInterval = selectedTime || valveInterval;
+        setShowInterval(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
+        setvalveInterval(valveInterval);
+    };
+
     const onChangeFb = (event, selectedTime) => {
         const fbTime = selectedTime || fbTime;
         setShowFbTime(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
@@ -270,6 +293,9 @@ const ValveSettingsScreen = ({ route }) => {
 
     const showPicker = () => {
         setShow(true);
+    };
+    const showIntervalPicker = () => {
+        setShowInterval(true);
     };
 
     return (
@@ -389,6 +415,37 @@ const ValveSettingsScreen = ({ route }) => {
                                 onChange={onChangeFO}
                             />
                         )}
+
+
+                        {formData.PumpNo == 2 && <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 2 }}>
+                                <View style={styles.formGroup}>
+
+                                    <TouchableOpacity onPress={showIntervalPicker}>
+                                        <TextInput
+                                            label="Interval "
+                                            returnKeyType="done"
+                                            editable={false}
+                                            value={moment(valveInterval).format('HH:mm')}
+                                        /></TouchableOpacity>
+
+                                </View>
+                            </View>
+                        </View>}
+                        {showInterval && (
+                            <DateTimePicker
+                                testID="dateTimePickerTime"
+                                value={valveInterval}
+                                mode="time" // Options: 'date', 'time', 'datetime'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangeInterval}
+                            />
+                        )}
+
+
+
+
 
                         <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Co-Valve Setting
                         </Text>

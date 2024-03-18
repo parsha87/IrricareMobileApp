@@ -30,6 +30,8 @@ const ValveSequenceScreen = ({ route }) => {
     //Valve Duration
     const [valveList, setValveList] = useState([]);
     const [valveDuration, setValveDuration] = useState(new Date());
+    const [valveInterval, setValveInterval] = useState(new Date());
+
     const [valveNo, setValveNo] = useState('');
     const [isFert, setIsFert] = useState(false);
     const [fertilizerName, setFertilizerName] = useState('');
@@ -84,17 +86,18 @@ const ValveSequenceScreen = ({ route }) => {
         else {
             if (formValveData.ValveNos.trim() !== '') {
                 // let valveInfo = valveList.filter(x => x.MainValveNo == formValveData.ValveNos)
+              
                 const newItem = {
                     ValveNos: formValveData.ValveNos,
                     IsFert: checked,
                     ValveDurationReadonly: valveDuration,
                     FertilizerName: formValveData.FertilizerName,
-                    ValveIntervalHH: timeSlot3.getHours() == NaN ? 0 : timeSlot3.getHours(),
-                    ValveIntervalMM: timeSlot3.getMinutes() == NaN ? 0 : timeSlot3.getMinutes()
+                    ValveInterval: valveInterval,
                 };
                 setValveArray([...valveArray, newItem]);
                 setIsFert(false);
                 setValveDuration("")
+                setValveInterval("")
                 setChecked(false)
                 setValveData
 
@@ -103,8 +106,8 @@ const ValveSequenceScreen = ({ route }) => {
                     IsFert: false,
                     ValveDurationReadonly: '',
                     FertilizerName: '',
-                    ValveIntervalHH:0,
-                    ValveIntervalMM:0
+                    ValveInterval:''
+                    
                 };
                 setValveData(newItemReset);
                 console.log("_____________________________________________")
@@ -188,8 +191,7 @@ const ValveSequenceScreen = ({ route }) => {
         ValveDurationReadonly: "",
         IsFert: false,
         FertilizerName: "",
-        ValveIntervalHH: 0,
-        ValveIntervalMM: 0
+        ValveInterval: ""
     }
     )
 
@@ -301,13 +303,20 @@ const ValveSequenceScreen = ({ route }) => {
                 }
                 if (valveInfo != undefined) {
                     let valDur = valveInfo.DurationHh + ":" + valveInfo.DurationMm;
+                    let valInterval = valveInfo.IntervalHh + ":" + valveInfo.IntervalMm;
+                    console.log("_________________k________________"+valInterval )
                     setValveDuration(valDur)
+                    setValveInterval(valInterval)
                     formValveData.ValveDurationReadonly = valDur;
+                    formValveData.ValveInterval = valInterval
                 }
                 else {
                     let valDur = "";
+                    let valInterval = "";
                     setValveDuration(valDur)
+                    setValveInterval(valInterval)
                     formValveData.ValveDurationReadonly = valDur;
+                    formValveData.ValveInterval = valInterval
                 }
 
                 // setValveData({
@@ -547,17 +556,25 @@ const ValveSequenceScreen = ({ route }) => {
                                                 </View>
                                                 <View style={styles.column}>
                                                     <TextInput
-                                                        label="Valve Duration"
+                                                        label="Duration"
                                                         returnKeyType="done"
                                                         value={valveDuration}
                                                     />
 
 
                                                 </View>
+                                                <View style={styles.column}>
+                                                    <TextInput
+                                                        label="Interval"
+                                                        returnKeyType="done"
+                                                        value={valveInterval}
+                                                    />
 
+
+                                                </View>
 
                                             </View>
-                                            <View style={styles.formContainer}>
+                                            {/* <View style={styles.formContainer}>
                                                 <View style={styles.column}>
                                                     <TouchableOpacity onPress={showTimeSlot3Picker}>
 
@@ -580,7 +597,7 @@ const ValveSequenceScreen = ({ route }) => {
                                                         />
                                                     )}
                                                 </View>
-                                            </View>
+                                            </View> */}
                                             <Button
                                                 mode="outlined"
                                                 onPress={addValveDetails}
@@ -601,7 +618,7 @@ const ValveSequenceScreen = ({ route }) => {
                                                                     <Text>{item.ValveDurationReadonly}</Text>
                                                                 </View>,
                                                                 <View style={styles.iconContainer}>
-                                                                    <Text>{item.ValveIntervalHH} : {item.ValveIntervalMM}</Text>
+                                                                    <Text>{item.ValveInterval}</Text>
                                                                 </View>,
 
                                                                 <View style={styles.iconContainer}>

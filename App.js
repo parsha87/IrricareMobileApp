@@ -26,7 +26,6 @@ import ValveSequenceListScreen from './src/screens/ValveSequenceList';
 import RainSensorSettingsListScreen from './src/screens/RainSensorSettingList';
 import WaterMeterSettingsListScreen from './src/screens/WaterMeterSettingList';
 import RainSensorSettingScreen from './src/screens/RainSensorSetting';
-import SoilMoistureSettingsListScreen from './src/screens/SoilMoistureSettingList';
 
 
 const Stack = createStackNavigator();
@@ -58,9 +57,9 @@ const ConfigurationStack = () => (
      <Drawer.Screen name="RainSensorSettingsScreen" component={RainSensorSettingScreen} options={{
       headerShown: false
     }} />
-    <Drawer.Screen name="SoilMoistureSettingsListScreen" component={SoilMoistureSettingsListScreen} options={{
+    {/* <Drawer.Screen name="SoilMoistureSettingsListScreen" component={SoilMoistureSettingsListScreen} options={{
       headerShown: false
-    }} />
+    }} /> */}
   </Stack.Navigator>
 );
 
@@ -153,7 +152,7 @@ function CustomDrawerContent(props) {
 
       {/* App Version */}
       <View style={{ alignItems: 'center', marginTop: 20 }}>
-        <Text>App Version: 1.7</Text>
+        <Text>App Version: 1.9</Text>
       </View>
     </DrawerContentScrollView>
 

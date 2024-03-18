@@ -98,7 +98,7 @@ const Dashboard = ({ navigation }) => {
           
         </View>
         <View style={styles.gridContainerrow2}>
-          <View style={[styles.gridItem, { flex: 4 }]}>
+         {/*  <View style={[styles.gridItem, { flex: 4 }]}>
             <TouchableOpacity style={styles.touchable} onPress={handleRainSensorNavigation}>
               <Image
                 source={require("../assets/rain.png")}
@@ -127,7 +127,7 @@ const Dashboard = ({ navigation }) => {
                 <Text style={styles.text}>Water Meter Sensor Setting</Text>
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
           
 
         </View>
