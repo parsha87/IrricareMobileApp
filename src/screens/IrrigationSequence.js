@@ -44,7 +44,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     const [showTimeSlot4, setShowTimeSlot4] = useState(false);
 
     const [visible, setVisible] = useState(false);
-
+    const [currentUser, setcurrentUser] = useState("");
     const hideModal = () => setVisible(false);
 
     const [items, setItems] = useState([
@@ -235,7 +235,10 @@ const IrrigationSequenceScreen = ({ route }) => {
         setValveArray(updatedArray);
     };
     useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(async () => {
+       const value = await AsyncStorage.getItem('user');
+            let jsonVal = JSON.parse(value);
+            setcurrentUser(jsonVal.firstName)
             setIsLoading(true);
             fetchValveData()
             setIsLoading(true)
@@ -425,6 +428,7 @@ const IrrigationSequenceScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Text style={styles.titleName}>Hi, {currentUser}</Text>
                 <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Provider>
                     <View>
@@ -831,6 +835,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center', // Align the icon vertically
         paddingHorizontal: 10, // Add horizontal padding for space
+    },
+    titleName: {
+        fontSize: 15,
+        marginBottom: 5,
+        textAlign: 'right',
+        color: 'green',
+        backgroundColor:'lightyellow',
+        padding:5
+
     },
 });
 export default IrrigationSequenceScreen;

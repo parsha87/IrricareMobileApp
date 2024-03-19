@@ -10,6 +10,7 @@ const Dashboard = ({ navigation }) => {
     selectedControllerId: 0,
     selectedControllerName: ''
   })
+  const [currentUser, setcurrentUser] = useState("");
 
   const handleControllerTimeNavigation = () => {
     navigation.navigate('ConfigurationTimeScreen')
@@ -31,7 +32,11 @@ const Dashboard = ({ navigation }) => {
     navigation.navigate('WaterMeterSettingsListScreen')
   };
   useFocusEffect(
-    React.useCallback(() => {
+    React.useCallback(async () => {
+
+      const value = await AsyncStorage.getItem('user');
+      let jsonVal = JSON.parse(value);
+      setcurrentUser(jsonVal.firstName)
       // Retrieve selected controller from AsyncStorage
       const retrieveSelectedController = async () => {
         try {
@@ -61,7 +66,7 @@ const Dashboard = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-      
+      <Text style={styles.titleName}>Hi, {currentUser}</Text>
         <Text style={styles.title}>Controller Configuration</Text>
         <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
         <View style={styles.gridContainer}>
@@ -194,5 +199,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 14,
     textAlign: 'center',
-  },
+  },   titleName: {
+    fontSize: 15,
+    marginBottom: 5,
+    textAlign: 'right',
+    color: 'green',
+    padding:5
+
+},
 });

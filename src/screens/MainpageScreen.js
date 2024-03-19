@@ -12,9 +12,13 @@ const MainpageScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [itemsController, setItemsController] = useState([]);
   const [selectedValue, setSelectedValue] = useState();
-
+  const [currentUser, setcurrentUser] = useState("");
   useFocusEffect(
-    React.useCallback(() => {
+    React.useCallback(async () => {
+
+      const value = await AsyncStorage.getItem('user');
+      let jsonVal = JSON.parse(value);
+      setcurrentUser(jsonVal.firstName)
       const fetchControllers = async () => {
         try {
           const value = await AsyncStorage.getItem('user');
@@ -39,6 +43,7 @@ const MainpageScreen = ({ navigation }) => {
 
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
+      <Text style={styles.titleName}>Hi, {currentUser}</Text>
         <Text style={styles.title}>Dashboard</Text>
         <View style={styles.gridContainer}>
           <Text style={{ marginLeft: 8 }}>Select Controller</Text>
@@ -112,6 +117,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  titleName: {
+    fontSize: 15,
+    marginBottom: 5,
+    textAlign: 'right',
+    color: 'green',
+    padding:5
+
+},
 });
 
 export default MainpageScreen;

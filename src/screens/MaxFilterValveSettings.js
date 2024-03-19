@@ -23,7 +23,7 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
 
     const [isAdd, setIsAdd] = useState(true);
     const [inputValue, setInputValue] = useState('sds');
-
+    const [currentUser, setcurrentUser] = useState("");
     const [formData, setFormData] = useState({
         Id: 0,
         MaxFilter: 0,
@@ -41,7 +41,11 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
 
 
     useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(async () => {
+            const value = await AsyncStorage.getItem('user');
+            let jsonVal = JSON.parse(value);
+            setcurrentUser(jsonVal.firstName)
+
             setIsLoading(true);
             // Retrieve selected controller from AsyncStorage
             const retrieveSelectedController = async () => {
@@ -192,8 +196,10 @@ const MaxFilterValveSettingsScreen = ({ route }) => {
                 {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                     <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Max Filter & Max Valve setting</Text>
                 </View> */}
-                            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
+                      <Text style={styles.titleName}>Hi, {currentUser}</Text>
 
+                            <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
+                
                 <Text style={styles.title}>Max Filter & Max Valve setting</Text>
                 <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
                 <View style={styles.container}>
@@ -348,6 +354,15 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: 'center',
         color: 'green'
+    },
+    titleName: {
+        fontSize: 15,
+        marginBottom: 5,
+        textAlign: 'right',
+        color: 'green',
+        backgroundColor:'lightyellow',
+        padding:5
+
     },
 })
 export default MaxFilterValveSettingsScreen;

@@ -24,6 +24,7 @@ const ValveSequenceListScreen = ({ route }) => {
         selectedControllerName: ''
     })
     const [formDataList, setFormDataList] = useState([]);
+    const [currentUser, setcurrentUser] = useState("");
     const [formData, setFormData] = useState({
         Id: 0,
         SequenceNo: 0,
@@ -76,7 +77,10 @@ const ValveSequenceListScreen = ({ route }) => {
     };
 
     useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(async () => {
+            const value = await AsyncStorage.getItem('user');
+            let jsonVal = JSON.parse(value);
+            setcurrentUser(jsonVal.firstName)
             setIsLoading(true);
             // Retrieve selected controller from AsyncStorage
             const retrieveSelectedController = async () => {
@@ -164,6 +168,7 @@ const ValveSequenceListScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Text style={styles.titleName}>Hi, {currentUser}</Text>
             <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Text style={styles.title}>Valve Sequence</Text>
                 <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
@@ -268,6 +273,15 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: 'center',
         color: 'green'
+    },
+    titleName: {
+        fontSize: 15,
+        marginBottom: 5,
+        textAlign: 'right',
+        color: 'green',
+        backgroundColor:'lightyellow',
+        padding:5
+
     },
 
 });

@@ -13,6 +13,7 @@ const ValveSettingsListScreen = ({ route }) => {
     const { authAxios } = useContext(AxiosContext);
     const [formDataList, setFormDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [currentUser, setcurrentUser] = useState("");
     // const { selectedControllerId, selectedControllerName } = route.params;
     const [controller, setSelectedController] = useState({
         selectedControllerId: 0,
@@ -71,7 +72,10 @@ const ValveSettingsListScreen = ({ route }) => {
 
 
     useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(async () => {
+            const value = await AsyncStorage.getItem('user');
+            let jsonVal = JSON.parse(value);
+            setcurrentUser(jsonVal.firstName)
             setIsLoading(true);
             // Retrieve selected controller from AsyncStorage
             const retrieveSelectedController = async () => {
@@ -137,6 +141,7 @@ const ValveSettingsListScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Text style={styles.titleName}>Hi, {currentUser}</Text>
             <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                     <Text style={{ fontSize: 18, color: 'green', fontWeight: 'bold', textAlign: 'center' }}>Valve setting</Text>
@@ -202,6 +207,15 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: 'center',
         color: 'green'
+    },
+    titleName: {
+        fontSize: 15,
+        marginBottom: 5,
+        textAlign: 'right',
+        color: 'green',
+        backgroundColor:'lightyellow',
+        padding:5
+
     },
 
 });

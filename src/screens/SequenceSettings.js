@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SequenceSetting({ route }) {
   const navigation = useNavigation();
+  const [currentUser, setcurrentUser] = useState("");
   const [controller, setSelectedController] = useState({
     selectedControllerId: 0,
     selectedControllerName: ''
@@ -29,7 +30,11 @@ export default function SequenceSetting({ route }) {
   };
 
   useFocusEffect(
-    React.useCallback(() => {
+    React.useCallback(async () => {
+      const value = await AsyncStorage.getItem('user');
+      let jsonVal = JSON.parse(value);
+      setcurrentUser(jsonVal.firstName)
+
       // Retrieve selected controller from AsyncStorage
       const retrieveSelectedController = async () => {
         try {
@@ -58,8 +63,9 @@ export default function SequenceSetting({ route }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>      
-
+      <View style={styles.container}>   
+      <Text style={styles.titleName}>Hi, {currentUser}</Text>
+   
         <Text style={styles.title}>Sequence Configuration</Text>
         <Text style={styles.controllerName}>Controller No: {controller.selectedControllerName}</Text>
 
@@ -160,4 +166,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  titleName: {
+    fontSize: 15,
+    marginBottom: 5,
+    textAlign: 'right',
+    color: 'green',
+    padding:5
+
+},
 });

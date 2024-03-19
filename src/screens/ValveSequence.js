@@ -36,7 +36,7 @@ const ValveSequenceScreen = ({ route }) => {
     const [isFert, setIsFert] = useState(false);
     const [fertilizerName, setFertilizerName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    const [currentUser, setcurrentUser] = useState("");
 
 
     const [showTimeSlot1, setShowTimeSlot1] = useState(false);
@@ -86,7 +86,7 @@ const ValveSequenceScreen = ({ route }) => {
         else {
             if (formValveData.ValveNos.trim() !== '') {
                 // let valveInfo = valveList.filter(x => x.MainValveNo == formValveData.ValveNos)
-              
+
                 const newItem = {
                     ValveNos: formValveData.ValveNos,
                     IsFert: checked,
@@ -106,8 +106,8 @@ const ValveSequenceScreen = ({ route }) => {
                     IsFert: false,
                     ValveDurationReadonly: '',
                     FertilizerName: '',
-                    ValveInterval:''
-                    
+                    ValveInterval: ''
+
                 };
                 setValveData(newItemReset);
                 console.log("_____________________________________________")
@@ -240,7 +240,10 @@ const ValveSequenceScreen = ({ route }) => {
         setValveArray(updatedArray);
     };
     useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(async () => {
+            const value = await AsyncStorage.getItem('user');
+            let jsonVal = JSON.parse(value);
+            setcurrentUser(jsonVal.firstName)
             setIsLoading(true);
             fetchValveData()
             setIsLoading(true)
@@ -304,7 +307,7 @@ const ValveSequenceScreen = ({ route }) => {
                 if (valveInfo != undefined) {
                     let valDur = valveInfo.DurationHh + ":" + valveInfo.DurationMm;
                     let valInterval = valveInfo.IntervalHh + ":" + valveInfo.IntervalMm;
-                    console.log("_________________k________________"+valInterval )
+                    console.log("_________________k________________" + valInterval)
                     setValveDuration(valDur)
                     setValveInterval(valInterval)
                     formValveData.ValveDurationReadonly = valDur;
@@ -328,7 +331,7 @@ const ValveSequenceScreen = ({ route }) => {
 
     };
     const handleSubmit = async () => {
-        if (formData.SequenceNo ==0 ) {
+        if (formData.SequenceNo == 0) {
             alert("SequenceNo should not be 0")
             return
         }
@@ -437,17 +440,12 @@ const ValveSequenceScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
+            <Text style={styles.titleName}>Hi, {currentUser}</Text>
                 <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Provider>
                     <View>
                         <Text style={styles.title}>Valve Sequence</Text>
                         <Text style={styles.controllerName}>Controller No: {selectedControllerName}</Text>
-                        {/* <View style={{ flexDirection: 'row', backgroundColor: '#3498db', padding: 16 }}>
-                        <TouchableOpacity onPress={handleBack}>
-                            <Text style={{ color: '#fff', fontSize: 18, marginRight: 16 }}>{'< Back'}</Text>
-                        </TouchableOpacity>
-                        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Irrigation Sequence</Text>
-                    </View> */}
                         <View style={styles.container}>
                             <TextInput
                                 label="SequenceNo"
@@ -727,7 +725,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'green'
 
-    }, controllerName: {
+    }, 
+    titleName: {
+        fontSize: 15,
+        marginBottom: 5,
+        textAlign: 'right',
+        color: 'green',
+        backgroundColor:'lightyellow',
+        padding:5
+
+    },
+    controllerName: {
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 10,
@@ -795,5 +803,15 @@ const styles = StyleSheet.create({
         alignItems: 'center', // Align the icon vertically
         paddingHorizontal: 10, // Add horizontal padding for space
     },
+    titleName: {
+        fontSize: 15,
+        marginBottom: 5,
+        textAlign: 'right',
+        color: 'green',
+        backgroundColor:'lightyellow',
+        padding:5
+
+    },
+
 });
 export default ValveSequenceScreen;
