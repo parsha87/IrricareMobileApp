@@ -117,7 +117,7 @@ const SequenceSettingsListScreen = ({ route }) => {
         try {
             const response = await authAxios.get('SequenceSetting/SequenceSettingByControllerId/' + id);
             // Update the state with the received data
-            let data = response.data
+            let data = response.data.filter(x=>x.SequenceNo<9)
             console.log(data)
             setFormDataList(data)
             if (data != null) {
