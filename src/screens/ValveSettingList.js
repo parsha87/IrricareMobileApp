@@ -43,6 +43,10 @@ const ValveSettingsListScreen = ({ route }) => {
         UsermobileImeino: '',
         ControllerId: 0,
         ControllerNo: '',
+        IntervalHh: 0,
+        IntervalMm: 0,
+        StartTimeHh:0,
+        StartTimeMm:0
     })
     // const renderItem = ({ item }) => (
     //     <CardItem item={item} onPress={() => handleCardItemPress(item)} />

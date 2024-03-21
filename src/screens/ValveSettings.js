@@ -34,6 +34,10 @@ const ValveSettingsScreen = ({ route }) => {
     const [foTime, setFoTime] = useState(new Date());
     //Interval Time
     const [valveInterval, setvalveInterval] = useState(new Date());
+    //Day Start Time
+    const [valveStartTIme, setvalveStartTIme] = useState(new Date());
+
+
     //Show Time Picker
     const [showDurationTime, setShowDuration] = useState(false);
     //Show Day Start time picker
@@ -42,6 +46,9 @@ const ValveSettingsScreen = ({ route }) => {
     const [showDFoTime, setShowFoTime] = useState(false);
     //Show Interval
     const [showInterval, setShowInterval] = useState(false);
+    //Show Time Picker
+    const [showvalveStartTime, setshowvalveStartTime] = useState(false);
+
 
     const [formData, setFormData] = useState({
         Id: 0,
@@ -69,13 +76,15 @@ const ValveSettingsScreen = ({ route }) => {
         ControllerNo: '',
         IntervalHh: 0,
         IntervalMm: 0,
+        StartTimeHh:0,
+        StartTimeMm:0
     })
 
     useFocusEffect(
         React.useCallback(async () => {
             const value = await AsyncStorage.getItem('user');
-      let jsonVal = JSON.parse(value);
-      setcurrentUser(jsonVal.firstName)
+            let jsonVal = JSON.parse(value);
+            setcurrentUser(jsonVal.firstName)
 
             setIsLoading(true);
             // Retrieve selected controller from AsyncStorage
@@ -135,6 +144,8 @@ const ValveSettingsScreen = ({ route }) => {
                         setFbTime(ftime)
                         let valvetime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.IntervalHh, dataModel.IntervalMm);
                         setvalveInterval(valvetime)
+                        let valveStarttime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.StartTimeHh, dataModel.StartTimeMm);
+                        setvalveStartTIme(valvetime)
                         setDate(new Date(currentYear, CurrentMonthServer, CurrentDayServer))
                     }
 
@@ -185,6 +196,9 @@ const ValveSettingsScreen = ({ route }) => {
         formData.FoTimeMin = foTime.getMinutes() == NaN ? 0 : foTime.getMinutes();
         formData.IntervalHh = valveInterval.getHours() == NaN ? 0 : valveInterval.getHours();
         formData.IntervalMm = valveInterval.getMinutes() == NaN ? 0 : valveInterval.getMinutes();
+
+        formData.StartTimeHh = valveStartTIme.getHours() == NaN ? 0 : valveStartTIme.getHours();
+        formData. StartTimeMm = valveStartTIme.getMinutes() == NaN ? 0 : valveStartTIme.getMinutes();
         formData.ControllerId = controller.selectedControllerId;
         formData.ControllerNo = controller.selectedControllerName;
         formData.CropSowingDate = date
@@ -277,6 +291,12 @@ const ValveSettingsScreen = ({ route }) => {
         setvalveInterval(valveInterval);
     };
 
+    const onChangevalveStartTime = (event, selectedTime) => {
+        const valveStartTime = selectedTime || valveStartTime;
+        setshowvalveStartTime(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
+        setvalveStartTIme(valveStartTime);
+    };
+
     const onChangeFb = (event, selectedTime) => {
         const fbTime = selectedTime || fbTime;
         setShowFbTime(Platform.OS === 'ios'); // For iOS, we need to manually hide the picker
@@ -301,11 +321,13 @@ const ValveSettingsScreen = ({ route }) => {
     const showIntervalPicker = () => {
         setShowInterval(true);
     };
-
+    const showvalveStartTimePicker = () => {
+        setshowvalveStartTime(true);
+    };
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
-            <Text style={styles.titleName}>Hi, {currentUser}</Text>
+                <Text style={styles.titleName}>Hi, {currentUser}</Text>
                 <Icon onPress={handleBack} name="chevron-left" size={30} color="green" />
                 <Text style={styles.title}>Valve Setting</Text>
                 <Text style={styles.controllerName}>Controller No:{controller.selectedControllerName}</Text>
@@ -528,6 +550,32 @@ const ValveSettingsScreen = ({ route }) => {
                             value={formData.ValveArea}
                             onChangeText={(value) => handleTextInputChange('ValveArea', value)}
                         />
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 2 }}>
+                                <View style={styles.formGroup}>
+
+                                    <TouchableOpacity onPress={showvalveStartTimePicker}>
+                                        <TextInput
+                                            label="Valve Start Time"
+                                            returnKeyType="done"
+                                            editable={false}
+                                            value={moment(valveStartTIme).format('HH:mm')}
+                                        /></TouchableOpacity>
+
+                                </View>
+                            </View>
+                        </View>
+                        {showvalveStartTime && (
+                            <DateTimePicker
+                                testID="dateTimePickerTime"
+                                value={valveStartTIme}
+                                mode="time" // Options: 'date', 'time', 'datetime'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangevalveStartTime}
+                            />
+                        )}
                         <Button
                             mode="outlined"
                             onPress={handleSubmit}
@@ -586,18 +634,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         textAlign: 'right',
         color: 'green',
-        backgroundColor:'lightyellow',
-        padding:5
+        backgroundColor: 'lightyellow',
+        padding: 5
 
     },
-    titleName: {
-        fontSize: 15,
-        marginBottom: 5,
-        textAlign: 'right',
-        color: 'green',
-        backgroundColor:'lightyellow',
-        padding:5
 
-    },
 });
 export default ValveSettingsScreen;
