@@ -3,14 +3,14 @@ import { View, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ScrollView, Ac
 import { Provider as PaperProvider, Card, DefaultTheme } from 'react-native-paper';
 import { AxiosContext } from '../context/AxiosContext';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Text } from "react-native-paper";
+import { Text, Picker } from "react-native-paper";
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const ValveSettingsScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -25,7 +25,7 @@ const ValveSettingsScreen = ({ route }) => {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
     const [currentUser, setcurrentUser] = useState("");
-
+    const [open, setOpen] = useState(false);
     //Server Current Time
     const [duration, setDuration] = useState(new Date());
     //Day Start Time
@@ -36,6 +36,7 @@ const ValveSettingsScreen = ({ route }) => {
     const [valveInterval, setvalveInterval] = useState(new Date());
     //Day Start Time
     const [valveStartTIme, setvalveStartTIme] = useState(new Date());
+    const [itemstype, setItemsType] = useState([]);
 
 
     //Show Time Picker
@@ -49,7 +50,12 @@ const ValveSettingsScreen = ({ route }) => {
     //Show Time Picker
     const [showvalveStartTime, setshowvalveStartTime] = useState(false);
 
-
+    const [selectedValue, setSelectedValue] = useState('java');
+    const items = [
+        { label: 'Irigation', value: 'Irigation' },
+        { label: 'Cyclic', value: 'Cyclic' },
+        { label: 'Valve-Cyclic', value: 'Valve-Cyclic' },
+    ];
     const [formData, setFormData] = useState({
         Id: 0,
         MainValveNo: 0,
@@ -76,8 +82,10 @@ const ValveSettingsScreen = ({ route }) => {
         ControllerNo: '',
         IntervalHh: 0,
         IntervalMm: 0,
-        StartTimeHh:0,
-        StartTimeMm:0
+        IntervalSec: 0,
+        StartTimeHh: 0,
+        StartTimeMm: 0,
+        SequenceType: ''
     })
 
     useFocusEffect(
@@ -142,13 +150,14 @@ const ValveSettingsScreen = ({ route }) => {
                         setFoTime(fotime)
                         let ftime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.FbTimeHh, dataModel.FbTimeMin);
                         setFbTime(ftime)
-                        let valvetime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.IntervalHh, dataModel.IntervalMm);
+                        let valvetime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.IntervalHh, dataModel.IntervalMm, dataModel.IntervalSec);
                         setvalveInterval(valvetime)
                         let valveStarttime = new Date(currentYear, CurrentMonthServer, CurrentDayServer, dataModel.StartTimeHh, dataModel.StartTimeMm);
-                        setvalveStartTIme(valvetime)
+                        setvalveStartTIme(valveStarttime)
                         setDate(new Date(currentYear, CurrentMonthServer, CurrentDayServer))
+                        //Sequence Type
+                        setSelectedValue(dataModel.SequenceType)
                     }
-
 
                     setFormData(dataModel);
                     setIsLoading(false);
@@ -196,14 +205,15 @@ const ValveSettingsScreen = ({ route }) => {
         formData.FoTimeMin = foTime.getMinutes() == NaN ? 0 : foTime.getMinutes();
         formData.IntervalHh = valveInterval.getHours() == NaN ? 0 : valveInterval.getHours();
         formData.IntervalMm = valveInterval.getMinutes() == NaN ? 0 : valveInterval.getMinutes();
+        formData.IntervalSec = valveInterval.getSeconds() == NaN ? 0 : valveInterval.getSeconds();
 
         formData.StartTimeHh = valveStartTIme.getHours() == NaN ? 0 : valveStartTIme.getHours();
-        formData. StartTimeMm = valveStartTIme.getMinutes() == NaN ? 0 : valveStartTIme.getMinutes();
+        formData.StartTimeMm = valveStartTIme.getMinutes() == NaN ? 0 : valveStartTIme.getMinutes();
         formData.ControllerId = controller.selectedControllerId;
         formData.ControllerNo = controller.selectedControllerName;
         formData.CropSowingDate = date
         formData.UsermobileImeino = ""
-
+        formData.SequenceType = selectedValue;
         console.log(formData)
         if (isAdd) {
             //Add
@@ -324,6 +334,10 @@ const ValveSettingsScreen = ({ route }) => {
     const showvalveStartTimePicker = () => {
         setshowvalveStartTime(true);
     };
+
+    const changeSelectOptionHandler = async (value) => {
+        setSelectedValue(value);
+    };
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
@@ -334,6 +348,23 @@ const ValveSettingsScreen = ({ route }) => {
 
                 <View style={styles.container}>
                     <View>
+                        <View style={styles.gridContainer}>
+                            <DropDownPicker
+                                open={open}
+                                items={items}
+                                value={selectedValue}
+                                setOpen={setOpen}
+                                setItems={setItemsType}
+                                setValue={setSelectedValue}
+                                containerStyle={{ padding: 8 }}
+                                onChangeItem={(item) => setSelectedValue(item.value)}
+                                style={{ backgroundColor: '#fafafa' }}
+                                dropDownContainerStyle={{ marginLeft: 8 }}
+                                listItemLabelStyle={{ marginLeft: 10 }}
+                                itemStyle={{ justifyContent: 'flex-start', marginLeft: 8 }}
+                                onSelectItem={changeSelectOptionHandler}
+                            />
+                        </View>
                         <TextInput
                             label="MainValveNo"
                             returnKeyType="done"
@@ -637,7 +668,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightyellow',
         padding: 5
 
+    }, gridContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
     },
 
 });
+
 export default ValveSettingsScreen;
