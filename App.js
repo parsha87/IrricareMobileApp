@@ -152,7 +152,7 @@ function CustomDrawerContent(props) {
 
       {/* App Version */}
       <View style={{ alignItems: 'center', marginTop: 20 }}>
-        <Text>App Version: 1.9</Text>
+        <Text>App Version: 1.13</Text>
       </View>
     </DrawerContentScrollView>
 

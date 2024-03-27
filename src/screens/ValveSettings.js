@@ -186,10 +186,10 @@ const ValveSettingsScreen = ({ route }) => {
         }
 
 
-        if (formData.PumpNo < 1 || formData.PumpNo > 2) {
-            alert("PumpNo should be 1 & 2 only")
-            return
-        }
+        // if (formData.PumpNo < 1 || formData.PumpNo > 2) {
+        //     alert("PumpNo should be 1 & 2 only")
+        //     return
+        // }
 
 
         setIsLoading(true);
@@ -421,7 +421,7 @@ const ValveSettingsScreen = ({ route }) => {
                             onChangeText={(value) => handleTextInputChange('PumpNo', value)}
                         />
 
-                        <View style={{ flexDirection: 'row' }}>
+                        {selectedValue == 'Irigation' && <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 2 }}>
                                 <View style={styles.formGroup}>
 
@@ -436,7 +436,7 @@ const ValveSettingsScreen = ({ route }) => {
                                 </View>
                             </View>
 
-                        </View>
+                        </View>}
                         {showFbTime && (
                             <DateTimePicker
                                 testID="dateTimePickerTime"
@@ -448,7 +448,7 @@ const ValveSettingsScreen = ({ route }) => {
                             />
                         )}
 
-                        <View style={{ flexDirection: 'row' }}>
+                        {selectedValue == 'Irigation' && <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 2 }}>
                                 <View style={styles.formGroup}>
 
@@ -462,7 +462,7 @@ const ValveSettingsScreen = ({ route }) => {
 
                                 </View>
                             </View>
-                        </View>
+                        </View>}
                         {showDFoTime && (
                             <DateTimePicker
                                 testID="dateTimePickerTime"
@@ -475,7 +475,7 @@ const ValveSettingsScreen = ({ route }) => {
                         )}
 
 
-                        {formData.PumpNo == 2 && <View style={{ flexDirection: 'row' }}>
+                        {selectedValue == 'Valve-Cyclic' && <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 2 }}>
                                 <View style={styles.formGroup}>
 
@@ -582,7 +582,7 @@ const ValveSettingsScreen = ({ route }) => {
                             onChangeText={(value) => handleTextInputChange('ValveArea', value)}
                         />
 
-                        <View style={{ flexDirection: 'row' }}>
+                        {selectedValue == 'Valve-Cyclic' && <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 2 }}>
                                 <View style={styles.formGroup}>
 
@@ -596,7 +596,7 @@ const ValveSettingsScreen = ({ route }) => {
 
                                 </View>
                             </View>
-                        </View>
+                        </View>}
                         {showvalveStartTime && (
                             <DateTimePicker
                                 testID="dateTimePickerTime"
