@@ -11,7 +11,9 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
-
+import InputSpinner from "react-native-input-spinner";
+import { TimerPickerModal } from "react-native-timer-picker";
+import LinearGradient from "react-native-linear-gradient"
 const ValveSettingsScreen = ({ route }) => {
     const navigation = useNavigation();
     const { authAxios } = useContext(AxiosContext);
@@ -22,6 +24,7 @@ const ValveSettingsScreen = ({ route }) => {
         selectedControllerId: 0,
         selectedControllerName: ''
     })
+    const [alarmString, setAlarmString] = useState("");
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
     const [currentUser, setcurrentUser] = useState("");
@@ -38,6 +41,7 @@ const ValveSettingsScreen = ({ route }) => {
     const [valveStartTIme, setvalveStartTIme] = useState(new Date());
     const [itemstype, setItemsType] = useState([]);
 
+    const [showPickerNew, setShowPicker] = useState(false);
 
     //Show Time Picker
     const [showDurationTime, setShowDuration] = useState(false);
@@ -49,6 +53,7 @@ const ValveSettingsScreen = ({ route }) => {
     const [showInterval, setShowInterval] = useState(false);
     //Show Time Picker
     const [showvalveStartTime, setshowvalveStartTime] = useState(false);
+    // const [alarmString, setAlarmString] = useState(null);
 
     const [selectedValue, setSelectedValue] = useState('java');
     const items = [
@@ -337,7 +342,14 @@ const ValveSettingsScreen = ({ route }) => {
 
     const changeSelectOptionHandler = async (value) => {
         setSelectedValue(value);
+        await AsyncStorage.setItem('selectedController', JSON.stringify(value));
     };
+    const formatTime = (time) => {
+        // Implement your own formatting logic here
+      //  return `${Math.floor(time.hours / 60)}:${time.minutes % 60}:${time.minutes % 60}`;
+      return `${time.hours}:${time.minutes}:${time.seconds}`;
+    };
+    
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
@@ -362,7 +374,7 @@ const ValveSettingsScreen = ({ route }) => {
                                 dropDownContainerStyle={{ marginLeft: 8 }}
                                 listItemLabelStyle={{ marginLeft: 10 }}
                                 itemStyle={{ justifyContent: 'fchangeSellectOptionHandlerlex-start', marginLeft: 8 }}
-                                onSelectItem={changeSellectOptionHandler}
+                            // onSelectItem={changeSellectOptionHandler}
                             />
                         </View>
                         <TextInput
@@ -384,8 +396,63 @@ const ValveSettingsScreen = ({ route }) => {
 
 
                         <View style={{ flexDirection: 'row' }}>
+                            <View style={{ backgroundColor: "#514242", alignItems: "center", justifyContent: "center" }}>
+                                <Text style={{ fontSize: 18, color: "#F1F1F1" }}>
+                                    {alarmString !== null
+                                        ? "Alarm set for"
+                                        : "No alarm set"}
+                                </Text>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    onPress={() => setShowPicker(true)}>
+                                    <View style={{ alignItems: "center" }}>
+                                        {alarmString !== null ? (
+                                            <Text style={{ color: "#F1F1F1", fontSize: 18 }}>
+                                                {alarmString}
+                                            </Text>
+                                        ) : null}
+                                        <TouchableOpacity
+                                            activeOpacity={0.7}
+                                            onPress={() => setShowPicker(true)}>
+                                            <View style={{ marginTop: 30 }}>
+                                                <Text
+                                                    style={{
+                                                        paddingVertical: 10,
+                                                        paddingHorizontal: 18,
+                                                        borderWidth: 1,
+                                                        borderRadius: 10,
+                                                        fontSize: 16,
+                                                        overflow: "hidden",
+                                                        borderColor: "#C2C2C2",
+                                                        color: "#C2C2C2"
+                                                    }}>
+                                                    Set Alarm 🔔
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </TouchableOpacity>
+                                <TimerPickerModal
+                                    visible={showPickerNew}
+                                    setIsVisible={setShowPicker}
+                                    onConfirm={(pickedDuration) => {
+                                        setAlarmString(formatTime(pickedDuration));
+                                        setShowPicker(false);
+                                    }}
+                                    modalTitle="Set Alarm"
+                                    onCancel={() => setShowPicker(false)}
+                                    closeOnOverlayPress
+                                    LinearGradient={LinearGradient}
+                                    styles={{
+                                        theme: "light",
+                                    }}
+                                    modalProps={{
+                                        overlayOpacity: 0.2,
+                                    }}
+                                />
+                            </View>
                             <View style={{ flex: 2 }}>
-                                <View style={styles.formGroup}>
+                                <View style={styles.formGroup}>                                  
 
                                     <TouchableOpacity onPress={showDurartionTimePicker}>
                                         <TextInput
@@ -408,6 +475,8 @@ const ValveSettingsScreen = ({ route }) => {
                                 mode="time" // Options: 'date', 'time', 'datetime'
                                 is24Hour={true}
                                 display="default"
+                                minuteInterval={1} // Optional: Specifies the interval for minutes
+                                secondInterval={1} // Optional: Specifies the interval for seconds
                                 onChange={onChangeTime}
                             />
                         )}
