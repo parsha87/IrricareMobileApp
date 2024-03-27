@@ -361,8 +361,8 @@ const ValveSettingsScreen = ({ route }) => {
                                 style={{ backgroundColor: '#fafafa' }}
                                 dropDownContainerStyle={{ marginLeft: 8 }}
                                 listItemLabelStyle={{ marginLeft: 10 }}
-                                itemStyle={{ justifyContent: 'flex-start', marginLeft: 8 }}
-                                onSelectItem={changeSelectOptionHandler}
+                                itemStyle={{ justifyContent: 'fchangeSellectOptionHandlerlex-start', marginLeft: 8 }}
+                                onSelectItem={changeSellectOptionHandler}
                             />
                         </View>
                         <TextInput
